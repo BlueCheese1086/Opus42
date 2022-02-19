@@ -1,6 +1,7 @@
 package frc.robot.components;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Solenoid;
 
@@ -8,8 +9,8 @@ public class Intake {
     CANSparkMax motor;
     Solenoid solenoid;
     
-    public Intake(){
-
+    public Intake(int motorID){
+        motor = new CANSparkMax(motorID, MotorType.kBrushless);
     }
 
      /**

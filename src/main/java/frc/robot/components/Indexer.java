@@ -1,9 +1,13 @@
-package frc.components;
+package frc.robot.components;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Indexer {
-    //todo - ask how many motors we have for the indexer, etc
-    public Indexer(){
-
+    CANSparkMax left, right;
+    public Indexer(int leftID, int rightID){
+        left = new CANSparkMax(leftID, MotorType.kBrushless);
+        right = new CANSparkMax(rightID, MotorType.kBrushless);
     }
 
     /**
