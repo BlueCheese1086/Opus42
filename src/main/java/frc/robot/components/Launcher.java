@@ -20,4 +20,27 @@ public class Launcher {
         four = new CANSparkMax(fourID, MotorType.kBrushless);
         five = new CANSparkMax(fiveID, MotorType.kBrushless);
     }
+
+    /*notes for future kai and emily-
+
+                            | upper hub
+                            |
+                            | X
+                            |
+            x               |
+    opus42 ----------------
+                   Y
+
+    X = 264 cm
+    x = camera mounting angle  +  ty from limelight(converted to degrees) 
+        ^ use that to set the hood angle ^
+        
+    Y = (X - cameraHeight)/tan(x)
+        ^ use that to set launching velocity^
+
+    1) set hood angle
+    2) have falcons approach launching velocity
+    3) *after* falcons are at that velocity, run indexer & internal cansparkmaxes
+    4) PEW PEW
+    */
 }
