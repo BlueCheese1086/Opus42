@@ -12,15 +12,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.Climb;
 import frc.robot.components.Drivetrain;
+import frc.robot.components.Hood;
 import frc.robot.components.Indexer;
 import frc.robot.components.Intake;
-import frc.robot.components.Launcher;
+import frc.robot.components.Shooter;
 import frc.robot.controlInterfaces.ClimbInterface;
 import frc.robot.controlInterfaces.DrivetrainInterface;
 import frc.robot.controlInterfaces.IndexerInterface;
 import frc.robot.controlInterfaces.IntakeInterface;
 import frc.robot.controlInterfaces.Interface;
-import frc.robot.controlInterfaces.LauncherInterface;
+import frc.robot.controlInterfaces.ShooterInterface;
+import frc.robot.sensors.Limelight;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -38,7 +40,9 @@ public class Robot extends TimedRobot {
   public Climb climb;
   public Indexer indexer;
   public Intake intake;
-  public Launcher launcher;
+  public Shooter shooter;
+  public Limelight limelight;
+  public Hood hood;
   Control c;
   RobotMap rMap;
   ArrayList<Interface> interfaces;
@@ -55,14 +59,17 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
+    limelight = new Limelight();
+    hood = new Hood(rMap.HOOD_SERVO_ID);
     drivetrain = new Drivetrain(rMap.FRONT_LEFT_ID, rMap.FRONT_RIGHT_ID, rMap.BACK_LEFT_ID, rMap.BACK_RIGHT_ID);
     climb = new Climb(rMap.CLIMB_LEFT_ID, rMap.CLIMB_RIGHT_ID);
     indexer = new Indexer(rMap.INDEXER_LEFT_ID, rMap.INDEXER_RIGHT_ID);
     intake = new Intake(rMap.INTAKE_MOTOR_ID);
-    launcher = new Launcher(rMap.LAUNCHER_X_ID, rMap.LAUNCHER_Y_ID, rMap.LAUNCHER_ONE_ID, rMap.LAUNCHER_TWO_ID, rMap.LAUNCHER_THREE_ID, rMap.LAUNCHER_FOUR_ID, rMap.LAUNCHER_FIVE_ID);
+    shooter = new Shooter(rMap.LAUNCHER_X_ID, rMap.LAUNCHER_Y_ID, rMap.LAUNCHER_ONE_ID, rMap.LAUNCHER_TWO_ID, rMap.LAUNCHER_THREE_ID, rMap.LAUNCHER_FOUR_ID, rMap.LAUNCHER_FIVE_ID, limelight, hood, indexer);
+  
 
     interfaces = new ArrayList<>();
-    interfaces.addAll(Arrays.asList(new DrivetrainInterface(this, c), new ClimbInterface(this, c), new IndexerInterface(this, c), new IntakeInterface(this, c), new LauncherInterface(this, c)));
+    interfaces.addAll(Arrays.asList(new DrivetrainInterface(this, c), new ClimbInterface(this, c), new IndexerInterface(this, c), new IntakeInterface(this, c), new ShooterInterface(this, c)));
   }
 
   /**
