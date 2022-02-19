@@ -26,6 +26,8 @@ public class RobotMap {
     public final int LAUNCHER_THREE_ID = 0;
     public final int LAUNCHER_FOUR_ID = 0;
     public final int LAUNCHER_FIVE_ID = 0;
+
+    public final int HOOD_SERVO_ID = 0;
     
 
     public final int PRIMARY_CONTROLLER_ID = 0;
