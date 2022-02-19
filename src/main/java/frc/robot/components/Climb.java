@@ -10,6 +10,15 @@ public class Climb {
         right = new CANSparkMax(rightID, MotorType.kBrushless);
     }
 
+    public void toggle(double c){
+        c = c/2.0;
+        if(Math.abs(c) >= 0.30) {
+            c *= 0.30/Math.abs(c);
+        }
+        left.set(c);
+        right.set(c);
+    }
+
     /**
      * pulling robot up (pulling climb inward)
      */
