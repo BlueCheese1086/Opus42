@@ -21,6 +21,12 @@ public class RobotMap {
     //todo - determine appropriate names for launcher falcons
     public final int LAUNCHER_X_ID = 0;
     public final int LAUNCHER_Y_ID = 0;
+    public final int LAUNCHER_ONE_ID = 0;
+    public final int LAUNCHER_TWO_ID = 0;
+    public final int LAUNCHER_THREE_ID = 0;
+    public final int LAUNCHER_FOUR_ID = 0;
+    public final int LAUNCHER_FIVE_ID = 0;
+    
 
     public final int PRIMARY_CONTROLLER_ID = 0;
     public final int SECONDARY_CONTROLLER_ID = 0;

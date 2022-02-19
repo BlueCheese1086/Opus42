@@ -59,7 +59,7 @@ public class Robot extends TimedRobot {
     climb = new Climb(constants.CLIMB_LEFT_ID, constants.CLIMB_RIGHT_ID);
     indexer = new Indexer(constants.INDEXER_LEFT_ID, constants.INDEXER_RIGHT_ID);
     intake = new Intake(constants.INTAKE_MOTOR_ID);
-    launcher = new Launcher(constants.LAUNCHER_X_ID, constants.LAUNCHER_Y_ID);
+    launcher = new Launcher(constants.LAUNCHER_X_ID, constants.LAUNCHER_Y_ID, constants.LAUNCHER_ONE_ID, constants.LAUNCHER_TWO_ID, constants.LAUNCHER_THREE_ID, constants.LAUNCHER_FOUR_ID, constants.LAUNCHER_FIVE_ID);
 
     interfaces = new ArrayList<>();
     interfaces.addAll(Arrays.asList(new DrivetrainInterface(this, c), new ClimbInterface(this, c), new IndexerInterface(this, c), new IntakeInterface(this, c), new LauncherInterface(this, c)));
