@@ -40,7 +40,7 @@ public class Robot extends TimedRobot {
   public Intake intake;
   public Launcher launcher;
   Control c;
-  RobotMap constants;
+  RobotMap rMap;
   ArrayList<Interface> interfaces;
 
   
@@ -55,11 +55,11 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    drivetrain = new Drivetrain(constants.FRONT_LEFT_ID, constants.FRONT_RIGHT_ID, constants.BACK_LEFT_ID, constants.BACK_RIGHT_ID);
-    climb = new Climb(constants.CLIMB_LEFT_ID, constants.CLIMB_RIGHT_ID);
-    indexer = new Indexer(constants.INDEXER_LEFT_ID, constants.INDEXER_RIGHT_ID);
-    intake = new Intake(constants.INTAKE_MOTOR_ID);
-    launcher = new Launcher(constants.LAUNCHER_X_ID, constants.LAUNCHER_Y_ID, constants.LAUNCHER_ONE_ID, constants.LAUNCHER_TWO_ID, constants.LAUNCHER_THREE_ID, constants.LAUNCHER_FOUR_ID, constants.LAUNCHER_FIVE_ID);
+    drivetrain = new Drivetrain(rMap.FRONT_LEFT_ID, rMap.FRONT_RIGHT_ID, rMap.BACK_LEFT_ID, rMap.BACK_RIGHT_ID);
+    climb = new Climb(rMap.CLIMB_LEFT_ID, rMap.CLIMB_RIGHT_ID);
+    indexer = new Indexer(rMap.INDEXER_LEFT_ID, rMap.INDEXER_RIGHT_ID);
+    intake = new Intake(rMap.INTAKE_MOTOR_ID);
+    launcher = new Launcher(rMap.LAUNCHER_X_ID, rMap.LAUNCHER_Y_ID, rMap.LAUNCHER_ONE_ID, rMap.LAUNCHER_TWO_ID, rMap.LAUNCHER_THREE_ID, rMap.LAUNCHER_FOUR_ID, rMap.LAUNCHER_FIVE_ID);
 
     interfaces = new ArrayList<>();
     interfaces.addAll(Arrays.asList(new DrivetrainInterface(this, c), new ClimbInterface(this, c), new IndexerInterface(this, c), new IntakeInterface(this, c), new LauncherInterface(this, c)));

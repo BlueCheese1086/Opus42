@@ -8,7 +8,7 @@ public class Control {
         getSafety
         getIntakeIn
         getIntakeOut
-        getIntakeToggle //returns a booleans
+        getIntakeToggle //returns a boolean
         getIndexerIn
         getIndexerOut
         getLauncherShoot
