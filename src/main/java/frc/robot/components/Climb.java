@@ -8,28 +8,15 @@ public class Climb {
     public Climb(int leftID, int rightID){
         left = new CANSparkMax(leftID, MotorType.kBrushless);
         right = new CANSparkMax(rightID, MotorType.kBrushless);
+        
+        right.follow(left);
     }
 
-    public void toggle(double c){
+    public void set(double c){
         c = c/2.0;
         if(Math.abs(c) >= 0.30) {
             c *= 0.30/Math.abs(c);
         }
         left.set(c);
-        right.set(c);
-    }
-
-    /**
-     * pulling robot up (pulling climb inward)
-     */
-    public void up(){
-
-    }
-
-    /**
-     * lowering robot (pulling climb outward)
-     */
-    public void down(){
-
     }
 }
