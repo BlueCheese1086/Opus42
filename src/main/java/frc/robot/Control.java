@@ -3,11 +3,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 
-public class Controls {
+public class Control {
 
     public enum Primary {
-        YBox,
         RyanBox,
+        YBox,
         Joystick;
 
         private Primary() {
@@ -25,7 +25,7 @@ public class Controls {
     }
 
     public enum Secondary {
-        Harrison;
+        Toshi;
     }
 
     static Primary primDriver;
@@ -103,7 +103,7 @@ public class Controls {
      */
     public boolean getIntakeIn() {
         switch (suckondeeznutzDriver) {
-            case Harrison:
+            case Toshi:
                 return secondary.getPOV() == 0;
             default:
                 return false;
@@ -115,7 +115,7 @@ public class Controls {
      */
     public boolean getIntakeOut() {
         switch (suckondeeznutzDriver) {
-            case Harrison:
+            case Toshi:
                 return secondary.getPOV() == 180;
             default:
                 return false;
@@ -127,7 +127,7 @@ public class Controls {
      */
     public boolean getIntakeToggle() {
         switch (suckondeeznutzDriver) {
-            case Harrison:
+            case Toshi:
                 return secondary.getBButtonPressed();
             default:
                 return false;
@@ -139,7 +139,7 @@ public class Controls {
      */
     public boolean getIndexerIn() {
         switch (suckondeeznutzDriver) {
-            case Harrison:
+            case Toshi:
                 return secondary.getYButton();
             default:
                 return false;
@@ -151,7 +151,7 @@ public class Controls {
      */
     public boolean getIndexerOut() {
         switch (suckondeeznutzDriver) {
-            case Harrison:
+            case Toshi:
                 return secondary.getAButton();
             default:
                 return false;
@@ -163,7 +163,7 @@ public class Controls {
      */
     public boolean getLauncherShoot() {
         switch (suckondeeznutzDriver) {
-            case Harrison:
+            case Toshi:
                 return secondary.getXButton();
             default:
                 return false;
@@ -175,7 +175,7 @@ public class Controls {
      */
     public double getClimb() {
         switch (suckondeeznutzDriver) {
-            case Harrison:
+            case Toshi:
                 return Meth.deadzone(secondary.getLeftY(), .03);
             default:
                 return 0.0;

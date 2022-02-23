@@ -10,6 +10,8 @@ import java.util.Arrays;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Control.Primary;
+import frc.robot.Control.Secondary;
 import frc.robot.components.Climb;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.Hood;
@@ -31,10 +33,9 @@ import frc.robot.sensors.Limelight;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
+  final SendableChooser<Primary> primDrivers = new SendableChooser<>();
+  final SendableChooser<Secondary> secondDrivers = new SendableChooser<>();
 
   public Drivetrain drivetrain;
   public Climb climb;
@@ -55,9 +56,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
 
     limelight = new Limelight();
     hood = new Hood(rMap.HOOD_SERVO_ID);
@@ -66,10 +64,27 @@ public class Robot extends TimedRobot {
     indexer = new Indexer(rMap.INDEXER_LEFT_ID, rMap.INDEXER_RIGHT_ID);
     intake = new Intake(rMap.INTAKE_MOTOR_ID);
     shooter = new Shooter(rMap.LAUNCHER_X_ID, rMap.LAUNCHER_Y_ID, rMap.LAUNCHER_ONE_ID, rMap.LAUNCHER_TWO_ID, rMap.LAUNCHER_THREE_ID, rMap.LAUNCHER_FOUR_ID, rMap.LAUNCHER_FIVE_ID, limelight, hood, indexer);
-  
+    
+    c = new Control();
 
     interfaces = new ArrayList<>();
     interfaces.addAll(Arrays.asList(new DrivetrainInterface(this, c), new ClimbInterface(this, c), new IndexerInterface(this, c), new IntakeInterface(this, c), new ShooterInterface(this, c)));
+
+    //Adding Control Scheme Picker
+    //Primary Drivers
+    for (int i = 0; i < Primary.values().length; i++) {
+      if (i == 0) primDrivers.setDefaultOption("Primary - " + Primary.values()[0], Primary.values()[0]);
+      else primDrivers.addOption("Primary - " + Primary.values()[i], Primary.values()[i]);
+    }
+    //Secondary Drivers
+    for (int i = 0; i < Secondary.values().length; i++) {
+      if (i == 0) secondDrivers.setDefaultOption("Secondary - " + Secondary.values()[0], Secondary.values()[0]);
+      else secondDrivers.addOption("Secondary - " + Secondary.values()[i], Secondary.values()[i]);
+    }
+    //Puts values to Smart Dashboard
+    SmartDashboard.putData("Primary", primDrivers);
+    SmartDashboard.putData("Secondary",secondDrivers);
+    SmartDashboard.updateValues();
   }
 
   /**
@@ -94,28 +109,19 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    c.setPrimary(primDrivers.getSelected());
+    c.setSecondary(secondDrivers.getSelected());
+  }
 
   /** This function is called periodically during operator control. */
   @Override
