@@ -18,8 +18,10 @@ public class Shooter {
     Limelight limelight;
     Hood hood;
     Indexer indexer;
+    Drivetrain drivetrain; 
+
     //5 cansparkmaxes????????? tbd
-    public Shooter(int xID, int yID, int oneID, int twoID, int threeID, int fourID, int fiveID, Limelight limelight, Hood hood, Indexer indexer){
+    public Shooter(int xID, int yID, int oneID, int twoID, int threeID, int fourID, int fiveID, Limelight limelight, Hood hood, Indexer indexer, Drivetrain drivetrain){
         x = new TalonFX(xID);
         y = new TalonFX(yID);
         one = new CANSparkMax(oneID, MotorType.kBrushless);
@@ -30,6 +32,7 @@ public class Shooter {
         this.limelight = limelight;
         this.hood = hood;
         this.indexer = indexer;
+        this.drivetrain = drivetrain;
 
         y.follow(x);
         x.config_kP(0, 0.05);
@@ -69,6 +72,13 @@ public class Shooter {
         double targetVelocity = Constants.LAUNCHER_DEFAULT_VELOCITY;
         double groundDistance = limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT);
         double height = Constants.UPPER_HUB_HEIGHT + Constants.CARGO_DIAMETER + 2;
+
+        //0) autoalign
+        double tx = limelight.getXAngle();
+        while(Math.abs(tx)>1.0){
+            drivetrain.autoAlign();
+            tx = limelight.getXAngle();
+        }
 
 
         //1) set hood angle 
