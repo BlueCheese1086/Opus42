@@ -17,13 +17,14 @@ public class IndexerInterface extends Interface{
      * what the indexer will do every tick
      */
     public void tick(){
-        if (c.getButton() && c.getButton()) {
+        //Commented out because I'm not sure what's going on here
+        /*if (c.getButton() && c.getButton()) {
             indexer.stop();
-        }
-        else if (c.getButton()) {
+        }*/
+        if (c.getIndexerIn()) {
             indexer.in();
         }
-        else if (c.getButton()) {
+        else if (c.getIndexerOut()) {
             indexer.out();
         }
         else {

@@ -16,7 +16,7 @@ public class ShooterInterface extends Interface{
      * what the pewpew will do every tick
      */
     public void tick(){
-        if(c.getButton()){
+        if(c.getLauncherShoot()){
             shooter.shoot();
         }
     }
