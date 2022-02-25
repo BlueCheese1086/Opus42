@@ -16,11 +16,11 @@ public class DrivetrainInterface extends Interface{
      * what the drive train will do every tick
      */
     public void tick() {
-        if(safe.getSafety()) {
-            Drivetrain.Drive(getDriveTurn);
+        if(c.getSafety()) {
+            drivetrain.drive(c.getDriveForward(), c.getDriveTurn());
         }
         else{
-            Drivetain.Drive(0, 0);
+            drivetrain.drive(0, 0);
         }      
     }
 
