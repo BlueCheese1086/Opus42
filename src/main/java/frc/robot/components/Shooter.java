@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
+import java.lang.Math.*;
 import frc.robot.Constants;
 import frc.robot.sensors.Limelight;
 
@@ -66,15 +66,18 @@ public class Shooter {
     */
 
     public void shoot(){  
-        //1) set hood angle (it's that easy..........)
-        double targetAngle = limelight.getYAngle();
+        double targetVelocity = Constants.LAUNCHER_DEFAULT_VELOCITY;
+        double groundDistance = limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT);
+        double height = Constants.UPPER_HUB_HEIGHT + Constants.CARGO_DIAMETER + 2;
+
+
+        //1) set hood angle 
+        //this formula was obtained with help from lokesh pillai
+        double targetAngle = Math.atan( ((2 * Math.pow(targetVelocity, 2)) + Math.sqrt( (4 * Math.pow(targetVelocity, 4) - (4 * Constants.GRAVITY * ((2 * Math.pow(targetVelocity, 2) * height) + (Constants.GRAVITY * Math.pow(groundDistance, 2))))))) / (2 * Constants.GRAVITY * groundDistance));
+
         hood.set(targetAngle);
 
-        //2) have falcons approaching launching velocity
-        double groundDistance = limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT);
-        //TODO: figure out how velocity might need to change based on target angle
-        double targetVelocity = Constants.LAUNCHER_DEFAULT_VELOCITY;
-
+        //2) have falcons approaching launching velocity       
         x.set(TalonFXControlMode.Velocity, targetVelocity);
 
         //3) *after* falcons are at that velocity, run indexer & internal cansparkmaxes
