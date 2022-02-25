@@ -11,6 +11,8 @@ public class Drivetrain {
         frontRight = new CANSparkMax(frontRightID, MotorType.kBrushless);
         backLeft = new CANSparkMax(backLeftID, MotorType.kBrushless);
         frontLeft = new CANSparkMax(frontLeftID, MotorType.kBrushless);
+        backLeft.follow(frontLeft);
+        backRight.follow(frontRight);
     }
 
     /**
@@ -18,7 +20,12 @@ public class Drivetrain {
      * @param turn controller input declaring how robot turns
      */
     public void drive(double forward, double turn){
-
+        double totalForward = forward * Math.abs(forward);
+        if(Math.abs(totalForward)<0.15) totalForward=0;
+        double totalTurn = turn * Math.abs(turn);
+        if(Math.abs(totalTurn)<0.15) totalTurn=0;
+        frontLeft.set(totalForward + totalTurn);
+        frontRight.set(totalForward - totalTurn);
     }
 
     /**
