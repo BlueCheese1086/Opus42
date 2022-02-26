@@ -69,9 +69,11 @@ public class Shooter {
     */
 
     public void shoot(){  
+
+        //all of these values are in meters or m/s
         double targetVelocity = Constants.LAUNCHER_DEFAULT_VELOCITY;
         double groundDistance = limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT);
-        double height = Constants.UPPER_HUB_HEIGHT + Constants.CARGO_DIAMETER + 2;
+        double height = Constants.UPPER_HUB_HEIGHT + Constants.CARGO_DIAMETER - Constants.CAMERA_HEIGHT + 2;
 
         //0) autoalign
         double tx = limelight.getXAngle();
@@ -82,19 +84,36 @@ public class Shooter {
 
 
         //1) set hood angle 
-        //this formula was obtained with help from lokesh pillai
-        double targetAngle = Math.atan( ((2 * Math.pow(targetVelocity, 2)) + Math.sqrt( (4 * Math.pow(targetVelocity, 4) - (4 * Constants.GRAVITY * ((2 * Math.pow(targetVelocity, 2) * height) + (Constants.GRAVITY * Math.pow(groundDistance, 2))))))) / (2 * Constants.GRAVITY * groundDistance));
-
+        double targetAngle = getLaunchAngle(targetVelocity, groundDistance, height);
         hood.set(targetAngle);
 
-        //2) have falcons approaching launching velocity       
-        x.set(TalonFXControlMode.Velocity, targetVelocity);
+        //2) have falcons approaching launching velocity   
+        x.config_kP(0, Constants.LAUNCHER_KP);
+        x.config_kI(0, Constants.LAUNCHER_KI);
+        x.config_kD(0, Constants.LAUNCHER_KD);
+
+        /*
+         *
+	    * See documentation for calculation details.
+	    * If using velocity, motion magic, or motion profile,
+	    * use (1023 * duty-cycle / sensor-velocity-sensor-units-per-100ms).
+        * 
+        */
+            
+        x.config_kF(0, (targetVelocity / Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * 60 / Constants.LAUNCHER_MAX_VELOCITY) * Constants.LAUNCHER_KF);
+
+        x.set(TalonFXControlMode.Velocity, targetVelocity / (Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION * 10));
+
 
         //3) *after* falcons are at that velocity, run indexer & internal cansparkmaxes
-        if(x.getSelectedSensorVelocity(0) >= 0.9*targetVelocity){
+        if(x.getSelectedSensorVelocity(0) * Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION * 10 >= 0.9*targetVelocity){
             one.set(0.5);
             indexer.in();
-        }
-        
+        }        
+    }
+
+    public double getLaunchAngle(double targetVelocity, double groundDistance, double height){
+        //this formula was obtained with help from lokesh pillai
+        return Math.atan( ((2 * Math.pow(targetVelocity, 2)) + Math.sqrt( (4 * Math.pow(targetVelocity, 4) - (4 * Constants.GRAVITY * ((2 * Math.pow(targetVelocity, 2) * height) + (Constants.GRAVITY * Math.pow(groundDistance, 2))))))) / (2 * Constants.GRAVITY * groundDistance));
     }
 }
