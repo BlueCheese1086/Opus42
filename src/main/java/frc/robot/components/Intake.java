@@ -3,43 +3,55 @@ package frc.robot.components;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class Intake {
     CANSparkMax motor;
     Solenoid solenoid;
     
-    public Intake(int motorID){
+    public Intake(int motorID, int solenoidID) {
         motor = new CANSparkMax(motorID, MotorType.kBrushless);
+        solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, solenoidID);
     }
 
      /**
      * runs intake inward to intake balls into robot
      */
-    public void in(){
-
+    public void in() {
+        motor.set(0.20);
     }
 
      /**
      * runs intake outward for dejamming
      */
-    public void out(){
-
+    public void out() {
+        motor.set(-0.20);
+    }
+    
+    /**
+     * makes intake do nothing to prevent overheating
+     */
+    public void neutral() {
+        motor.set(0);
     }
 
     /**
      * puts intake in up position
      */
-    public void up(){
-
+    public void up() {
+        if (solenoid.get()) {
+            solenoid.set(false);
+        }
     }
 
     /**
      * puts intake in down position
      */
-    public void down(){
-
+    public void down() {
+        if (!solenoid.get()) {
+            solenoid.set(true);
+        }
     }
 
-    
 }
