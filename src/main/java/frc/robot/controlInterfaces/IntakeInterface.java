@@ -16,8 +16,26 @@ public class IntakeInterface extends Interface {
     /**
      * what the intake will do every tick
      */
-    public void tick(){
-        
+    public void tick() {
+        //Check for loading in
+        if(xbox.getButton()) {
+            intake.in();
+        }
+        //Check for jamming
+        else if (xbox.getButton()) {
+            intake.out();
+        }
+        //stop loading
+        else {
+            intake.neutral();
+        }
+        //Check for obtain ready
+        if(xbox.getButton()) {
+            intake.down();
+        }
+        else {
+            intake.up();
+        }
     }
     
 }
