@@ -18,10 +18,12 @@ public class ClimbInterface extends Interface{
      */
     public void tick() {
         if(c.getSafety()) {
+            climb.unlock();
             climb.set(c.getClimb());
         }
         else{
             climb.set(0.0);
+            climb.lock();
         }      
     }
 
