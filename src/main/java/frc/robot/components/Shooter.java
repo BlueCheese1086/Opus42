@@ -84,8 +84,8 @@ public class Shooter {
 
 
         //1) set hood angle 
-        double targetAngle = getLaunchAngle(targetVelocity, groundDistance, height);
-        hood.set(targetAngle);
+        double targetAngle = getLaunchAngle(targetVelocity, groundDistance, height) + 45;
+        hood.set(targetAngle); 
 
         //2) have falcons approaching launching velocity   
         x.config_kP(0, Constants.LAUNCHER_KP);
