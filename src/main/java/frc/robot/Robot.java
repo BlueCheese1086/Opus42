@@ -62,9 +62,9 @@ public class Robot extends TimedRobot {
     limelight = new Limelight();
     hood = new Hood(rMap.HOOD_SERVO_ID);
     drivetrain = new Drivetrain(rMap.FRONT_LEFT_ID, rMap.FRONT_RIGHT_ID, rMap.BACK_LEFT_ID, rMap.BACK_RIGHT_ID, limelight);
-    climb = new Climb(rMap.CLIMB_LEFT_ID, rMap.CLIMB_RIGHT_ID);
+    climb = new Climb(rMap.CLIMB_LEFT_ID, rMap.CLIMB_RIGHT_ID, rMap.CLIMB_SOLENOID_ID);
     indexer = new Indexer(rMap.INDEXER_LEFT_ID, rMap.INDEXER_RIGHT_ID);
-    intake = new Intake(rMap.INTAKE_MOTOR_ID);
+    intake = new Intake(rMap.INTAKE_MOTOR_ID, rMap.INTAKE_SOLENOID_ID);
     shooter = new Shooter(rMap.LAUNCHER_X_ID, rMap.LAUNCHER_Y_ID, rMap.LAUNCHER_ONE_ID, rMap.LAUNCHER_TWO_ID, rMap.LAUNCHER_THREE_ID, rMap.LAUNCHER_FOUR_ID, limelight, hood, indexer, drivetrain);
   
 
