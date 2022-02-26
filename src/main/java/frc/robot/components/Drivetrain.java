@@ -13,7 +13,7 @@ public class Drivetrain {
         frontLeft = new CANSparkMax(frontLeftID, MotorType.kBrushless);
         frontRight = new CANSparkMax(frontRightID, MotorType.kBrushless);
         backLeft = new CANSparkMax(backLeftID, MotorType.kBrushless);
-        frontLeft = new CANSparkMax(frontLeftID, MotorType.kBrushless);
+        backRight = new CANSparkMax(backRightID, MotorType.kBrushless);
         this.limelight = limelight;
         
         backLeft.follow(frontLeft);
