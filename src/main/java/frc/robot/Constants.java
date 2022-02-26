@@ -2,7 +2,8 @@ package frc.robot;
 
 public class Constants {
     public static final double LAUNCHER_DEFAULT_VELOCITY = 9.0; //meters/second
-
+    public static final double LAUNCHER_MIN_ANGLE = 76;
+    public static final double LAUNCHER_MAX_ANGLE = 90;
 
     public static final double CAMERA_HEIGHT = 0.762; //meters, TODO: determine camera height
     public static final double CAMERA_ANGLE = 45; //degrees
