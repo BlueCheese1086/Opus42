@@ -9,19 +9,6 @@ public class Control {
         RyanBox,
         YBox,
         Joystick;
-
-        private Primary() {
-
-        }
-
-        public static Primary getByString(String s) {
-            for (Primary a : Primary.values()) {
-                if (s.equalsIgnoreCase(a.name())) {
-                    return a;
-                }
-            }
-            return YBox;
-        }
     }
 
     public enum Secondary {
@@ -50,6 +37,20 @@ public class Control {
     public void setSecondary(Secondary sux) {
         suckondeeznutzDriver = sux;
     }
+
+    /*
+     * --getDriveForward (returns a double)--
+     * --getDriveTurn (returns a double)--
+     * --getSafety--
+     * --getIntakeIn--
+     * --getIntakeOut--
+     * --getIntakeToggle-- //returns a booleans
+     * --getIndexerIn--
+     * --getIndexerOut--
+     * --getLauncherShoot--
+     * --getClimbUp--
+     * --getClimbDown--
+     */
 
     /**
      * @return Returns acceleration value based on driver profile
@@ -190,20 +191,4 @@ public class Control {
                 return false;
         }
     }
-
-    // not sure what controllers we're using for drive right now, but necessary
-    // methods include:
-    /*
-     * --getDriveForward (returns a double)--
-     * --getDriveTurn (returns a double)--
-     * --getSafety--
-     * --getIntakeIn--
-     * --getIntakeOut--
-     * --getIntakeToggle-- //returns a booleans
-     * --getIndexerIn--
-     * --getIndexerOut--
-     * --getLauncherShoot--
-     * --getClimbUp--
-     * --getClimbDown--
-     */
 }
