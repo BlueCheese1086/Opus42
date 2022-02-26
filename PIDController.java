@@ -5,7 +5,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.math.controller.PIDController;
 
 public class PIDController {
@@ -14,10 +13,14 @@ public class PIDController {
     double variable;
     CANSparkMax controller;
     SparkMaxPIDController pid;
+    int id;
 
-    public PIDController(String type, double variable){
+    public PIDController(String type, int id, double variable){
             this.type = type;
             this.variable = variable;
+            controller = new CANSparkMax(id, MotorType.kBrushless);
+            this.id = id;
+            controller.getEncoder().setPosition(0);
 
     }
 
