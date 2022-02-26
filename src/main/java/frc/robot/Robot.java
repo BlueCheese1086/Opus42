@@ -23,6 +23,7 @@ import frc.robot.controlInterfaces.IntakeInterface;
 import frc.robot.controlInterfaces.Interface;
 import frc.robot.controlInterfaces.ShooterInterface;
 import frc.robot.sensors.Limelight;
+import frc.robot.PIDController;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -62,10 +63,10 @@ public class Robot extends TimedRobot {
     limelight = new Limelight();
     hood = new Hood(rMap.HOOD_SERVO_ID);
     drivetrain = new Drivetrain(rMap.FRONT_LEFT_ID, rMap.FRONT_RIGHT_ID, rMap.BACK_LEFT_ID, rMap.BACK_RIGHT_ID, limelight);
-    climb = new Climb(rMap.CLIMB_LEFT_ID, rMap.CLIMB_RIGHT_ID, rMap.CLIMB_SOLENOID_ID);
+    climb = new Climb(rMap.CLIMB_LEFT_ID, rMap.CLIMB_RIGHT_ID);
     indexer = new Indexer(rMap.INDEXER_LEFT_ID, rMap.INDEXER_RIGHT_ID);
-    intake = new Intake(rMap.INTAKE_MOTOR_ID, rMap.INTAKE_SOLENOID_ID);
-    shooter = new Shooter(rMap.LAUNCHER_X_ID, rMap.LAUNCHER_Y_ID, rMap.LAUNCHER_ONE_ID, rMap.LAUNCHER_TWO_ID, rMap.LAUNCHER_THREE_ID, rMap.LAUNCHER_FOUR_ID, limelight, hood, indexer, drivetrain);
+    intake = new Intake(rMap.INTAKE_MOTOR_ID);
+    shooter = new Shooter(rMap.LAUNCHER_X_ID, rMap.LAUNCHER_Y_ID, rMap.LAUNCHER_ONE_ID, rMap.LAUNCHER_TWO_ID, rMap.LAUNCHER_THREE_ID, rMap.LAUNCHER_FOUR_ID, rMap.LAUNCHER_FIVE_ID, limelight, hood, indexer, drivetrain);
   
 
     interfaces = new ArrayList<>();
