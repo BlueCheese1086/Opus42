@@ -7,6 +7,8 @@ package frc.robot;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -43,6 +45,7 @@ public class Robot extends TimedRobot {
   public Shooter shooter;
   public Limelight limelight;
   public Hood hood;
+  Compressor compressor;
   Control c;
   RobotMap rMap;
   ArrayList<Interface> interfaces;
@@ -66,7 +69,9 @@ public class Robot extends TimedRobot {
     indexer = new Indexer(rMap.INDEXER_LEFT_ID, rMap.INDEXER_RIGHT_ID);
     intake = new Intake(rMap.INTAKE_MOTOR_ID);
     shooter = new Shooter(rMap.LAUNCHER_X_ID, rMap.LAUNCHER_Y_ID, rMap.LAUNCHER_ONE_ID, rMap.LAUNCHER_TWO_ID, rMap.LAUNCHER_THREE_ID, rMap.LAUNCHER_FOUR_ID, rMap.LAUNCHER_FIVE_ID, limelight, hood, indexer);
-  
+
+    compressor = new Compressor(rMap.COMPRESSOR_ID, PneumaticsModuleType.CTREPCM);
+    c = new Control();
 
     interfaces = new ArrayList<>();
     interfaces.addAll(Arrays.asList(new DrivetrainInterface(this, c), new ClimbInterface(this, c), new IndexerInterface(this, c), new IntakeInterface(this, c), new ShooterInterface(this, c)));

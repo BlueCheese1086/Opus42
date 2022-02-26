@@ -11,15 +11,14 @@ public class ClimbInterface extends Interface{
     public ClimbInterface(Robot robot, Control c) {
         super(robot, c);
         climb = robot.climb;
-        safe = new Control();
     }
 
      /**
      * what the climb will do every tick
      */
     public void tick() {
-        if(safe.getSafety()) {
-            climb.set(safe.getClimb());
+        if(c.getSafety()) {
+            climb.set(c.getClimb());
         }
         else{
             climb.set(0.0);

@@ -17,6 +17,9 @@ public class RobotMap {
 
     public final int INTAKE_MOTOR_ID = 0;
     
+    public final int COMPRESSOR_ID = 0;
+    public final int CLIMB_SOLENOID_ID = 0;
+    public final int INTAKE_SOLENOID_ID = 0;
     
     //todo - determine appropriate names for launcher falcons
     public final int LAUNCHER_X_ID = 0;
