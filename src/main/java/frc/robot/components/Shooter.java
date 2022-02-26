@@ -14,21 +14,20 @@ public class Shooter {
 
     //todo: find appropriate names
     TalonFX x, y;
-    CANSparkMax one, two, three, four, five;
+    CANSparkMax one, two, three, four;
     Limelight limelight;
     Hood hood;
     Indexer indexer;
     Drivetrain drivetrain; 
 
     //5 cansparkmaxes????????? tbd
-    public Shooter(int xID, int yID, int oneID, int twoID, int threeID, int fourID, int fiveID, Limelight limelight, Hood hood, Indexer indexer, Drivetrain drivetrain){
+    public Shooter(int xID, int yID, int oneID, int twoID, int threeID, int fourID, Limelight limelight, Hood hood, Indexer indexer, Drivetrain drivetrain){
         x = new TalonFX(xID);
         y = new TalonFX(yID);
         one = new CANSparkMax(oneID, MotorType.kBrushless);
         two = new CANSparkMax(twoID, MotorType.kBrushless);
         three = new CANSparkMax(threeID, MotorType.kBrushless);
         four = new CANSparkMax(fourID, MotorType.kBrushless);
-        five = new CANSparkMax(fiveID, MotorType.kBrushless);
         this.limelight = limelight;
         this.hood = hood;
         this.indexer = indexer;
@@ -42,7 +41,6 @@ public class Shooter {
         two.follow(one);
         three.follow(one);
         four.follow(one);
-        five.follow(one);
     }
 
     /*notes for future kai and emily-
