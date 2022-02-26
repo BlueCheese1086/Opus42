@@ -15,4 +15,11 @@ public class Hood {
         motor.setAngle(position);
     }
 
+    public void setMax(){
+        motor.set(1.0);
+    }
+
+    public void setMin(){
+        motor.set(0.0);
+    }
 }
