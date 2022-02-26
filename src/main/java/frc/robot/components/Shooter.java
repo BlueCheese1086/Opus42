@@ -44,7 +44,6 @@ public class Shooter {
     }
 
     /*notes for future kai and emily-
-
                             | upper hub
                             |
                             | X
@@ -52,14 +51,12 @@ public class Shooter {
             x               |
     opus42 ----------------
                    Y
-
     X = 264 cm
     x = camera mounting angle  +  ty from limelight(converted to degrees) 
         ^ use that to set the hood angle ^
         
     Y = (X - cameraHeight)/tan(x) (this is what is in Limelight.java)
         ^ use that to set launching velocity^
-
     1) set hood angle
     2) have falcons approach launching velocity
     3) *after* falcons are at that velocity, run indexer & internal cansparkmaxes
@@ -67,29 +64,23 @@ public class Shooter {
     */
 
     /*public void shoot(){  
-
         //all of these values are in meters or m/s
         double targetVelocity = Constants.LAUNCHER_DEFAULT_VELOCITY;
         double groundDistance = limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT);
         double height = Constants.UPPER_HUB_HEIGHT + Constants.CARGO_DIAMETER - Constants.CAMERA_HEIGHT + 2;
-
         //0) autoalign
         double tx = limelight.getXAngle();
         while(Math.abs(tx)>1.0){
             drivetrain.autoAlign();
             tx = limelight.getXAngle();
         }
-
-
         //1) set hood angle 
         double targetAngle = getLaunchAngle(targetVelocity, groundDistance, height) + 45;
         hood.set(targetAngle); 
-
         //2) have falcons approaching launching velocity   
         x.config_kP(0, Constants.LAUNCHER_KP);
         x.config_kI(0, Constants.LAUNCHER_KI);
         x.config_kD(0, Constants.LAUNCHER_KD);
-
         /*
          *
 	    * See documentation for calculation details.
@@ -99,10 +90,7 @@ public class Shooter {
         
             
         x.config_kF(0, Constants.LAUNCHER_KF);
-
         x.set(TalonFXControlMode.Velocity, targetVelocity / (Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION * 10));
-
-
         //3) *after* falcons are at that velocity, run indexer & internal cansparkmaxes
         if(x.getSelectedSensorVelocity(0) * Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION * 10 >= 0.9*targetVelocity){
             one.set(0.5);

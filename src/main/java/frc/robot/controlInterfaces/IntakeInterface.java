@@ -18,11 +18,11 @@ public class IntakeInterface extends Interface {
      */
     public void tick() {
         //Check for loading in
-        if(xbox.getButton()) {
+        if(c.getIntakeIn()) {
             intake.in();
         }
         //Check for jamming
-        else if (xbox.getButton()) {
+        else if (c.getIntakeOut()) {
             intake.out();
         }
         //stop loading
@@ -30,12 +30,8 @@ public class IntakeInterface extends Interface {
             intake.neutral();
         }
         //Check for obtain ready
-        if(xbox.getButton()) {
-            intake.down();
-        }
-        else {
-            intake.up();
+        if (c.getIntakeToggle()) {
+            intake.toggle();
         }
     }
-    
 }

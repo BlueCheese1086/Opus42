@@ -33,7 +33,6 @@ public class RobotMap {
 
     public final int HOOD_SERVO_ID = 0;
     
-
     public final int PRIMARY_CONTROLLER_ID = 0;
     public final int SECONDARY_CONTROLLER_ID = 0;
 }
