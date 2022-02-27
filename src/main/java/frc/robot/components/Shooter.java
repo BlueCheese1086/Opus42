@@ -137,11 +137,11 @@ public class Shooter {
             
         x.config_kF(0, Constants.LAUNCHER_KF);
 
-        x.set(TalonFXControlMode.Velocity, targetVelocity / (Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION * 10));
+        x.set(TalonFXControlMode.Velocity, targetVelocity * Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION / (Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * 10));
 
 
         //3) *after* falcons are at that velocity, run indexer & internal cansparkmaxes
-        if(x.getSelectedSensorVelocity(0) * Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION * 10 >= 0.9*targetVelocity){
+        if(x.getSelectedSensorVelocity(0) * Constants.LAUNCHER_WHEEL_CIRCUMFERENCE  * 10 / Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION >= 0.9*targetVelocity){
             one.set(0.5);
             indexer.in();
         }        
