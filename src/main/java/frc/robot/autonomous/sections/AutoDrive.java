@@ -12,6 +12,7 @@ public class AutoDrive extends AutoSection {
     double distance; // rotaions
     PIDController rDrivePIDController;
     PIDController lDrivePIDController;
+    boolean isDistBased;
 
     /** distance = cm */
     public AutoDrive(double distance){
@@ -21,7 +22,13 @@ public class AutoDrive extends AutoSection {
         this.lDrivePIDController = new PIDController("distance", drivetrain.getFrontLeft(), distance);
         lDrivePIDController.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
         rDrivePIDController.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
+        this.isDistBased = true;
 
+    }
+
+    public AutoDrive(int length){
+        this.drivetrain = Robot.drivetrain;
+        this.isDistBased = false;
     }
 
     @Override
@@ -35,8 +42,12 @@ public class AutoDrive extends AutoSection {
 
     @Override
     public void update() {
-        rDrivePIDController.driveDistance(distance);
-        lDrivePIDController.driveDistance(distance);
+        if(isDistBased){
+            rDrivePIDController.driveDistance(distance);
+            lDrivePIDController.driveDistance(distance);
+        } else {
+            drivetrain.drive(0.5, 0);
+        }
     }
 
     @Override
