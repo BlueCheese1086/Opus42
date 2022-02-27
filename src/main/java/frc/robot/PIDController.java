@@ -1,11 +1,7 @@
 package frc.robot;
 
-import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.math.controller.PIDController;
 
 public class PIDController {
 
@@ -18,7 +14,6 @@ public class PIDController {
             this.type = type;
             this.value = value;
             this.controller = controller;
-            this.id = id;
 
     }
 
@@ -35,7 +30,7 @@ public class PIDController {
      */
     public void rotateToAngle(double angle) {
         value = angle;
-        pid.setReference(angle, ControlType.kPosition, 0);
+        pid.setReference(angle, CANSparkMax.ControlType.kPosition, 0);
     }
 
     /** move the robot the given distance
@@ -43,7 +38,7 @@ public class PIDController {
      */
     public void driveDistance(double distance) {
         value = distance;
-        pid.setReference(distance, ControlType.kPosition, 0);
+        pid.setReference(distance, CANSparkMax.ControlType.kPosition, 0);
     }
     
 }

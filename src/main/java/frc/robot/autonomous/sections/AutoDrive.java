@@ -1,13 +1,13 @@
 package frc.robot.autonomous.sections;
 
-import frc.robot.Drivetrain;
+import frc.robot.components.Drivetrain;
 import frc.robot.Robot;
 import frc.robot.PIDController;
 import frc.robot.Constants;
 
 public class AutoDrive extends AutoSection {
 
-    Drivetrian drivetrain;
+    Drivetrain drivetrain;
     double current;
     double distance; // rotaions
     PIDController rDrivePIDController;
@@ -17,10 +17,10 @@ public class AutoDrive extends AutoSection {
     public AutoDrive(double distance){
         this.drivetrain = Robot.drivetrain;
         this.distance = (distance * 0.001) * Constants.DRIVETRAIN_POSITION_SCALE;
-        this.rDrivePIDController = new PIDController("distance", drivetrain.frontRight, distance);
-        this.lDrivePIDController = new PIDController("distance", drivetrain.frontLeft, distance);
-        drivetrain.frontLeft.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
-        drivetrain.frontRight.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
+        this.rDrivePIDController = new PIDController("distance", drivetrain.getFrontRight(), distance);
+        this.lDrivePIDController = new PIDController("distance", drivetrain.getFrontLeft(), distance);
+        lDrivePIDController.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
+        rDrivePIDController.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
 
     }
 
@@ -28,15 +28,15 @@ public class AutoDrive extends AutoSection {
     public void init(){
         super.startTime = System.currentTimeMillis();
         super.started = true;
-        drivetrian.frontLeft.getEncoder().setPosition(0);
-        drivetrain.frontRight.getEncoder().setPosition(0);
+        drivetrain.getFrontLeft().getEncoder().setPosition(0);
+        drivetrain.getFrontRight().getEncoder().setPosition(0);
 
     }
 
     @Override
-    public void update(double distance) {
-        rdrivePIDConroller.driveDistance(distance);
-        ldrivePIDConroller.driveDistance(distance);
+    public void update() {
+        rDrivePIDController.driveDistance(distance);
+        lDrivePIDController.driveDistance(distance);
     }
 
     @Override
@@ -47,7 +47,11 @@ public class AutoDrive extends AutoSection {
 
     @Override
     public boolean disableCondition() {
-        return distance - Constant.DRIVE_ERROR < drivetrain.frontRight.getEncoder().getPosition() < distance + Constants.DRIVE_ERROR: false;
+        if(distance - Constants.DRIVE_ERROR < drivetrain.getFrontRight().getEncoder().getPosition() && drivetrain.getFrontRight().getEncoder().getPosition() < distance + Constants.DRIVE_ERROR){
+            return true;
+        } else{
+            return false;
+        }
     }
 }
 
