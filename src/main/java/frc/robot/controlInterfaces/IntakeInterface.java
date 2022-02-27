@@ -10,7 +10,6 @@ public class IntakeInterface extends Interface {
     public IntakeInterface(Robot robot, Control c) {
         super(robot, c);
         intake = robot.intake;
-        //TODO Auto-generated constructor stub
     }
 
     /**

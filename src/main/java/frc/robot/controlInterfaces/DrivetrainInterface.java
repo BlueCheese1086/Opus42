@@ -16,12 +16,13 @@ public class DrivetrainInterface extends Interface{
      * what the drive train will do every tick
      */
     public void tick() {
-        if(c.getSafety()) {
+        if(true) {
             drivetrain.drive(c.getDriveForward(), c.getDriveTurn());
         }
-        else{
-            drivetrain.drive(0, 0);
-        }      
+
+        if (c.getBrakeToggle()) {
+            drivetrain.toggleMode();
+        }
     }
 
 }

@@ -19,14 +19,14 @@ public class Intake {
      * runs intake inward to intake balls into robot
      */
     public void in() {
-        motor.set(0.20);
+        motor.set(1);
     }
 
      /**
      * runs intake outward for dejamming
      */
     public void out() {
-        motor.set(-0.20);
+        motor.set(-1);
     }
     
     /**

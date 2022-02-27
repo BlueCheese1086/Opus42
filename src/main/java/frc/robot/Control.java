@@ -69,6 +69,18 @@ public class Control {
     }
 
     /**
+     * @return Returns B button pressed for braking toggle
+     */
+    public boolean getBrakeToggle() {
+        switch (primDriver) {
+            case RyanBox:
+                return primary.getBButtonPressed();
+            default:
+                return false;
+        }
+    }
+
+    /**
      * @return Returns turn axis value based on driver profile
      */
     public double getDriveTurn() {
@@ -180,15 +192,6 @@ public class Control {
                 return Meth.deadzone(secondary.getLeftY(), .03);
             default:
                 return 0.0;
-        }
-    }
-
-    public boolean getBrake() {
-        switch (primDriver) {
-            case RyanBox:
-                return primary.getPOV() == 0;
-            default:
-                return false;
         }
     }
 }

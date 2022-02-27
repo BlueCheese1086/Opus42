@@ -1,11 +1,9 @@
 package frc.robot.components;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import java.lang.Math.*;
 import frc.robot.Constants;
 import frc.robot.sensors.Limelight;
 

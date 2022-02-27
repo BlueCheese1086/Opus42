@@ -1,6 +1,7 @@
 package frc.robot.components;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.sensors.Limelight;
@@ -8,6 +9,9 @@ import frc.robot.sensors.Limelight;
 public class Drivetrain {
     CANSparkMax frontLeft, frontRight, backLeft, backRight;
     Limelight limelight;
+
+    boolean brake = true;
+
     //import IDs in the constructor and leave them as variables. don't hard-code them in.
     public Drivetrain(int frontLeftID, int frontRightID, int backLeftID, int backRightID, Limelight limelight){
         frontLeft = new CANSparkMax(frontLeftID, MotorType.kBrushless);
@@ -15,9 +19,23 @@ public class Drivetrain {
         backLeft = new CANSparkMax(backLeftID, MotorType.kBrushless);
         backRight = new CANSparkMax(backRightID, MotorType.kBrushless);
         this.limelight = limelight;
-        
+
         backLeft.follow(frontLeft);
         backRight.follow(frontRight);
+
+        frontRight.setInverted(false);
+        frontLeft.setInverted(true);
+
+        frontLeft.setIdleMode(IdleMode.kBrake);
+        frontRight.setIdleMode(IdleMode.kBrake);
+    }
+
+    public CANSparkMax getFrontLeft() {
+        return frontLeft;
+    }
+
+    public CANSparkMax getFrontRight() {
+        return frontRight;
     }
 
     /**
@@ -25,13 +43,27 @@ public class Drivetrain {
      * @param turn controller input declaring how robot turns
      */
     public void drive(double forward, double turn){
-        double totalForward = forward * Math.abs(forward);
-        if(Math.abs(totalForward)<0.15) totalForward=0;
-        double totalTurn = turn * Math.abs(turn);
-        if(Math.abs(totalTurn)<0.15) totalTurn=0;
+        frontLeft.set(forward + turn);
+        frontRight.set(forward - turn);
+    }
 
-        frontLeft.set(totalForward + totalTurn);
-        frontRight.set(totalForward - totalTurn);
+    // Changes control mode
+    public void toggleMode() {
+        brake = !brake;
+        if (brake) {
+            frontLeft.setIdleMode(IdleMode.kBrake);
+            frontRight.setIdleMode(IdleMode.kBrake);
+        } else {
+            frontLeft.setIdleMode(IdleMode.kCoast);
+            frontRight.setIdleMode(IdleMode.kCoast);
+        }
+    }
+
+    /**
+     * @return Returns if brake mode is active or not
+     */
+    public boolean getMode() {
+        return brake;
     }
 
     /**
