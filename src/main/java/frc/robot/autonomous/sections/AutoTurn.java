@@ -14,8 +14,8 @@ public class AutoTurn extends AutoSection{
     PIDController lTurnPIDController;
 
     /** angle = degrees */
-    public AutoTurn(double angle){
-        this.drivetrain = Robot.drivetrain;
+    public AutoTurn(double angle, Robot robot){
+        this.drivetrain = robot.drivetrain;
         this.turningDist = (((2 * Math.PI * Constants.WHEEL_TO_WHEEL_RADIUS) * (angle / 360 )) * 0.001) * Constants.DRIVETRAIN_POSITION_SCALE;
         this.rTurnPIDController = new PIDController("angle", drivetrain.getFrontRight(), angle);
         this.lTurnPIDController = new PIDController("angle", drivetrain.getFrontLeft(), angle);

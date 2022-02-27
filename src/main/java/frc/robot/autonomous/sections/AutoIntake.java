@@ -10,10 +10,10 @@ public class AutoIntake extends AutoSection{
     Intake intake;
     Drivetrain drivetrain;
     
-    public AutoIntake(double length){
+    public AutoIntake(double length, Robot robot){
         super(length);
-        this.intake = Robot.intake;
-        this.drivetrain = Robot.drivetrain;
+        this.intake = robot.intake;
+        this.drivetrain = robot.drivetrain;
         
     }
 

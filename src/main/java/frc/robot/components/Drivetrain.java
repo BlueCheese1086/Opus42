@@ -38,6 +38,10 @@ public class Drivetrain {
         return frontRight;
     }
 
+    public double[] getTemps() {
+        return new double[]{frontLeft.getMotorTemperature(), backLeft.getMotorTemperature(), frontRight.getMotorTemperature(), backRight.getMotorTemperature()};
+    }
+
     /**
      * @param forward controller input declaring robot's speed forward/backward
      * @param turn controller input declaring how robot turns

@@ -1,6 +1,17 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+/*
+░░███╗░░░█████╗░░█████╗░░█████╗░  ██████╗░██╗░░░░░███████╗░██╗░░░░░░░██╗  ░█████╗░██╗░░██╗███████╗███████╗
+░████║░░██╔══██╗██╔═══╝░██╔══██╗  ██╔══██╗██║░░░░░██╔════╝░██║░░██╗░░██║  ██╔══██╗██║░░██║██╔════╝╚════██║
+██╔██║░░██║░░██║██████╗░╚█████╔╝  ██████╦╝██║░░░░░█████╗░░░╚██╗████╗██╔╝  ██║░░╚═╝███████║█████╗░░░░███╔═╝
+╚═╝██║░░██║░░██║██╔══██╗██╔══██╗  ██╔══██╗██║░░░░░██╔══╝░░░░████╔═████║░  ██║░░██╗██╔══██║██╔══╝░░██╔══╝░░
+███████╗╚█████╔╝╚█████╔╝╚█████╔╝  ██████╦╝███████╗███████╗░░╚██╔╝░╚██╔╝░  ╚█████╔╝██║░░██║███████╗███████╗
+╚══════╝░╚════╝░░╚════╝░░╚════╝░  ╚═════╝░╚══════╝╚══════╝░░░╚═╝░░░╚═╝░░  ░╚════╝░╚═╝░░╚═╝╚══════╝╚══════╝
+
+█▄─██─▄█▄─█▀▀▀█─▄█▄─██─▄███▄─▀█▀─▄█▄─█─▄███▄─▀█▄─▄█▄─██─▄█─▄─▄─█░▄▄░▄█
+██─██─███─█─█─█─███─██─█████─█▄█─███▄─▄█████─█▄▀─███─██─████─████▀▄█▀█
+▀▀▄▄▄▄▀▀▀▄▄▄▀▄▄▄▀▀▀▄▄▄▄▀▀▀▀▄▄▄▀▄▄▄▀▀▄▄▄▀▀▀▀▄▄▄▀▀▄▄▀▀▄▄▄▄▀▀▀▄▄▄▀▀▄▄▄▄▄▀
+
+
+*/
 
 package frc.robot;
 
@@ -40,21 +51,21 @@ import frc.robot.sensors.Limelight;
  */
 public class Robot extends TimedRobot {
 
-  public static Drivetrain drivetrain;
+  public Drivetrain drivetrain;
   public Climb climb;
-  public static Indexer indexer;
-  public static Intake intake;
+  public Indexer indexer;
+  public Intake intake;
   public Shooter shooter;
   public Limelight limelight;
   public Hood hood;
-  AutoManager m;
+  public AutoManager m;
   Control c;
   ArrayList<Interface> interfaces;
 
   SendableChooser<Primary> primaryDrivers;
   SendableChooser<Secondary> secondaryDrivers;
 
-  SendableChooser<AutoMode> autoMode;
+  public SendableChooser<AutoMode> autoMode;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -85,6 +96,9 @@ public class Robot extends TimedRobot {
     primaryDrivers = new SendableChooser<>();
     secondaryDrivers = new SendableChooser<>();
 
+    autoMode = new SendableChooser<>();
+    m = new AutoManager(this);
+
     for (Primary p : Primary.values()) {
       primaryDrivers.addOption("Primary - " + p.name(), p);
     }
@@ -93,6 +107,7 @@ public class Robot extends TimedRobot {
     }
     primaryDrivers.setDefaultOption("Primary - " + Primary.values()[0].name(), Primary.values()[0]);
     secondaryDrivers.setDefaultOption("Secondary - " + Secondary.values()[0].name(), Secondary.values()[0]);
+
   }
 
   @Override
@@ -108,13 +123,22 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Primary Driver", primaryDrivers);
     SmartDashboard.putData("Secondary Driver", secondaryDrivers);
 
-    //Brake Mode
+    // Auto Selection
+    SmartDashboard.putData("Auto Mode Selector", autoMode);
+
+    // Brake Mode
     SmartDashboard.putBoolean("Brake Mode", drivetrain.getMode());
+
+    // Motor Temps
+    SmartDashboard.putNumber("Front Left Temp", drivetrain.getTemps()[0]);
+    SmartDashboard.putNumber("Back Left Temp", drivetrain.getTemps()[1]);
+    SmartDashboard.putNumber("Front Right Temp", drivetrain.getTemps()[2]);
+    SmartDashboard.putNumber("Back Right Temp", drivetrain.getTemps()[3]);
   }
 
   @Override
   public void autonomousInit() {
-    m = new AutoManager();
+    m.getAuto();
   }
 
   /** This function is called periodically during autonomous. */
