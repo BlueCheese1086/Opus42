@@ -32,7 +32,7 @@ public class AutoManager {
         auto1.addSection(new AutoIntake(intakeTime * 1.3), 1);
 
         auto2.addSection(new AutoShoot(6), 0);
-        auto2.addSection(new AutoDrive(100), 0);
+        auto2.addSection(new AutoDrive(9), 0);
 
         autoChooser.setDefaultOption(auto1.getName(), auto1);
         //autoChooser.addOption(auto2.getName(), auto2);
