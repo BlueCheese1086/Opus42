@@ -10,25 +10,29 @@ public class IntakeInterface extends Interface {
     public IntakeInterface(Robot robot, Control c) {
         super(robot, c);
         intake = robot.intake;
+        intake.down();
     }
 
     /**
      * what the intake will do every tick
      */
     public void tick() {
-        //Check for loading in
-        if(c.getIntakeIn()) {
-            intake.in();
+        // Check for loading in
+        if (intake.getPos()) {
+            if (c.getIntakeIn()) {
+                robot.indexer.in();
+                intake.in();
+            }
+            // Check for jamming
+            else if (c.getIntakeOut()) {
+                robot.indexer.out();
+                intake.out();
+            }
+            // stop loading
+            else {
+                intake.neutral();
+            }
         }
-        //Check for jamming
-        else if (c.getIntakeOut()) {
-            intake.out();
-        }
-        //stop loading
-        else {
-            intake.neutral();
-        }
-        //Check for obtain ready
         if (c.getIntakeToggle()) {
             intake.toggle();
         }

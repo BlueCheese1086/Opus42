@@ -16,7 +16,7 @@ public class DrivetrainInterface extends Interface{
      * what the drive train will do every tick
      */
     public void tick() {
-        if(true) {
+        if (true) {
             drivetrain.drive(c.getDriveForward(), c.getDriveTurn());
         }
 

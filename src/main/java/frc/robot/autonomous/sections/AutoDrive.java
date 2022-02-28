@@ -13,6 +13,7 @@ public class AutoDrive extends AutoSection {
     PIDController rDrivePIDController;
     PIDController lDrivePIDController;
     boolean isDistBased;
+    boolean invert;
 
     /** distance = cm */
     public AutoDrive(double distance, Robot robot){
@@ -26,17 +27,20 @@ public class AutoDrive extends AutoSection {
 
     }
 
-    public AutoDrive(int length, Robot robot){
+    public AutoDrive(int length, Robot robot, boolean invert){
+        super(length);
         this.drivetrain = robot.drivetrain;
         this.isDistBased = false;
+        this.invert = invert;
     }
 
     @Override
     public void init(){
-        super.startTime = System.currentTimeMillis();
-        super.started = true;
-        drivetrain.getFrontLeft().getEncoder().setPosition(0);
-        drivetrain.getFrontRight().getEncoder().setPosition(0);
+        super.init();
+        if (isDistBased){
+            drivetrain.getFrontLeft().getEncoder().setPosition(0);
+            drivetrain.getFrontRight().getEncoder().setPosition(0);
+        }
 
     }
 
@@ -46,7 +50,9 @@ public class AutoDrive extends AutoSection {
             rDrivePIDController.driveDistance(distance);
             lDrivePIDController.driveDistance(distance);
         } else {
-            drivetrain.drive(0.5, 0);
+            double x = 0.0;
+            x = invert ? -1.0 : 1.0;
+            drivetrain.drive(0.25 * x, 0);
         }
     }
 
@@ -58,11 +64,14 @@ public class AutoDrive extends AutoSection {
 
     @Override
     public boolean disableCondition() {
-        if(distance - Constants.DRIVE_ERROR < drivetrain.getFrontRight().getEncoder().getPosition() && drivetrain.getFrontRight().getEncoder().getPosition() < distance + Constants.DRIVE_ERROR){
-            return true;
-        } else{
-            return false;
-        }
+        if(isDistBased){
+            if(distance - Constants.DRIVE_ERROR < drivetrain.getFrontRight().getEncoder().getPosition() && drivetrain.getFrontRight().getEncoder().getPosition() < distance + Constants.DRIVE_ERROR){
+                return true;
+            } else{
+                return false;
+            }
+        } else { return super.disableCondition(); }
     }
 }
+
 

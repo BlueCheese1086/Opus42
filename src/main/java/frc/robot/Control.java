@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class Control {
@@ -21,8 +20,8 @@ public class Control {
     XboxController primary = new XboxController(0);
     XboxController secondary = new XboxController(1);
 
-    Joystick left = new Joystick(2);
-    Joystick right = new Joystick(3);
+    /*Joystick left = new Joystick(2);
+    Joystick right = new Joystick(3);*/
 
     /**
      * @param p Primary driver to set control scheme
@@ -59,8 +58,6 @@ public class Control {
         switch (primDriver) {
             case YBox:
                 return Meth.doMagik(-primary.getLeftY());
-            case Joystick:
-                return (Meth.doMagik(-left.getRawAxis(1)));
             case RyanBox:
                 return (Meth.doMagik(primary.getRightTriggerAxis()) - Meth.doMagik(primary.getLeftTriggerAxis()));
             default:
@@ -87,8 +84,6 @@ public class Control {
         switch (primDriver) {
             case YBox:
                 return (Meth.doTurnMagik(primary.getRightX()));
-            case Joystick:
-                return Meth.doTurnMagik(right.getRawAxis(0));
             case RyanBox:
                 /*if (getDriveForward() < 0) {
                     return Meth.doTurnMagik(-primary.getLeftX());
@@ -104,8 +99,6 @@ public class Control {
      */
     public boolean getSafety() {
         switch (primDriver) {
-            case Joystick:
-                left.getTrigger();
             default:
                 return true;
         }
@@ -153,7 +146,7 @@ public class Control {
     public boolean getIndexerIn() {
         switch (suckondeeznutzDriver) {
             case Toshi:
-                return secondary.getYButton();
+                return secondary.getRightBumper();
             default:
                 return false;
         }
@@ -165,7 +158,7 @@ public class Control {
     public boolean getIndexerOut() {
         switch (suckondeeznutzDriver) {
             case Toshi:
-                return secondary.getAButton();
+                return secondary.getLeftBumper();
             default:
                 return false;
         }

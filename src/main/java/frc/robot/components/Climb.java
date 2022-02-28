@@ -29,6 +29,10 @@ public class Climb {
         lock.set(false);
     }
 
+    public boolean getLock() {
+        return lock.get();
+    }
+
     public void unlock() {
         lock.set(true);
     }

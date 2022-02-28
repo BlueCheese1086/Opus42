@@ -27,7 +27,7 @@ public class AutoIntake extends AutoSection{
 
     @Override
     public void update() {
-        intake.in();
+        //intake.in();
 
     }
 

@@ -1,5 +1,6 @@
 package frc.robot.controlInterfaces;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Control;
 import frc.robot.Robot;
 import frc.robot.components.Shooter;
@@ -9,7 +10,7 @@ public class ShooterInterface extends Interface{
 
     public ShooterInterface(Robot robot, Control c) {
         super(robot, c);
-        shooter = robot.shooter;
+        //shooter = Robot.shooter;
     }
 
     /**
@@ -17,7 +18,12 @@ public class ShooterInterface extends Interface{
      */
     public void tick(){
         if(c.getLauncherShoot()){
-            shooter.shoot();
+            Robot.getShooter().setVelocity(SmartDashboard.getNumber("Shooter Velocity", 0));
+            //shooter.shoot();
+            Robot.testShoot();
+        }
+        else{
+            Robot.getShooter().stopEverything();
         }
     }
     

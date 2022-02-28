@@ -26,6 +26,7 @@ import frc.robot.Control.Primary;
 import frc.robot.Control.Secondary;
 import frc.robot.autonomous.AutoManager;
 import frc.robot.autonomous.AutoMode;
+import frc.robot.autonomous.sections.AutoSection;
 import frc.robot.components.Climb;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.Hood;
@@ -39,6 +40,8 @@ import frc.robot.controlInterfaces.IntakeInterface;
 import frc.robot.controlInterfaces.Interface;
 import frc.robot.controlInterfaces.ShooterInterface;
 import frc.robot.sensors.Limelight;
+
+import com.ctre.phoenix.music.Orchestra;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -55,12 +58,14 @@ public class Robot extends TimedRobot {
   public Climb climb;
   public Indexer indexer;
   public Intake intake;
-  public Shooter shooter;
+  public static Shooter shooter;
   public Limelight limelight;
   public Hood hood;
   public AutoManager m;
   Control c;
   ArrayList<Interface> interfaces;
+  //ArrayList<AutoSection> autoSections;
+  Orchestra o;
 
   SendableChooser<Primary> primaryDrivers;
   SendableChooser<Secondary> secondaryDrivers;
@@ -78,6 +83,7 @@ public class Robot extends TimedRobot {
     c = new Control();
 
     c.setPrimary(Primary.RyanBox);
+    c.setSecondary(Secondary.Toshi);
 
     limelight = new Limelight();
     hood = new Hood(RobotMap.HOOD_SERVO_ID);
@@ -108,6 +114,17 @@ public class Robot extends TimedRobot {
     primaryDrivers.setDefaultOption("Primary - " + Primary.values()[0].name(), Primary.values()[0]);
     secondaryDrivers.setDefaultOption("Secondary - " + Secondary.values()[0].name(), Secondary.values()[0]);
 
+    o = new Orchestra();
+
+    o.addInstrument(shooter.x);
+    o.addInstrument(shooter.y);
+
+    o.loadMusic("toto.chrp");
+
+  }
+
+  public static Shooter getShooter() {
+    return shooter;
   }
 
   @Override
@@ -134,30 +151,72 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Back Left Temp", drivetrain.getTemps()[1]);
     SmartDashboard.putNumber("Front Right Temp", drivetrain.getTemps()[2]);
     SmartDashboard.putNumber("Back Right Temp", drivetrain.getTemps()[3]);
+
+    // Shoota
+    SmartDashboard.putBoolean("Shooter Button", c.getLauncherShoot());
+
+    //Solenoids
+    SmartDashboard.putBoolean("Intake Solenoid", intake.getPos());
+    SmartDashboard.putBoolean("Climb Solenoid", climb.getLock());
+
+    // Input
+    SmartDashboard.putNumber("Shooter Velocity", SmartDashboard.getNumber("Shooter Velocity", 0));
+    SmartDashboard.getNumber("Shooter Velocity", 0);
+
+    // Falcons :)
+    SmartDashboard.putNumber("Shooter 1 Velo", shooter.x.getSelectedSensorVelocity());
   }
 
   @Override
   public void autonomousInit() {
     m.getAuto();
+
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
     m.update();
+    
+    //shooter.shoot();
+    //o.play();
+
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+
     c.setPrimary(primaryDrivers.getSelected());
     c.setSecondary(secondaryDrivers.getSelected());
-  }
 
+  }
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
     interfaces.forEach(Interface::tick);
+
+    //shooter.runBelts(0.5);
+    /*if (c.primary.getAButton()) {
+      shooter.one.set(.2);
+    } else {
+      shooter.one.set(0);
+    }*/
+    //shooter.shoot();
+    /*if (c.secondary.getYButton()) {
+      hood.setMax();
+    }
+    if (c.secondary.getAButton()) {
+      hood.setMin();
+    }
+    if (c.getLauncherShoot()){
+      //shooter.shoot();
+      shooter1.set(ControlMode.PercentOutput, 1);
+      shooter2.set(ControlMode.PercentOutput, 1);
+    } else {
+      shooter1.set(ControlMode.PercentOutput, 0);
+      shooter2.set(ControlMode.PercentOutput, 0);
+    }*/
     //interfaces.get(0).tick();
   }
 
@@ -189,5 +248,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {
+  }
+
+  public static void testShoot(){
+    shooter.shoot();
   }
 }

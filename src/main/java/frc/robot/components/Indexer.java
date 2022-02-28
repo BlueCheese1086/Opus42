@@ -15,16 +15,16 @@ public class Indexer {
      * makes indexer intake balls into launcher/run inward
      */
     public void in(){
-        left.set(1);
-        right.set(1);
+        left.set(-0.8);
+        right.set(-0.8);
     }
 
      /**
      * makes indexer outtake balls/run outward at a slower speed for dejamming
      */
     public void out(){
-        left.set(-1);
-        right.set(-1);
+        left.set(0.8);
+        right.set(0.8);
     }
 
     /**

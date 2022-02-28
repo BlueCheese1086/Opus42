@@ -7,7 +7,6 @@ public class RobotMap {
     public static final int FRONT_LEFT_ID = 1;
     public static final int FRONT_RIGHT_ID = 2;
     public static final int BACK_LEFT_ID = 3;
-    
     public static final int BACK_RIGHT_ID = 4;
 
     public static final int CLIMB_LEFT_ID = 11; 
@@ -19,12 +18,12 @@ public class RobotMap {
     public static final int INTAKE_MOTOR_ID = 31;
     
     public static final int COMPRESSOR_ID = 0;
-    public static final int CLIMB_SOLENOID_ID = 0;
-    public static final int INTAKE_SOLENOID_ID = 1;
+    public static final int CLIMB_SOLENOID_ID = 2;
+    public static final int INTAKE_SOLENOID_ID = 3;
     
     //todo - determine appropriate names for launcher falcons
-    public static final int LAUNCHER_X_ID = 1;
-    public static final int LAUNCHER_Y_ID = 2;
+    public static final int LAUNCHER_X_ID = 51;
+    public static final int LAUNCHER_Y_ID = 52;
 
     //also known as tower
     public static final int LAUNCHER_ONE_ID = 41;
@@ -35,5 +34,5 @@ public class RobotMap {
     public static final int HOOD_SERVO_ID = 0;
     
     public static final int PRIMARY_CONTROLLER_ID = 0;
-    public static final int SECONDARY_CONTROLLER_ID = 0;
+    public static final int SECONDARY_CONTROLLER_ID = 1;
 }

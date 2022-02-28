@@ -28,6 +28,11 @@ public class Drivetrain {
 
         frontLeft.setIdleMode(IdleMode.kBrake);
         frontRight.setIdleMode(IdleMode.kBrake);
+
+        frontRight.setOpenLoopRampRate(0.2);
+        backRight.setOpenLoopRampRate(0.2);
+        frontLeft.setOpenLoopRampRate(0.2);
+        backLeft.setOpenLoopRampRate(0.2);
     }
 
     public CANSparkMax getFrontLeft() {

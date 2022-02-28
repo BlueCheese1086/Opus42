@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import frc.robot.Constants;
 import frc.robot.sensors.Limelight;
 
@@ -11,14 +12,15 @@ public class Shooter {
     //this will be madness and i will figure it out eventually - kai
 
     //todo: find appropriate names
-    TalonFX x, y;
-    CANSparkMax one, two, three, four;
+    public TalonFX x, y;
+    public CANSparkMax one, two, three, four;
     Limelight limelight;
     Hood hood;
     Indexer indexer;
     Drivetrain drivetrain; 
+    double velocity;
 
-    //5 cansparkmaxes????????? tbd
+    //4 cansparkmaxes????????? tbd
     public Shooter(int xID, int yID, int oneID, int twoID, int threeID, int fourID, Limelight limelight, Hood hood, Indexer indexer, Drivetrain drivetrain){
         x = new TalonFX(xID);
         y = new TalonFX(yID);
@@ -26,19 +28,34 @@ public class Shooter {
         two = new CANSparkMax(twoID, MotorType.kBrushless);
         three = new CANSparkMax(threeID, MotorType.kBrushless);
         four = new CANSparkMax(fourID, MotorType.kBrushless);
+
         this.limelight = limelight;
         this.hood = hood;
         this.indexer = indexer;
         this.drivetrain = drivetrain;
 
+        y.setInverted(true);
         y.follow(x);
-        x.config_kP(0, 0.05);
-        x.config_kI(0, 0);
-        x.config_kD(0, 0);
+        //x.config_kP(0, 0.05);
+        //x.config_kI(0, 0);
+        //x.config_kD(0, 0);
 
-        two.follow(one);
-        three.follow(one);
-        four.follow(one);
+        // 41 - Back Top
+        one.setInverted(true);
+        // 42 - Back Bottom
+        two.follow(one, true);
+        // 43 - Front Bottom
+        three.follow(one, true);
+        // 44 - Front Top
+        four.follow(one, false);
+    }
+
+    public double getVelocity(){
+        return this.velocity;
+    }
+
+    public void setVelocity(double velocity){
+        this.velocity = velocity;
     }
 
     /*notes for future kai and emily-
@@ -100,7 +117,7 @@ public class Shooter {
      * pew pew
      */
     public void shoot(){
-        //all of these values are in meters or m/s
+        ///all of these values are in meters or m/s
         //double targetVelocity = Constants.LAUNCHER_DEFAULT_VELOCITY;
         double groundDistance = limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT);
         double height = Constants.UPPER_HUB_HEIGHT + Constants.CARGO_DIAMETER - Constants.CAMERA_HEIGHT + 2;
@@ -119,8 +136,9 @@ public class Shooter {
         //hood.set(targetAngle); 
         hood.setMax();
 
+        groundDistance= 2.0;
         //2) have falcons approaching launching velocity   
-        double targetVelocity = getLaunchVelocity(targetAngle, groundDistance, height);
+        //double targetVelocity = getLaunchVelocity(targetAngle, groundDistance, height);
         x.config_kP(0, Constants.LAUNCHER_KP);
         x.config_kI(0, Constants.LAUNCHER_KI);
         x.config_kD(0, Constants.LAUNCHER_KD);
@@ -134,15 +152,18 @@ public class Shooter {
         */
             
         x.config_kF(0, Constants.LAUNCHER_KF);
-
-        x.set(TalonFXControlMode.Velocity, targetVelocity / (Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION * 10));
-
+        
+        //x.set(TalonFXControlMode.Velocity, targetVelocity * Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION / (Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * 10));
+        x.set(TalonFXControlMode.Velocity, velocity);
 
         //3) *after* falcons are at that velocity, run indexer & internal cansparkmaxes
-        if(x.getSelectedSensorVelocity(0) * Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION * 10 >= 0.9*targetVelocity){
+        //if(x.getSelectedSensorVelocity(0) * Constants.LAUNCHER_WHEEL_CIRCUMFERENCE  * 10 / Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION >= 0.9*targetVelocity){
+        if (Math.abs(x.getSelectedSensorVelocity() - velocity) <= 500
+        ) {
             one.set(0.5);
             indexer.in();
-        }        
+        }
+        //}      
     }
 
     /**
@@ -172,5 +193,14 @@ public class Shooter {
      */
     public double sec(double a){
         return 1.0 / Math.cos(a);
+    }
+
+    public void stopEverything(){
+        x.set(TalonFXControlMode.PercentOutput, 0);
+        one.set(0);
+    }
+
+    public void runBelts(double x){
+        one.set(x);
     }
 }

@@ -19,14 +19,14 @@ public class Intake {
      * runs intake inward to intake balls into robot
      */
     public void in() {
-        motor.set(1);
+        motor.set(-1);
     }
 
      /**
      * runs intake outward for dejamming
      */
     public void out() {
-        motor.set(-1);
+        motor.set(1);
     }
     
     /**
@@ -47,6 +47,10 @@ public class Intake {
 
     public void toggle() {
         solenoid.set(!solenoid.get());
+    }
+
+    public boolean getPos() {
+        return solenoid.get();
     }
 
     /**
