@@ -1,7 +1,10 @@
 package frc.robot;
 
+
+
 public class Constants {
     public static final double LAUNCHER_DEFAULT_VELOCITY = 9.0; //meters/second
+
     public static final double LAUNCHER_MIN_ANGLE = 80.2141;
     public static final double LAUNCHER_MAX_ANGLE = 90;
 
@@ -32,4 +35,7 @@ public class Constants {
     public static double TURN_ERROR = 0.005 * DRIVETRAIN_POSITION_SCALE; // rotations
     public static double DRIVE_ERROR = 0.003 * DRIVETRAIN_POSITION_SCALE; // rotaions
 
+
+    public static double TURN_ERROR = 0.005 * DRIVETRAIN_POSITION_SCALE; // rotations
+    public static double DRIVE_ERROR = 0.003 * DRIVETRAIN_POSITION_SCALE; // rotaions
 }

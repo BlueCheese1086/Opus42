@@ -1,3 +1,4 @@
+
 package frc.robot.autonomous.sections;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,3 +26,4 @@ public class AutoShoot extends AutoSection {
         Robot.shooter.stopEverything();
     }
 }
+

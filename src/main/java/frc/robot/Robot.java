@@ -44,11 +44,13 @@ import com.ctre.phoenix.music.Orchestra;
 
 public class Robot extends TimedRobot {
 
-  public Drivetrain drivetrain;
+  public static Drivetrain drivetrain;
   public Climb climb;
   public Indexer indexer;
+
   public Intake intake;
   public static Shooter shooter;
+
   public Limelight limelight;
   public Hood hood;
   public AutoManager m;

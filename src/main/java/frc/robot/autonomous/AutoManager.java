@@ -1,3 +1,4 @@
+
 package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -56,4 +57,5 @@ public class AutoManager {
         //auto2.update();
         autoChooser.getSelected().update();
     }
+
 }

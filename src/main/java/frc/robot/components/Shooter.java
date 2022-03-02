@@ -168,6 +168,7 @@ public class Shooter {
         //if(x.getSelectedSensorVelocity(0) * Constants.LAUNCHER_WHEEL_CIRCUMFERENCE  * 10 / Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION >= 0.9*targetVelocity){
         if (Math.abs(x.getSelectedSensorVelocity() - velocity) <= 500
         ) {
+
             one.set(0.5);
             indexer.in();
         }
@@ -219,3 +220,4 @@ public class Shooter {
         one.set(x);
     }
 }
+
