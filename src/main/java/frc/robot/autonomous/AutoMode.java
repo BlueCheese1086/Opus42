@@ -1,3 +1,4 @@
+
 package frc.robot.autonomous;
 
 import java.util.ArrayList;
@@ -39,4 +40,5 @@ public class AutoMode {
     public String getName() {
         return name;
     }
+
 }

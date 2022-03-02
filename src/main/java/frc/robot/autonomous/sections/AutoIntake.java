@@ -1,3 +1,4 @@
+
 package frc.robot.autonomous.sections;
 
 import frc.robot.components.Drivetrain;
@@ -10,10 +11,10 @@ public class AutoIntake extends AutoSection{
     Intake intake;
     Drivetrain drivetrain;
     
-    public AutoIntake(double length){
+    public AutoIntake(double length, Robot robot){
         super(length);
-        this.intake = Robot.intake;
-        this.drivetrain = Robot.drivetrain;
+        this.intake = robot.intake;
+        this.drivetrain = robot.drivetrain;
         
     }
 
@@ -27,7 +28,7 @@ public class AutoIntake extends AutoSection{
 
     @Override
     public void update() {
-        intake.in();
+        //intake.in();
 
     }
 
@@ -38,3 +39,4 @@ public class AutoIntake extends AutoSection{
 
     }
 }
+

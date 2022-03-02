@@ -1,15 +1,31 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+/*
+░░███╗░░░█████╗░░█████╗░░█████╗░  ██████╗░██╗░░░░░███████╗░██╗░░░░░░░██╗  ░█████╗░██╗░░██╗███████╗███████╗
+░████║░░██╔══██╗██╔═══╝░██╔══██╗  ██╔══██╗██║░░░░░██╔════╝░██║░░██╗░░██║  ██╔══██╗██║░░██║██╔════╝╚════██║
+██╔██║░░██║░░██║██████╗░╚█████╔╝  ██████╦╝██║░░░░░█████╗░░░╚██╗████╗██╔╝  ██║░░╚═╝███████║█████╗░░░░███╔═╝
+╚═╝██║░░██║░░██║██╔══██╗██╔══██╗  ██╔══██╗██║░░░░░██╔══╝░░░░████╔═████║░  ██║░░██╗██╔══██║██╔══╝░░██╔══╝░░
+███████╗╚█████╔╝╚█████╔╝╚█████╔╝  ██████╦╝███████╗███████╗░░╚██╔╝░╚██╔╝░  ╚█████╔╝██║░░██║███████╗███████╗
+╚══════╝░╚════╝░░╚════╝░░╚════╝░  ╚═════╝░╚══════╝╚══════╝░░░╚═╝░░░╚═╝░░  ░╚════╝░╚═╝░░╚═╝╚══════╝╚══════╝
+
+█▄─██─▄█▄─█▀▀▀█─▄█▄─██─▄███▄─▀█▀─▄█▄─█─▄███▄─▀█▄─▄█▄─██─▄█─▄─▄─█░▄▄░▄█
+██─██─███─█─█─█─███─██─█████─█▄█─███▄─▄█████─█▄▀─███─██─████─████▀▄█▀█
+▀▀▄▄▄▄▀▀▀▄▄▄▀▄▄▄▀▀▀▄▄▄▄▀▀▀▀▄▄▄▀▄▄▄▀▀▄▄▄▀▀▀▀▄▄▄▀▀▄▄▀▀▄▄▄▄▀▀▀▄▄▄▀▀▄▄▄▄▄▀
+
+
+*/
 
 package frc.robot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Control.Primary;
+import frc.robot.Control.Secondary;
+import frc.robot.autonomous.AutoManager;
+import frc.robot.autonomous.AutoMode;
 import frc.robot.components.Climb;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.Hood;
@@ -24,126 +40,181 @@ import frc.robot.controlInterfaces.Interface;
 import frc.robot.controlInterfaces.ShooterInterface;
 import frc.robot.sensors.Limelight;
 
-/**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
- * project.
- */
+import com.ctre.phoenix.music.Orchestra;
+
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   public static Drivetrain drivetrain;
   public Climb climb;
   public Indexer indexer;
-  public static Intake intake;
-  public Shooter shooter;
+
+  public Intake intake;
+  public static Shooter shooter;
+
   public Limelight limelight;
   public Hood hood;
+  public AutoManager m;
   Control c;
-  RobotMap rMap;
   ArrayList<Interface> interfaces;
+  Orchestra o;
 
-  
+  SendableChooser<Primary> primaryDrivers;
+  SendableChooser<Secondary> secondaryDrivers;
 
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
+  public SendableChooser<AutoMode> autoMode;
+
+  // Robot Initiate
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
+
+    c = new Control();
+
+    c.setPrimary(Primary.RyanBox);
+    c.setSecondary(Secondary.Toshi);
 
     limelight = new Limelight();
-    hood = new Hood(rMap.HOOD_SERVO_ID);
-    drivetrain = new Drivetrain(rMap.FRONT_LEFT_ID, rMap.FRONT_RIGHT_ID, rMap.BACK_LEFT_ID, rMap.BACK_RIGHT_ID, limelight);
-    climb = new Climb(rMap.CLIMB_LEFT_ID, rMap.CLIMB_RIGHT_ID, rMap.CLIMB_SOLENOID_ID);
-    indexer = new Indexer(rMap.INDEXER_LEFT_ID, rMap.INDEXER_RIGHT_ID);
-    intake = new Intake(rMap.INTAKE_MOTOR_ID, rMap.INTAKE_SOLENOID_ID);
-    shooter = new Shooter(rMap.LAUNCHER_X_ID, rMap.LAUNCHER_Y_ID, rMap.LAUNCHER_ONE_ID, rMap.LAUNCHER_TWO_ID, rMap.LAUNCHER_THREE_ID, rMap.LAUNCHER_FOUR_ID, limelight, hood, indexer, drivetrain);
-  
+    hood = new Hood(RobotMap.HOOD_SERVO_ID);
+    drivetrain = new Drivetrain(RobotMap.FRONT_LEFT_ID, RobotMap.FRONT_RIGHT_ID, RobotMap.BACK_LEFT_ID, RobotMap.BACK_RIGHT_ID, limelight);
+    climb = new Climb(RobotMap.CLIMB_LEFT_ID, RobotMap.CLIMB_RIGHT_ID, RobotMap.CLIMB_SOLENOID_ID);
+    indexer = new Indexer(RobotMap.INDEXER_LEFT_ID, RobotMap.INDEXER_RIGHT_ID);
+    intake = new Intake(RobotMap.INTAKE_MOTOR_ID, RobotMap.INTAKE_SOLENOID_ID);
+    shooter = new Shooter(RobotMap.LAUNCHER_X_ID, RobotMap.LAUNCHER_Y_ID, RobotMap.LAUNCHER_ONE_ID, RobotMap.LAUNCHER_TWO_ID, RobotMap.LAUNCHER_THREE_ID, RobotMap.LAUNCHER_FOUR_ID, limelight, hood, indexer, drivetrain);
 
     interfaces = new ArrayList<>();
     interfaces.addAll(Arrays.asList(new DrivetrainInterface(this, c), new ClimbInterface(this, c), new IndexerInterface(this, c), new IntakeInterface(this, c), new ShooterInterface(this, c)));
+
+    primaryDrivers = new SendableChooser<>();
+    secondaryDrivers = new SendableChooser<>();
+
+    autoMode = new SendableChooser<>();
+    m = new AutoManager(this);
+
+    for (Primary p : Primary.values()) {
+      primaryDrivers.addOption("Primary - " + p.name(), p);
+    }
+    for (Secondary s : Secondary.values()) {
+      secondaryDrivers.addOption("Secondary - " + s.name(), s);
+    }
+    primaryDrivers.setDefaultOption("Primary - " + Primary.values()[0].name(), Primary.values()[0]);
+    secondaryDrivers.setDefaultOption("Secondary - " + Secondary.values()[0].name(), Secondary.values()[0]);
+
+    o = new Orchestra();
+
+    o.addInstrument(shooter.x);
+    o.addInstrument(shooter.y);
+
+    o.loadMusic("somethingjustlikethis.chrp");
+
   }
 
-  /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
-   */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    /********************
+     * TELEMETRY WOOOOO *
+     ********************/
 
-  /**
-   * This autonomous (along with the chooser code above) shows how to select between different
-   * autonomous modes using the dashboard. The sendable chooser code works with the Java
-   * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the chooser code and
-   * uncomment the getString line to get the auto name from the text box below the Gyro
-   *
-   * <p>You can add additional auto modes by adding additional comparisons to the switch structure
-   * below with additional strings. If using the SendableChooser make sure to add them to the
-   * chooser code above as well.
-   */
+    // Battery Voltage
+    SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
+
+    // Driver Selection
+    SmartDashboard.putData("Primary Driver", primaryDrivers);
+    SmartDashboard.putData("Secondary Driver", secondaryDrivers);
+
+    // Auto Selection
+    SmartDashboard.putData("Auto Mode Selector", autoMode);
+
+    // Brake Mode
+    SmartDashboard.putBoolean("Brake Mode", drivetrain.getMode());
+
+    // Motor Temps
+    SmartDashboard.putNumber("Front Left Temp", drivetrain.getTemps()[0]);
+    SmartDashboard.putNumber("Back Left Temp", drivetrain.getTemps()[1]);
+    SmartDashboard.putNumber("Front Right Temp", drivetrain.getTemps()[2]);
+    SmartDashboard.putNumber("Back Right Temp", drivetrain.getTemps()[3]);
+
+    // Shooter
+    SmartDashboard.putBoolean("Shooter Button", c.getLauncherShoot());
+    SmartDashboard.putNumber("Shooter 1 Velo", shooter.x.getSelectedSensorVelocity());
+
+    //Solenoids
+    SmartDashboard.putBoolean("Intake Solenoid", intake.getPos());
+    SmartDashboard.putBoolean("Climb Solenoid", climb.getLock());
+
+    // Input
+    SmartDashboard.putNumber("Shooter Velocity", SmartDashboard.getNumber("Shooter Velocity", 0));
+    SmartDashboard.getNumber("Shooter Velocity", 0);
+
+    //Currents
+    SmartDashboard.putNumber("Front Right Current", drivetrain.getFrontRight().getOutputCurrent());
+    SmartDashboard.putNumber("Front Left Current", drivetrain.getFrontLeft().getOutputCurrent());
+
+    //SPEEEEED
+    SmartDashboard.putNumber("Speed", (drivetrain.getFrontRight().get() + drivetrain.getFrontLeft().get())/2.0);
+  }
+
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
+    m.getAuto();
+
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }
+    //m.update();
+    o.play();
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
 
+    c.setPrimary(primaryDrivers.getSelected());
+    c.setSecondary(secondaryDrivers.getSelected());
+
+  }
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
     interfaces.forEach(Interface::tick);
   }
 
+  long timeOff;
+
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    timeOff = 0;
+    timeOff = System.currentTimeMillis();
+  }
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    SmartDashboard.putNumber("Time Disabled", (System.currentTimeMillis() - timeOff)/1000.0);
+  }
 
   /** This function is called once when test mode is enabled. */
   @Override
-  public void testInit() {}
+  public void testInit() {
+  }
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
+
+  public static void testShoot(){
+    shooter.shoot();
+  }
 }

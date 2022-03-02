@@ -10,7 +10,6 @@ public class IndexerInterface extends Interface{
     public IndexerInterface(Robot robot, Control c) {
         super(robot, c);
         indexer = robot.indexer;
-        //TODO Auto-generated constructor stub
     }
 
     /**
