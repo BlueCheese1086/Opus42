@@ -50,10 +50,18 @@ public class Shooter {
         four.follow(one, false);
     }
 
+    /**
+     * Gets target velocity
+     * @return Returns target velocity
+     */
     public double getVelocity(){
         return this.velocity;
     }
 
+    /**
+     * Sets target velocity
+     * @param velocity Target velocity
+     */
     public void setVelocity(double velocity){
         this.velocity = velocity;
     }
@@ -195,11 +203,18 @@ public class Shooter {
         return 1.0 / Math.cos(a);
     }
 
+    /**
+     * Stops everything
+     */
     public void stopEverything(){
         x.set(TalonFXControlMode.PercentOutput, 0);
         one.set(0);
     }
 
+    /**
+     * Run tower belts
+     * @param x Speed that tower belts will run at
+     */
     public void runBelts(double x){
         one.set(x);
     }

@@ -26,7 +26,6 @@ import frc.robot.Control.Primary;
 import frc.robot.Control.Secondary;
 import frc.robot.autonomous.AutoManager;
 import frc.robot.autonomous.AutoMode;
-import frc.robot.autonomous.sections.AutoSection;
 import frc.robot.components.Climb;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.Hood;
@@ -43,15 +42,6 @@ import frc.robot.sensors.Limelight;
 
 import com.ctre.phoenix.music.Orchestra;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the
- * name of this class or
- * the package after creating this project, you must also update the
- * build.gradle file in the
- * project.
- */
 public class Robot extends TimedRobot {
 
   public Drivetrain drivetrain;
@@ -64,7 +54,6 @@ public class Robot extends TimedRobot {
   public AutoManager m;
   Control c;
   ArrayList<Interface> interfaces;
-  //ArrayList<AutoSection> autoSections;
   Orchestra o;
 
   SendableChooser<Primary> primaryDrivers;
@@ -72,11 +61,7 @@ public class Robot extends TimedRobot {
 
   public SendableChooser<AutoMode> autoMode;
 
-  /**
-   * This function is run when the robot is first started up and should be used
-   * for any
-   * initialization code.
-   */
+  // Robot Initiate
   @Override
   public void robotInit() {
 
@@ -87,14 +72,11 @@ public class Robot extends TimedRobot {
 
     limelight = new Limelight();
     hood = new Hood(RobotMap.HOOD_SERVO_ID);
-    drivetrain = new Drivetrain(RobotMap.FRONT_LEFT_ID, RobotMap.FRONT_RIGHT_ID, RobotMap.BACK_LEFT_ID,
-        RobotMap.BACK_RIGHT_ID, limelight);
+    drivetrain = new Drivetrain(RobotMap.FRONT_LEFT_ID, RobotMap.FRONT_RIGHT_ID, RobotMap.BACK_LEFT_ID, RobotMap.BACK_RIGHT_ID, limelight);
     climb = new Climb(RobotMap.CLIMB_LEFT_ID, RobotMap.CLIMB_RIGHT_ID, RobotMap.CLIMB_SOLENOID_ID);
     indexer = new Indexer(RobotMap.INDEXER_LEFT_ID, RobotMap.INDEXER_RIGHT_ID);
     intake = new Intake(RobotMap.INTAKE_MOTOR_ID, RobotMap.INTAKE_SOLENOID_ID);
-    shooter = new Shooter(RobotMap.LAUNCHER_X_ID, RobotMap.LAUNCHER_Y_ID, RobotMap.LAUNCHER_ONE_ID,
-        RobotMap.LAUNCHER_TWO_ID, RobotMap.LAUNCHER_THREE_ID, RobotMap.LAUNCHER_FOUR_ID, limelight, hood, indexer,
-        drivetrain);
+    shooter = new Shooter(RobotMap.LAUNCHER_X_ID, RobotMap.LAUNCHER_Y_ID, RobotMap.LAUNCHER_ONE_ID, RobotMap.LAUNCHER_TWO_ID, RobotMap.LAUNCHER_THREE_ID, RobotMap.LAUNCHER_FOUR_ID, limelight, hood, indexer, drivetrain);
 
     interfaces = new ArrayList<>();
     interfaces.addAll(Arrays.asList(new DrivetrainInterface(this, c), new ClimbInterface(this, c), new IndexerInterface(this, c), new IntakeInterface(this, c), new ShooterInterface(this, c)));
@@ -119,12 +101,8 @@ public class Robot extends TimedRobot {
     o.addInstrument(shooter.x);
     o.addInstrument(shooter.y);
 
-    o.loadMusic("toto.chrp");
+    o.loadMusic("somethingjustlikethis.chrp");
 
-  }
-
-  public static Shooter getShooter() {
-    return shooter;
   }
 
   @Override
@@ -136,7 +114,7 @@ public class Robot extends TimedRobot {
     // Battery Voltage
     SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
 
-    // Driver Selection Shit
+    // Driver Selection
     SmartDashboard.putData("Primary Driver", primaryDrivers);
     SmartDashboard.putData("Secondary Driver", secondaryDrivers);
 
@@ -152,8 +130,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Front Right Temp", drivetrain.getTemps()[2]);
     SmartDashboard.putNumber("Back Right Temp", drivetrain.getTemps()[3]);
 
-    // Shoota
+    // Shooter
     SmartDashboard.putBoolean("Shooter Button", c.getLauncherShoot());
+    SmartDashboard.putNumber("Shooter 1 Velo", shooter.x.getSelectedSensorVelocity());
 
     //Solenoids
     SmartDashboard.putBoolean("Intake Solenoid", intake.getPos());
@@ -163,8 +142,12 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Shooter Velocity", SmartDashboard.getNumber("Shooter Velocity", 0));
     SmartDashboard.getNumber("Shooter Velocity", 0);
 
-    // Falcons :)
-    SmartDashboard.putNumber("Shooter 1 Velo", shooter.x.getSelectedSensorVelocity());
+    //Currents
+    SmartDashboard.putNumber("Front Right Current", drivetrain.getFrontRight().getOutputCurrent());
+    SmartDashboard.putNumber("Front Left Current", drivetrain.getFrontLeft().getOutputCurrent());
+
+    //SPEEEEED
+    SmartDashboard.putNumber("Speed", (drivetrain.getFrontRight().get() + drivetrain.getFrontLeft().get())/2.0);
   }
 
   @Override
@@ -176,11 +159,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    m.update();
-    
-    //shooter.shoot();
-    //o.play();
-
+    //m.update();
+    o.play();
   }
 
   /** This function is called once when teleop is enabled. */
@@ -195,39 +175,21 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     interfaces.forEach(Interface::tick);
-
-    //shooter.runBelts(0.5);
-    /*if (c.primary.getAButton()) {
-      shooter.one.set(.2);
-    } else {
-      shooter.one.set(0);
-    }*/
-    //shooter.shoot();
-    /*if (c.secondary.getYButton()) {
-      hood.setMax();
-    }
-    if (c.secondary.getAButton()) {
-      hood.setMin();
-    }
-    if (c.getLauncherShoot()){
-      //shooter.shoot();
-      shooter1.set(ControlMode.PercentOutput, 1);
-      shooter2.set(ControlMode.PercentOutput, 1);
-    } else {
-      shooter1.set(ControlMode.PercentOutput, 0);
-      shooter2.set(ControlMode.PercentOutput, 0);
-    }*/
-    //interfaces.get(0).tick();
   }
+
+  long timeOff;
 
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {
+    timeOff = 0;
+    timeOff = System.currentTimeMillis();
   }
 
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
+    SmartDashboard.putNumber("Time Disabled", (System.currentTimeMillis() - timeOff)/1000.0);
   }
 
   /** This function is called once when test mode is enabled. */

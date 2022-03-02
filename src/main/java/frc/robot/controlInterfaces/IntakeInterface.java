@@ -14,7 +14,7 @@ public class IntakeInterface extends Interface {
     }
 
     /**
-     * what the intake will do every tick
+     * what the zuc will do every tick
      */
     public void tick() {
         // Check for loading in

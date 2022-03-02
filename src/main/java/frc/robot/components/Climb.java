@@ -17,6 +17,10 @@ public class Climb {
         right.follow(left);
     }
 
+    /**
+     * Sets climb motor speed
+     * @param c How fast you want the motors to go
+     */
     public void set(double c) {
         c = c/2.0;
         if(Math.abs(c) >= 0.30) {
@@ -25,14 +29,24 @@ public class Climb {
         left.set(c);
     }
 
+    /**
+     * Locks climb solenoid
+     */
     public void lock() {
         lock.set(false);
     }
 
+    /**
+     * Gets climb solenoid position
+     * @return Returns solenoid position
+     */
     public boolean getLock() {
         return lock.get();
     }
 
+    /**
+     * Unlocks lock solenoid
+     */
     public void unlock() {
         lock.set(true);
     }

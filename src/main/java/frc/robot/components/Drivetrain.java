@@ -29,25 +29,38 @@ public class Drivetrain {
         frontLeft.setIdleMode(IdleMode.kBrake);
         frontRight.setIdleMode(IdleMode.kBrake);
 
-        frontRight.setOpenLoopRampRate(0.2);
-        backRight.setOpenLoopRampRate(0.2);
-        frontLeft.setOpenLoopRampRate(0.2);
-        backLeft.setOpenLoopRampRate(0.2);
+        frontRight.setOpenLoopRampRate(0);
+        backRight.setOpenLoopRampRate(0);
+        frontLeft.setOpenLoopRampRate(0);
+        backLeft.setOpenLoopRampRate(0);
     }
 
+    /**
+     * Gets the front left CANSparkMax object
+     * @return Returns front left CANSparkMax object
+     */
     public CANSparkMax getFrontLeft() {
         return frontLeft;
     }
 
+    /**
+     * Gets the front right CANSparkMax object
+     * @return Returns fron right CANSparkMax object
+     */
     public CANSparkMax getFrontRight() {
         return frontRight;
     }
 
+    /**
+     * Get motor temps array
+     * @return Returns motor temps double array (FrontLeft, BackLeft, FrontRight, BackRight)
+     */
     public double[] getTemps() {
         return new double[]{frontLeft.getMotorTemperature(), backLeft.getMotorTemperature(), frontRight.getMotorTemperature(), backRight.getMotorTemperature()};
     }
 
     /**
+     * Drives robot (duh)
      * @param forward controller input declaring robot's speed forward/backward
      * @param turn controller input declaring how robot turns
      */
@@ -56,7 +69,9 @@ public class Drivetrain {
         frontRight.set(forward - turn);
     }
 
-    // Changes control mode
+    /**
+     * Toggle Control Mode (Brake, Coast)
+     */
     public void toggleMode() {
         brake = !brake;
         if (brake) {
@@ -69,6 +84,7 @@ public class Drivetrain {
     }
 
     /**
+     * Get current mode
      * @return Returns if brake mode is active or not
      */
     public boolean getMode() {
@@ -76,6 +92,7 @@ public class Drivetrain {
     }
 
     /**
+     * Control left and right side individually
      * @param left what the left side is set to
      * @param right what the right side is set to
      */

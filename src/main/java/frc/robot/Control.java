@@ -20,6 +20,7 @@ public class Control {
     XboxController primary = new XboxController(0);
     XboxController secondary = new XboxController(1);
 
+    
     /*Joystick left = new Joystick(2);
     Joystick right = new Joystick(3);*/
 

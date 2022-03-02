@@ -15,13 +15,13 @@ public class AutoShoot extends AutoSection {
 
     @Override
     public void update() {
-        Robot.getShooter().setVelocity(SmartDashboard.getNumber("Shooter Velocity", 0));
+        Robot.shooter.setVelocity(SmartDashboard.getNumber("Shooter Velocity", 0));
         //shooter.shoot();
         Robot.testShoot();
     }
 
     @Override
     public void disabled() {
-        Robot.getShooter().stopEverything();
+        Robot.shooter.stopEverything();
     }
 }

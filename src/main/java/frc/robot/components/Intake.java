@@ -45,10 +45,17 @@ public class Intake {
         }
     }
 
+    /**
+     * Toggles intake position
+     */
     public void toggle() {
         solenoid.set(!solenoid.get());
     }
 
+    /**
+     * Gets current intake position
+     * @return Returns current intake position
+     */
     public boolean getPos() {
         return solenoid.get();
     }
