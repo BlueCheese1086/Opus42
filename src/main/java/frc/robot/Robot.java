@@ -150,6 +150,11 @@ public class Robot extends TimedRobot {
 
     //SPEEEEED
     SmartDashboard.putNumber("Speed", (drivetrain.getFrontRight().get() + drivetrain.getFrontLeft().get())/2.0);
+    
+    //stuff for kai to finally get to test the shooter    
+    SmartDashboard.putNumber("Ground Distance",limelight.getGroundDistance());
+    SmartDashboard.putNumber("Target Angle", limelight.getYAngle());
+      
   }
 
   @Override
