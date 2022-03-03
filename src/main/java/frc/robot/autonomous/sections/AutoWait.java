@@ -1,3 +1,4 @@
+
 package frc.robot.autonomous.sections;
 
 public class AutoWait extends AutoSection {
@@ -16,4 +17,5 @@ public class AutoWait extends AutoSection {
 
     }
     
+
 }
