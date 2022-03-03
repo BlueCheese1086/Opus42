@@ -26,6 +26,7 @@ import frc.robot.Control.Primary;
 import frc.robot.Control.Secondary;
 import frc.robot.autonomous.AutoManager;
 import frc.robot.autonomous.AutoMode;
+//import frc.robot.autonomous.sections.AutoAutoAlign;
 import frc.robot.components.Climb;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.Hood;
@@ -39,6 +40,8 @@ import frc.robot.controlInterfaces.IntakeInterface;
 import frc.robot.controlInterfaces.Interface;
 import frc.robot.controlInterfaces.ShooterInterface;
 import frc.robot.sensors.Limelight;
+//import frc.robot.autonomous.sections.AutoAutoAlign;
+//import frc.robot.autonomous.sections.AutoShoot;
 
 import com.ctre.phoenix.music.Orchestra;
 
@@ -49,8 +52,7 @@ public class Robot extends TimedRobot {
   public Indexer indexer;
 
   public Intake intake;
-  public static Shooter shooter;
-
+  public Shooter shooter;
   public Limelight limelight;
   public Hood hood;
   public AutoManager m;
@@ -62,6 +64,18 @@ public class Robot extends TimedRobot {
   SendableChooser<Secondary> secondaryDrivers;
 
   public SendableChooser<AutoMode> autoMode;
+
+  public Drivetrain getDrivetrain(){
+      return drivetrain;
+  }
+
+  public Shooter getShooter(){
+    return shooter;
+  }
+
+  public Indexer getIndexer(){
+    return indexer;
+  }
 
   // Robot Initiate
   @Override
@@ -150,11 +164,11 @@ public class Robot extends TimedRobot {
 
     //SPEEEEED
     SmartDashboard.putNumber("Speed", (drivetrain.getFrontRight().get() + drivetrain.getFrontLeft().get())/2.0);
-    
-    //stuff for kai to finally get to test the shooter    
-    SmartDashboard.putNumber("Ground Distance",limelight.getGroundDistance());
-    SmartDashboard.putNumber("Target Angle", limelight.getYAngle());
-      
+
+    //Limelight
+    SmartDashboard.putNumber("Ground Number", limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT - Constants.CAMERA_HEIGHT + Constants.CARGO_DIAMETER));
+    SmartDashboard.putNumber("Y Angle", limelight.getYAngle());
+
   }
 
   @Override
@@ -166,22 +180,36 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    //m.update();
-    o.play();
+    m.update();
+    //o.play();
   }
+
+  //AutoAutoAlign a;
 
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+
+    //a = new AutoAutoAlign(3);
 
     c.setPrimary(primaryDrivers.getSelected());
     c.setSecondary(secondaryDrivers.getSelected());
 
   }
   /** This function is called periodically during operator control. */
+
+  //AutoAutoAlign a = new AutoAutoAlign(3);
+
   @Override
   public void teleopPeriodic() {
     interfaces.forEach(Interface::tick);
+
+    if (c.primary.getXButton()) {
+      //a.update();
+      //drivetrain.autoAlign();
+    }
+    
+    
   }
 
   long timeOff;
@@ -219,7 +247,7 @@ public class Robot extends TimedRobot {
   public void simulationPeriodic() {
   }
 
-  public static void testShoot(){
+  /**public static void testShoot(){
     shooter.shoot();
-  }
+  }*/
 }

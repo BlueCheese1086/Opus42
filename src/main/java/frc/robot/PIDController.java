@@ -23,6 +23,7 @@ public class PIDController {
         pid.setP(kp);
         pid.setI(ki);
         pid.setD(kd);
+        pid.setOutputRange(-1, 1);
     }
 
     /** turns the robot to the given angle
