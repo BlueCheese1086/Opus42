@@ -1,3 +1,10 @@
+/**
+ *    █████
+ *  █░ ░░░███
+ *  █████████
+ *  █████████ AMOGUS
+ * ███ ██████
+ */
 package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -10,7 +17,7 @@ import frc.robot.autonomous.sections.*;
 public class AutoManager {
 
     SendableChooser<AutoMode> autoChooser;
-    AutoMode auto1, auto2;
+    AutoMode auto1, auto2, auto3;
 
     Robot robot;
 
@@ -21,7 +28,23 @@ public class AutoManager {
 
         auto1 = new AutoMode("2ball");
         auto2 = new AutoMode("1ball");
+        auto3 = new AutoMode("test");
 
+        
+        auto3.addSection(new AutoDrive(2, robot, false), 0);
+        auto3.addSection(new AutoDrive(2, robot, true), 0);
+        auto3.addSection(new AutoAutoAlign(1, robot), 0);
+        auto3.addSection(new AutoShoot(3, robot), 0);
+
+        //auto3.addSection(new AutoWait(1), 1);
+        auto3.addSection(new AutoIntake(2.2, robot), 1);
+
+        auto1.addSection(new AutoDrive(2, robot, false), 0);
+        auto1.addSection(new AutoIntake(2.2, robot), 1);
+        auto1.addSection(new AutoDrive(2, robot, true), 0);
+        auto1.addSection(new AutoShoot(4, robot), 0);
+
+        /**
         //AutoTurn autoTurn1 = new AutoTurn(-29, robot);
         //auto1.addSection(autoTurn1, 0);
         //double waitTime = (autoTurn1.getEndTime() - autoTurn1.getStartTime())/1000;
@@ -35,12 +58,14 @@ public class AutoManager {
         //auto1.addSection(new AutoWait(waitTime), 1);
         auto1.addSection(new AutoIntake(intakeTime * 1.3, robot), 1);
 
-        auto2.addSection(new AutoShoot(3), 0);
+        */
+
+        auto2.addSection(new AutoShoot(3, robot), 0);
         auto2.addSection(new AutoDrive(2, robot, false), 0);
 
         autoChooser.setDefaultOption(auto1.getName(), auto1);
         autoChooser.addOption(auto2.getName(), auto2);
-        //autoChooser.addOption(auto3.getName(), auto3);
+        autoChooser.addOption(auto3.getName(), auto3);
 
         //SmartDashboard.putData("Auto Mode Selector", autoChooser);
 

@@ -18,12 +18,12 @@ public class ShooterInterface extends Interface{
      */
     public void tick(){
         if(c.getLauncherShoot()){
-            Robot.shooter.setVelocity(SmartDashboard.getNumber("Shooter Velocity", 0));
+            robot.getShooter().setVelocity(SmartDashboard.getNumber("Shooter Velocity", 0));
             //shooter.shoot();
-            Robot.testShoot();
+            robot.getShooter().shoot();
         }
         else{
-            Robot.shooter.stopEverything();
+            robot.getShooter().stopEverything();
         }
     }
     

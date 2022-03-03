@@ -19,7 +19,7 @@ public class Intake {
      * runs intake inward to intake balls into robot
      */
     public void in() {
-        motor.set(-1);
+        motor.set(-0.55);
     }
 
      /**
