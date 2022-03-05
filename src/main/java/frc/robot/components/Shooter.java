@@ -8,6 +8,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
 import frc.robot.sensors.Limelight;
 
+import java.util.Hashtable;
+
 public class Shooter {
     //this will be madness and i will figure it out eventually - kai
 
@@ -19,6 +21,7 @@ public class Shooter {
     Indexer indexer;
     Drivetrain drivetrain; 
     double velocity;
+    Hashtable<Double, Double> h;
 
     //4 cansparkmaxes????????? tbd
     public Shooter(int xID, int yID, int oneID, int twoID, int threeID, int fourID, Limelight limelight, Hood hood, Indexer indexer, Drivetrain drivetrain){
@@ -219,5 +222,20 @@ public class Shooter {
     public void runBelts(double x){
         one.set(x);
     }
+
+
+
+    /* Ben's Shoot thing idk
+    public void shoot() {
+        double velocity;
+        h = new Hashtable();
+        h.put(keys, values); // idk
+        velocity = h.get(limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT));
+        x.set(TalonFXControlMode.Velocity, velocity);
+    }
+    */
+
+
+
 }
 
