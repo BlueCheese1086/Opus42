@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import frc.robot.sensors.Limelight;
 
 public class Drivetrain {
@@ -18,6 +19,7 @@ public class Drivetrain {
         frontRight = new CANSparkMax(frontRightID, MotorType.kBrushless);
         backLeft = new CANSparkMax(backLeftID, MotorType.kBrushless);
         backRight = new CANSparkMax(backRightID, MotorType.kBrushless);
+        
         this.limelight = limelight;
 
         backLeft.follow(frontLeft);
@@ -114,5 +116,17 @@ public class Drivetrain {
         else if(tx<1.0) steering_adjust+=min_command;
           
         this.set(-1 * steering_adjust, steering_adjust);
+    }
+
+    //not sure how to work this yet, so i've just made it the same as auto align for now - kai
+    public void setPointAlign(double targetYAngle){
+        double Kp = -0.01;
+        double min_command = 0.001;
+        double ty = limelight.getYAngle();
+
+        double steering_adjust = (ty) * Kp;
+        if( Math.abs(ty - targetYAngle) > 1.0) steering_adjust -= min_command;
+        else if(Math.abs(ty-targetYAngle) < 1.0) steering_adjust+=min_command;
+        this.set(steering_adjust, steering_adjust);
     }
 }
