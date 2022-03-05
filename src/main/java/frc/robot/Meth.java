@@ -58,7 +58,6 @@ public class Meth {
         return j;
     }
 
-
     /**
      * @param x Input value to perform preset rate calculation on
      * @return Returns the rate calculation
@@ -93,7 +92,6 @@ public class Meth {
         }
         return 0;
     }
-
 
     /**
      * @param d Input to perform deadzone on

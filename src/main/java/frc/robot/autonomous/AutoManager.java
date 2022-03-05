@@ -31,17 +31,17 @@ public class AutoManager {
         auto3 = new AutoMode("test");
 
         
-        auto3.addSection(new AutoDrive(2, robot, false), 0);
-        auto3.addSection(new AutoDrive(2, robot, true), 0);
+        auto3.addSection(new AutoDrive(1, robot, false), 0);
+        auto3.addSection(new AutoDrive(1, robot, true), 0);
         auto3.addSection(new AutoAutoAlign(1, robot), 0);
         auto3.addSection(new AutoShoot(3, robot), 0);
 
         //auto3.addSection(new AutoWait(1), 1);
-        auto3.addSection(new AutoIntake(2.2, robot), 1);
+        auto3.addSection(new AutoIntake(1, robot), 1);
 
-        auto1.addSection(new AutoDrive(2, robot, false), 0);
-        auto1.addSection(new AutoIntake(2.2, robot), 1);
         auto1.addSection(new AutoDrive(2, robot, true), 0);
+        auto1.addSection(new AutoIntake(2.2, robot), 1);
+        auto1.addSection(new AutoDrive(2, robot, false), 0);
         auto1.addSection(new AutoShoot(4, robot), 0);
 
         /**

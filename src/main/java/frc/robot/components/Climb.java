@@ -13,23 +13,25 @@ public class Climb {
         left = new CANSparkMax(leftID, MotorType.kBrushless);
         right = new CANSparkMax(rightID, MotorType.kBrushless);
         lock = new Solenoid(PneumaticsModuleType.CTREPCM, solenoidID);
-
-        right.follow(left);
     }
 
     /**
      * Sets climb motor speed
      * @param c How fast you want the motors to go
      */
-    public void set(double c) {
+    public void setLeft(double c) {
         left.set(c);
+    }
+
+    public void setRight(double c) {
+        right.set(c);
     }
 
     /**
      * Locks climb solenoid
      */
     public void lock() {
-        lock.set(false);
+        lock.set(true);
     }
 
     /**
@@ -44,6 +46,6 @@ public class Climb {
      * Unlocks lock solenoid
      */
     public void unlock() {
-        lock.set(true);
+        lock.set(false);
     }
 }

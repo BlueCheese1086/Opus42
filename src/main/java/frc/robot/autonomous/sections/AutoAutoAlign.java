@@ -19,7 +19,7 @@ public class AutoAutoAlign extends AutoSection {
     @Override
     public void update() {
         // TODO Auto-generated method stub
-        robot.getDrivetrain().autoAlign();
+        robot.drivetrain.autoAlign();
         
     }
 

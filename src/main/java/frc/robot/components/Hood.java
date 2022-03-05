@@ -15,11 +15,19 @@ public class Hood {
      * @param position the degree which the hood is set to
      */
     public void set(double position){
-        motor.setAngle(position);
+        motor.set(position);
     }
 
     public void setRaw(int a) {
         motor.setRaw(a);
+    }
+
+    public double getPos() {
+        return motor.get();
+    }
+
+    public void setSpeed(double speed) {
+        motor.setSpeed(speed);
     }
 
     /**

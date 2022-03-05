@@ -19,7 +19,7 @@ public class Constants {
 
     public static final double LAUNCHER_KP = 0.5;
     public static final double LAUNCHER_KI = 0.00;
-    public static final double LAUNCHER_KD = 3.8;
+    public static final double LAUNCHER_KD = 0.5;
     public static final double LAUNCHER_KF = 1023 / LAUNCHER_MAX_VELOCITY;
 
     public static final double MP_DRIVE_FF = 1.0 / 5676.0;

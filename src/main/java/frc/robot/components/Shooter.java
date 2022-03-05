@@ -6,11 +6,9 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.sensors.Limelight;
-
-import java.util.ArrayList;
-import java.util.Hashtable;
 
 public class Shooter {
     //this will be madness and i will figure it out eventually - kai
@@ -23,7 +21,7 @@ public class Shooter {
     Indexer indexer;
     Drivetrain drivetrain; 
     double velocity;
-    ShooterConstants shooterConstants;
+    public ShooterConstants shooterConstants;
     
     //4 cansparkmaxes????????? tbd
     public Shooter(int xID, int yID, int oneID, int twoID, int threeID, int fourID, Limelight limelight, Hood hood, Indexer indexer, Drivetrain drivetrain){
@@ -41,10 +39,18 @@ public class Shooter {
         this.drivetrain = drivetrain;
 
         y.setInverted(true);
-        y.follow(x);
-        //x.config_kP(0, 0.05);
-        //x.config_kI(0, 0);
-        //x.config_kD(0, 0);
+
+        x.setInverted(false);
+        x.config_kP(0, Constants.LAUNCHER_KP);
+        x.config_kI(0, Constants.LAUNCHER_KI);
+        x.config_kD(0, Constants.LAUNCHER_KD);
+        x.config_kF(0, Constants.LAUNCHER_KF);
+
+        y.setInverted(true);
+        y.config_kP(0, Constants.LAUNCHER_KP);
+        y.config_kI(0, Constants.LAUNCHER_KI);
+        y.config_kD(0, Constants.LAUNCHER_KD);
+        y.config_kF(0, Constants.LAUNCHER_KF);
 
         // 41 - Back Top
         one.setInverted(true);
@@ -70,6 +76,16 @@ public class Shooter {
      */
     public void setVelocity(double velocity){
         this.velocity = velocity;
+    }
+
+    public void setMotorVelo(double velo) {
+        x.set(TalonFXControlMode.Velocity, velo);
+        y.set(TalonFXControlMode.Velocity, velo);
+    }
+
+    public void setMotorPercentage(double velo) {
+        x.set(TalonFXControlMode.PercentOutput, velo);
+        y.set(TalonFXControlMode.PercentOutput, velo);
     }
 
     /*notes for future kai and emily-
@@ -177,7 +193,54 @@ public class Shooter {
     /**
      * setpoints version of shoot method
      */
+
+    public void alignSetpoint(){
+        double tx = limelight.getXAngle();
+        if (Math.abs(tx)>2.0){
+            drivetrain.autoAlign();
+            //tx = limelight.getXAngle();
+        }
+
+        
+        double ty = limelight.getYAngle();
+        double[] setPoint = shooterConstants.getSetpoint(shooterConstants.getNearestSetpointID(ty));
+        double targetYAngle = setPoint[0]; //as in, the angle we want to get to, not the limelight target
+        double hoodAngle = setPoint[1];
+        /*
+        0 - yAngle
+        1 - hoodAngle
+        2 - velocity
+        */
+
+        //autoalign to that setpoint
+        
+        if(Math.abs(ty - targetYAngle) > 2.0){
+            drivetrain.setPointAlign(targetYAngle);
+            //drivetrain.autoAlign();
+        }
+
+        //change the hood angle
+        //hood.setSpeed(1);
+        hood.set(hoodAngle);
+    }
+
+    public void shootAuto(){
+        limelight.setLights(3);
+        setMotorVelo(SmartDashboard.getNumber("Shooter Velocity", 0));
+
+        double ty = limelight.getYAngle();
+        double[] setPoint = shooterConstants.getSetpoint(shooterConstants.getNearestSetpointID(ty));
+        double hoodAngle = setPoint[1];
+        hood.set(hoodAngle);
+
+        if (Math.abs(x.getSelectedSensorVelocity() - SmartDashboard.getNumber("Shooter Velocity", 0)) < 300 && Math.abs(hood.getPos() - hoodAngle) < 2) {
+            one.set(0.5);
+            indexer.in();
+        }
+    }
+
     public void shoot(){
+        limelight.setLights(3);
         //ok, so our inconveniently written algorithm is:
 
         //auto-align to tx
@@ -191,9 +254,9 @@ public class Shooter {
 
         //auto-align to tx
         double tx = limelight.getXAngle();
-        while(Math.abs(tx)>1.0){
+        if (Math.abs(tx)>2.0){
             drivetrain.autoAlign();
-            tx = limelight.getXAngle();
+            //tx = limelight.getXAngle();
         }
 
         //figure out the closest setpoint via yAngle (will be the one at setPointID)
@@ -210,21 +273,24 @@ public class Shooter {
         */
 
         //autoalign to that setpoint
-        //TODO: make a drivetrain PID
-        while(Math.abs(ty - targetYAngle) > 2.0){
+        
+        if(Math.abs(ty - targetYAngle) > 2.0){
             drivetrain.setPointAlign(targetYAngle);
+            //drivetrain.autoAlign();
         }
 
         //change the hood angle
+        //hood.setSpeed(1);
         hood.set(hoodAngle);
 
         //set the velocity of the falcons
-        //TODO: use toshi and ryan's PID
-        x.set(ControlMode.Velocity, targetVelocity);
+        setMotorVelo(targetVelocity);
 
-        //pewpew     
-        one.set(0.5);
-        indexer.in();
+        //pewpew
+        if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 500 && Math.abs(hood.getPos() - hoodAngle) < 1.0) {
+            one.set(0.5);
+            indexer.in();
+        }
     }
 
     /**
@@ -260,8 +326,9 @@ public class Shooter {
      * Stops everything
      */
     public void stopEverything(){
-        x.set(TalonFXControlMode.PercentOutput, 0);
+        setMotorPercentage(0);
         one.set(0);
+        //limelight.setLights(1);
     }
 
     /**

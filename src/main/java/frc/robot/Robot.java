@@ -24,9 +24,7 @@ import frc.robot.Control.Primary;
 import frc.robot.Control.Secondary;
 import frc.robot.autonomous.AutoManager;
 import frc.robot.autonomous.AutoMode;
-//import frc.robot.autonomous.sections.AutoAutoAlign;
 import frc.robot.components.Climb;
-import frc.robot.components.CustomServo;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.Hood;
 import frc.robot.components.Indexer;
@@ -39,78 +37,62 @@ import frc.robot.controlInterfaces.IntakeInterface;
 import frc.robot.controlInterfaces.Interface;
 import frc.robot.controlInterfaces.ShooterInterface;
 import frc.robot.sensors.Limelight;
-//import frc.robot.autonomous.sections.AutoAutoAlign;
-//import frc.robot.autonomous.sections.AutoShoot;
 
 import com.ctre.phoenix.music.Orchestra;
 
 public class Robot extends TimedRobot {
 
-  public static Drivetrain drivetrain;
+  public Drivetrain drivetrain;
   public Climb climb;
   public Indexer indexer;
-
-  public CustomServo servo;
-
   public Intake intake;
   public Shooter shooter;
   public Limelight limelight;
   public Hood hood;
   public AutoManager m;
-  Control c;
-  ArrayList<Interface> interfaces;
-  Orchestra o;
+  public Control c;
+  public ArrayList<Interface> interfaces;
+  public Orchestra o;
 
-  SendableChooser<Primary> primaryDrivers;
-  SendableChooser<Secondary> secondaryDrivers;
-
+  public SendableChooser<Primary> primaryDrivers;
+  public SendableChooser<Secondary> secondaryDrivers;
   public SendableChooser<String> distanceVelo;
-
   public SendableChooser<AutoMode> autoMode;
-
-  public Drivetrain getDrivetrain(){
-      return drivetrain;
-  }
-
-  public Shooter getShooter(){
-    return shooter;
-  }
-
-  public Indexer getIndexer(){
-    return indexer;
-  }
 
   // Robot Initiate
   @Override
   public void robotInit() {
 
+    // Init control
+    // Setting default drivers
     c = new Control();
-
     c.setPrimary(Primary.RyanBox);
     c.setSecondary(Secondary.Toshi);
 
-    //servo = new CustomServo(RobotMap.HOOD_SERVO_ID);
 
+    // Initializing components
     limelight = new Limelight();
     hood = new Hood(RobotMap.HOOD_SERVO_ID);
     drivetrain = new Drivetrain(RobotMap.FRONT_LEFT_ID, RobotMap.FRONT_RIGHT_ID, RobotMap.BACK_LEFT_ID, RobotMap.BACK_RIGHT_ID, limelight);
     climb = new Climb(RobotMap.CLIMB_LEFT_ID, RobotMap.CLIMB_RIGHT_ID, RobotMap.CLIMB_SOLENOID_ID);
     indexer = new Indexer(RobotMap.INDEXER_LEFT_ID, RobotMap.INDEXER_RIGHT_ID);
     intake = new Intake(RobotMap.INTAKE_MOTOR_ID, RobotMap.INTAKE_SOLENOID_ID);
-    shooter = new Shooter(this, RobotMap.LAUNCHER_X_ID, RobotMap.LAUNCHER_Y_ID, RobotMap.LAUNCHER_ONE_ID, RobotMap.LAUNCHER_TWO_ID, RobotMap.LAUNCHER_THREE_ID, RobotMap.LAUNCHER_FOUR_ID, limelight, hood, indexer, drivetrain);
+    shooter = new Shooter(RobotMap.LAUNCHER_X_ID, RobotMap.LAUNCHER_Y_ID, RobotMap.LAUNCHER_ONE_ID, RobotMap.LAUNCHER_TWO_ID, RobotMap.LAUNCHER_THREE_ID, RobotMap.LAUNCHER_FOUR_ID, limelight, hood, indexer, drivetrain);
 
+    // Initializing interfaces
     interfaces = new ArrayList<>();
     interfaces.addAll(Arrays.asList(new DrivetrainInterface(this, c), new ClimbInterface(this, c), new IndexerInterface(this, c), new IntakeInterface(this, c), new ShooterInterface(this, c)));
 
-
+    // Sendable Choosers
     distanceVelo = new SendableChooser<>();
-
     primaryDrivers = new SendableChooser<>();
     secondaryDrivers = new SendableChooser<>();
-
     autoMode = new SendableChooser<>();
+
+    // Auto Manager
     m = new AutoManager(this);
 
+    // Driver selection
     for (Primary p : Primary.values()) {
       primaryDrivers.addOption("Primary - " + p.name(), p);
     }
@@ -120,11 +102,10 @@ public class Robot extends TimedRobot {
     primaryDrivers.setDefaultOption("Primary - " + Primary.values()[0].name(), Primary.values()[0]);
     secondaryDrivers.setDefaultOption("Secondary - " + Secondary.values()[0].name(), Secondary.values()[0]);
 
+    // Singing Falcon FX
     o = new Orchestra();
-
     o.addInstrument(shooter.x);
     o.addInstrument(shooter.y);
-
     o.loadMusic("somethingjustlikethis.chrp");
 
   }
@@ -136,7 +117,7 @@ public class Robot extends TimedRobot {
      ********************/
 
     // Hood
-    SmartDashboard.putNumber("Hood Raw", Double.valueOf(hood.getRaw()));
+    SmartDashboard.putNumber("Hood Raw", hood.getPos());
 
     // Battery Voltage
     SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
@@ -190,13 +171,11 @@ public class Robot extends TimedRobot {
 
     // Distance -> Velo Data
     SmartDashboard.putData(distanceVelo);
-
   }
 
   @Override
   public void autonomousInit() {
     m.getAuto();
-
   }
 
   /** This function is called periodically during autonomous. */
@@ -206,48 +185,25 @@ public class Robot extends TimedRobot {
     //o.play();
   }
 
-  //AutoAutoAlign a;
-
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-
-    //a = new AutoAutoAlign(3);
 
     c.setPrimary(primaryDrivers.getSelected());
     c.setSecondary(secondaryDrivers.getSelected());
 
   }
-  /** This function is called periodically during operator control. */
-
-  //AutoAutoAlign a = new AutoAutoAlign(3);
 
   @Override
   public void teleopPeriodic() {
+    // Ticks each interface
     interfaces.forEach(Interface::tick);
-
-    /*if (c.primary.getPOV() == 0) {
-      hood.setRaw(hood.getRaw() + 1);
-    } else if (c.primary.getPOV() == 180) {
-      hood.setRaw(hood.getRaw() - 1);
-    }*/
-
-    /*if (c.primary.getPOV() == 0) {
-      servo.setSpeed(1);
-    } else if (c.primary.getPOV() == 180) {
-      servo.setSpeed(-1);
-    } else {
-      servo.setSpeed(0);
-    }*/
-    
-    
   }
 
   long timeOff;
-
-  /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {
+    // Sets up counter for disabled time
     timeOff = 0;
     timeOff = System.currentTimeMillis();
   }
@@ -255,6 +211,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
+    // Updates time disabled counter
     SmartDashboard.putNumber("Time Disabled", (System.currentTimeMillis() - timeOff)/1000.0);
   }
 
@@ -277,8 +234,4 @@ public class Robot extends TimedRobot {
   @Override
   public void simulationPeriodic() {
   }
-
-  /**public static void testShoot(){
-    shooter.shoot();
-  }*/
 }

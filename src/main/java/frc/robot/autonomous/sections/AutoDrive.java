@@ -18,7 +18,7 @@ public class AutoDrive extends AutoSection {
 
     /** distance = cm */
     public AutoDrive(double distance, Robot robot){
-        this.drivetrain = robot.getDrivetrain();
+        this.drivetrain = robot.drivetrain;
         this.distance = (distance * 0.001) * Constants.DRIVETRAIN_POSITION_SCALE;
         this.rDrivePIDController = new PIDController("distance", drivetrain.getFrontRight(), distance);
         this.lDrivePIDController = new PIDController("distance", drivetrain.getFrontLeft(), distance);
@@ -30,7 +30,7 @@ public class AutoDrive extends AutoSection {
 
     public AutoDrive(int length, Robot robot, boolean invert){
         super(length);
-        this.drivetrain = robot.getDrivetrain();
+        this.drivetrain = robot.drivetrain;
         this.isDistBased = false;
         this.invert = invert;
     }
