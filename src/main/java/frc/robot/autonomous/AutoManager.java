@@ -17,7 +17,7 @@ import frc.robot.autonomous.sections.*;
 public class AutoManager {
 
     SendableChooser<AutoMode> autoChooser;
-    AutoMode auto1, auto2, auto3;
+    AutoMode auto1, auto2, auto3, auto4;
 
     Robot robot;
 
@@ -29,6 +29,25 @@ public class AutoManager {
         auto1 = new AutoMode("2ball");
         auto2 = new AutoMode("1ball");
         auto3 = new AutoMode("test");
+        
+        /**auto4 = new AutoMode("3ball");
+
+        auto4.addSection(new AutoAutoAlign(1), 0);
+        auto4.addSection(new AutoShoot(2), 0);
+        auto4.addSection(new AutoDrive(1, robot, false), 0);
+        auto4.addSection(new AutoDrive(1, robot, true), 0);
+        auto4.addSection(new AutoTurn(1, true, 0.5), 0);
+        auto4.addSection(new AutoDrive(2, robot, false), 0);
+        auto4.addSection(new AutoTurn(1, true, 0.5), 0);
+        auto4.addSection(new AutoAutoAlign(1), 0);
+        auto4.addSection(new AutoShoot(3), 0);
+
+        auto4.addSection(new AutoWait(3), 1);
+        auto4.addSection(new AutoIntake(1), 1);
+        auto4.addSection(new AutoWait(2), 1);
+        auto4.addSection(new AutoIntake(2), 1);
+    
+        */
 
         
         auto3.addSection(new AutoDrive(1, robot, false), 0);
