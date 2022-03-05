@@ -1,18 +1,13 @@
 package frc.robot.components;
 
 import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
 
 public class Hood {
     Servo motor;
 
-    PWMMotorController pwm;
-
     public Hood(int motorID){
         motor = new Servo(motorID);
         // = new PWMMotorController();
-            
-        
     }
 
     /**
@@ -23,11 +18,19 @@ public class Hood {
         motor.setAngle(position);
     }
 
+    public void setRaw(int a) {
+        motor.setRaw(a);
+    }
+
     /**
      * Sets hood to max position
      */
     public void setMax(){
         motor.set(1);
+    }
+
+    public int getRaw() {
+        return motor.getRaw();
     }
 
     /**

@@ -9,8 +9,6 @@
 █▄─██─▄█▄─█▀▀▀█─▄█▄─██─▄███▄─▀█▀─▄█▄─█─▄███▄─▀█▄─▄█▄─██─▄█─▄─▄─█░▄▄░▄█
 ██─██─███─█─█─█─███─██─█████─█▄█─███▄─▄█████─█▄▀─███─██─████─████▀▄█▀█
 ▀▀▄▄▄▄▀▀▀▄▄▄▀▄▄▄▀▀▀▄▄▄▄▀▀▀▀▄▄▄▀▄▄▄▀▀▄▄▄▀▀▀▀▄▄▄▀▀▄▄▀▀▄▄▄▄▀▀▀▄▄▄▀▀▄▄▄▄▄▀
-
-
 */
 
 package frc.robot;
@@ -28,6 +26,7 @@ import frc.robot.autonomous.AutoManager;
 import frc.robot.autonomous.AutoMode;
 //import frc.robot.autonomous.sections.AutoAutoAlign;
 import frc.robot.components.Climb;
+import frc.robot.components.CustomServo;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.Hood;
 import frc.robot.components.Indexer;
@@ -51,6 +50,8 @@ public class Robot extends TimedRobot {
   public Climb climb;
   public Indexer indexer;
 
+  public CustomServo servo;
+
   public Intake intake;
   public Shooter shooter;
   public Limelight limelight;
@@ -62,6 +63,8 @@ public class Robot extends TimedRobot {
 
   SendableChooser<Primary> primaryDrivers;
   SendableChooser<Secondary> secondaryDrivers;
+
+  public SendableChooser<String> distanceVelo;
 
   public SendableChooser<AutoMode> autoMode;
 
@@ -86,16 +89,21 @@ public class Robot extends TimedRobot {
     c.setPrimary(Primary.RyanBox);
     c.setSecondary(Secondary.Toshi);
 
+    //servo = new CustomServo(RobotMap.HOOD_SERVO_ID);
+
     limelight = new Limelight();
     hood = new Hood(RobotMap.HOOD_SERVO_ID);
     drivetrain = new Drivetrain(RobotMap.FRONT_LEFT_ID, RobotMap.FRONT_RIGHT_ID, RobotMap.BACK_LEFT_ID, RobotMap.BACK_RIGHT_ID, limelight);
     climb = new Climb(RobotMap.CLIMB_LEFT_ID, RobotMap.CLIMB_RIGHT_ID, RobotMap.CLIMB_SOLENOID_ID);
     indexer = new Indexer(RobotMap.INDEXER_LEFT_ID, RobotMap.INDEXER_RIGHT_ID);
     intake = new Intake(RobotMap.INTAKE_MOTOR_ID, RobotMap.INTAKE_SOLENOID_ID);
-    shooter = new Shooter(RobotMap.LAUNCHER_X_ID, RobotMap.LAUNCHER_Y_ID, RobotMap.LAUNCHER_ONE_ID, RobotMap.LAUNCHER_TWO_ID, RobotMap.LAUNCHER_THREE_ID, RobotMap.LAUNCHER_FOUR_ID, limelight, hood, indexer, drivetrain);
+    shooter = new Shooter(this, RobotMap.LAUNCHER_X_ID, RobotMap.LAUNCHER_Y_ID, RobotMap.LAUNCHER_ONE_ID, RobotMap.LAUNCHER_TWO_ID, RobotMap.LAUNCHER_THREE_ID, RobotMap.LAUNCHER_FOUR_ID, limelight, hood, indexer, drivetrain);
 
     interfaces = new ArrayList<>();
     interfaces.addAll(Arrays.asList(new DrivetrainInterface(this, c), new ClimbInterface(this, c), new IndexerInterface(this, c), new IntakeInterface(this, c), new ShooterInterface(this, c)));
+
+
+    distanceVelo = new SendableChooser<>();
 
     primaryDrivers = new SendableChooser<>();
     secondaryDrivers = new SendableChooser<>();
@@ -127,6 +135,9 @@ public class Robot extends TimedRobot {
      * TELEMETRY WOOOOO *
      ********************/
 
+    // Hood
+    SmartDashboard.putNumber("Hood Raw", Double.valueOf(hood.getRaw()));
+
     // Battery Voltage
     SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
 
@@ -146,11 +157,18 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Front Right Temp", drivetrain.getTemps()[2]);
     SmartDashboard.putNumber("Back Right Temp", drivetrain.getTemps()[3]);
 
+    SmartDashboard.putNumber("Shooter 1 Temp", shooter.x.getTemperature());
+    SmartDashboard.putNumber("Shooter 2 Temp", shooter.y.getTemperature());
+
     // Shooter
     SmartDashboard.putBoolean("Shooter Button", c.getLauncherShoot());
     SmartDashboard.putNumber("Shooter 1 Velo", shooter.x.getSelectedSensorVelocity());
 
-    //Solenoids
+    // Shooter Currents
+    SmartDashboard.putNumber("Shooter 1 Current", shooter.x.getStatorCurrent());
+    SmartDashboard.putNumber("Shooter 2 Current", shooter.y.getStatorCurrent());
+
+    // Solenoids
     SmartDashboard.putBoolean("Intake Solenoid", intake.getPos());
     SmartDashboard.putBoolean("Climb Solenoid", climb.getLock());
 
@@ -158,16 +176,21 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Shooter Velocity", SmartDashboard.getNumber("Shooter Velocity", 0));
     SmartDashboard.getNumber("Shooter Velocity", 0);
 
-    //Currents
+    // Currents
     SmartDashboard.putNumber("Front Right Current", drivetrain.getFrontRight().getOutputCurrent());
     SmartDashboard.putNumber("Front Left Current", drivetrain.getFrontLeft().getOutputCurrent());
 
-    //SPEEEEED
+    // SPEEEEED
     SmartDashboard.putNumber("Speed", (drivetrain.getFrontRight().get() + drivetrain.getFrontLeft().get())/2.0);
 
-    //Limelight
+    // Limelight
     SmartDashboard.putNumber("Ground Number", limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT - Constants.CAMERA_HEIGHT + Constants.CARGO_DIAMETER));
     SmartDashboard.putNumber("Y Angle", limelight.getYAngle());
+    SmartDashboard.putNumber("X Angle", limelight.getXAngle());
+
+    // Distance -> Velo Data
+    SmartDashboard.putData(distanceVelo);
+
   }
 
   @Override
@@ -203,10 +226,19 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     interfaces.forEach(Interface::tick);
 
-    if (c.primary.getXButton()) {
-      //a.update();
-      //drivetrain.autoAlign();
-    }
+    /*if (c.primary.getPOV() == 0) {
+      hood.setRaw(hood.getRaw() + 1);
+    } else if (c.primary.getPOV() == 180) {
+      hood.setRaw(hood.getRaw() - 1);
+    }*/
+
+    /*if (c.primary.getPOV() == 0) {
+      servo.setSpeed(1);
+    } else if (c.primary.getPOV() == 180) {
+      servo.setSpeed(-1);
+    } else {
+      servo.setSpeed(0);
+    }*/
     
     
   }

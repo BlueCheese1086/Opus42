@@ -26,6 +26,7 @@ public class Limelight {
      public double getYAngle() {
          return limelight.getEntry("ty").getDouble(0);
      }
+
  
      /**
       * Sets light settings
