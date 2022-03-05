@@ -1,6 +1,7 @@
 package frc.robot.components;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -8,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
 import frc.robot.sensors.Limelight;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class Shooter {
@@ -21,8 +23,8 @@ public class Shooter {
     Indexer indexer;
     Drivetrain drivetrain; 
     double velocity;
-    Hashtable<Double, Double> h;
-
+    ShooterConstants shooterConstants;
+    
     //4 cansparkmaxes????????? tbd
     public Shooter(int xID, int yID, int oneID, int twoID, int threeID, int fourID, Limelight limelight, Hood hood, Indexer indexer, Drivetrain drivetrain){
         x = new TalonFX(xID);
@@ -31,7 +33,8 @@ public class Shooter {
         two = new CANSparkMax(twoID, MotorType.kBrushless);
         three = new CANSparkMax(threeID, MotorType.kBrushless);
         four = new CANSparkMax(fourID, MotorType.kBrushless);
-
+        shooterConstants = new ShooterConstants();
+        
         this.limelight = limelight;
         this.hood = hood;
         this.indexer = indexer;
@@ -127,7 +130,7 @@ public class Shooter {
     /**
      * pew pew
      */
-    public void shoot(){
+    /*public void shoot(){
         ///all of these values are in meters or m/s
         //double targetVelocity = Constants.LAUNCHER_DEFAULT_VELOCITY;
         double groundDistance = limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT);
@@ -154,13 +157,6 @@ public class Shooter {
         x.config_kI(0, Constants.LAUNCHER_KI);
         x.config_kD(0, Constants.LAUNCHER_KD);
 
-        /*
-         *
-	    * See documentation for calculation details.
-	    * If using velocity, motion magic, or motion profile,
-	    * use (1023 * duty-cycle / sensor-velocity-sensor-units-per-100ms).
-        * 
-        */
             
         x.config_kF(0, Constants.LAUNCHER_KF);
         
@@ -176,6 +172,55 @@ public class Shooter {
             indexer.in();
         }
         //}      
+    }*/
+
+    /**
+     * setpoints version of shoot method
+     */
+    public void shoot(){
+        //ok, so our inconveniently written algorithm is:
+
+        //auto-align to tx
+        //figure out the closest setpoint via yangle
+        //auto-align to that ty
+        //auto-align tx again?????? //TODO: see which timing of auto-aligning tx is better
+        //change the hood angle
+        //set velocity of falcons
+        //PEW PEW
+
+
+        //auto-align to tx
+        double tx = limelight.getXAngle();
+        while(Math.abs(tx)>1.0){
+            drivetrain.autoAlign();
+            tx = limelight.getXAngle();
+        }
+
+        //figure out the closest setpoint via yAngle (will be the one at setPointID)
+        
+        double ty = limelight.getYAngle();
+        double[] setPoint = shooterConstants.getSetpoint(shooterConstants.getNearestSetpointID(ty));
+        double hoodAngle = setPoint[1];
+        double targetVelocity = setPoint[2];
+        /*
+        0 - yAngle
+        1 - hoodAngle
+        2 - velocity
+        */
+
+        //autoalign to that setpoint
+        //TODO: make a drivetrain PID
+
+        //change the hood angle
+        hood.set(hoodAngle);
+
+        //set the velocity of the falcons
+        //TODO: use toshi and ryan's PID
+        x.set(ControlMode.Velocity, targetVelocity);
+
+        //pewpew     
+        one.set(0.5);
+        indexer.in();
     }
 
     /**
@@ -234,6 +279,8 @@ public class Shooter {
         x.set(TalonFXControlMode.Velocity, velocity);
     }
     */
+
+    
 
 
 
