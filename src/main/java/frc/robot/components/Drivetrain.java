@@ -127,6 +127,7 @@ public class Drivetrain {
         double steering_adjust = (ty) * Kp;
         if( Math.abs(ty - targetYAngle) > 1.0) steering_adjust -= min_command;
         else if(Math.abs(ty-targetYAngle) < 1.0) steering_adjust+=min_command;
+        steering_adjust*=-1;
         this.set(steering_adjust, steering_adjust);
     }
 }
