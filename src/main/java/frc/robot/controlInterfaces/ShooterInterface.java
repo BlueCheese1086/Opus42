@@ -25,7 +25,12 @@ public class ShooterInterface extends Interface{
             //robot.shooter.setVelocity(SmartDashboard.getNumber("Shooter Velocity", 0));
             //shooter.shoot();
             robot.shooter.shoot();
-        } else {
+        } 
+        else if(c.getLauncherAlign()){
+            robot.limelight.setLights(3);
+            robot.shooter.alignSetpoint();
+        }
+        else {
             //robot.limelight.setLights(1);
             robot.shooter.stopEverything();
         }
