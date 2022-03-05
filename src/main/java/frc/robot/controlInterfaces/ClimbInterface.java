@@ -17,13 +17,21 @@ public class ClimbInterface extends Interface{
      * what the climb will do every tick
      */
     public void tick() {
-        if (Math.abs(c.getClimb()) > .2) {
+
+
+
+
+        if (Math.abs(c.getLeftClimb()) > .2) {
             climb.lock();
-            climb.set(c.getClimb());
-        } else {
-            climb.set(0);
-            climb.unlock();
+            climb.setLeft(c.getLeftClimb());
         }
+        if (Math.abs(c.getRightClimb()) > .2) {
+            climb.lock();
+            climb.setRight(c.getRightClimb());
+        }
+
+
+
     }
 
 }

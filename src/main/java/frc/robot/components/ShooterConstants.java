@@ -7,6 +7,8 @@ public class ShooterConstants {
 
     public ShooterConstants(){
         setPoints = new ArrayList<double[]>();
+        this.setPoint(7, .75, 8400);
+        this.setPoint(-12, 1.0, 10000);
     }
 
     public ArrayList<double[]> getSetPoints(){

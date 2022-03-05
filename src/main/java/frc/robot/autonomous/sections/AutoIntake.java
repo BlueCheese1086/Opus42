@@ -17,7 +17,7 @@ public class AutoIntake extends AutoSection{
         super(length);
         this.intake = robot.intake;
         //this.drivetrain = robot.drivetrain;
-        this.indexer = robot.getIndexer();
+        this.indexer = robot.indexer;
         
     }
 

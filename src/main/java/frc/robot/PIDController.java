@@ -10,7 +10,7 @@ public class PIDController {
     CANSparkMax controller;
     SparkMaxPIDController pid;
 
-    public PIDController(String type, CANSparkMax controller, double value){
+    public PIDController(String type, CANSparkMax controller, double value) {
             this.type = type;
             this.value = value;
             this.controller = controller;
@@ -25,16 +25,18 @@ public class PIDController {
         pid.setOutputRange(-1, 1);
     }
 
-    /** turns the robot to the given angle
-      * angle = degrees
+    /** 
+     * turns the robot to the given angle
+     * @param angle = degrees
      */
     public void rotateToAngle(double angle) {
         value = angle;
         pid.setReference(angle, CANSparkMax.ControlType.kPosition, 0);
     }
 
-    /** move the robot the given distance
-      * distance = meters
+    /** 
+     * move the robot the given distance
+     * @param distance = meters
      */
     public void driveDistance(double distance) {
         value = distance;

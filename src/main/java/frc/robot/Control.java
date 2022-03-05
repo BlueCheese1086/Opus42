@@ -4,12 +4,14 @@ import edu.wpi.first.wpilibj.XboxController;
 
 public class Control {
 
+    // Enum of primary drivers
     public enum Primary {
         RyanBox,
         YBox,
         Joystick;
     }
 
+    // Enum of secondary drivers
     public enum Secondary {
         Toshi;
     }
@@ -19,10 +21,6 @@ public class Control {
 
     public XboxController primary = new XboxController(0);
     public XboxController secondary = new XboxController(1);
-
-    
-    /*Joystick left = new Joystick(2);
-    Joystick right = new Joystick(3);*/
 
     /**
      * @param p Primary driver to set control scheme
@@ -38,19 +36,7 @@ public class Control {
         suckondeeznutzDriver = sux;
     }
 
-    /*
-     * --getDriveForward (returns a double)--
-     * --getDriveTurn (returns a double)--
-     * --getSafety--
-     * --getIntakeIn--
-     * --getIntakeOut--
-     * --getIntakeToggle-- //returns a booleans
-     * --getIndexerIn--
-     * --getIndexerOut--
-     * --getLauncherShoot--
-     * --getClimbUp--
-     * --getClimbDown--
-     */
+
 
     /**
      * @return Returns acceleration value based on driver profile
@@ -178,14 +164,36 @@ public class Control {
     }
 
     /**
-     * @return Raw double value of climb axis (deadzone .03)
+     * @return Raw double value of left climb axis (deadzone .03)
      */
-    public double getClimb() {
+    public double getLeftClimb() {
         switch (suckondeeznutzDriver) {
             case Toshi:
                 return Meth.deadzone(secondary.getLeftY(), .03);
             default:
                 return 0.0;
+        }
+    }
+
+    /**
+     * @return Raw double value of right climb axis (deadzone .03)
+     */
+    public double getRightClimb() {
+        switch (suckondeeznutzDriver) {
+            case Toshi:
+                return Meth.deadzone(secondary.getRightY(), .03);
+            default:
+                return 0.0;
+        }
+    }
+
+    //TODO: have ryan decide what button he wants for this
+    public boolean getLauncherAlign(){
+        switch(primDriver){
+            case RyanBox:
+                return primary.getAButton();
+            default:
+                return primary.getAButton();
         }
     }
 }

@@ -10,11 +10,11 @@ public class DrivetrainInterface extends Interface{
     //Constructor
     public DrivetrainInterface(Robot robot, Control c){
         super(robot, c);
-        drivetrain = robot.getDrivetrain();
+        drivetrain = robot.drivetrain;
     }
 
     /**
-     * what the Twin Turbo V8 2.4L 800BHP absolute clapped out honda civic will do every tick
+     * what the Twin Turbo V8 2.4L 800BHP absolute clapped out honda civic (Opus42) will do every tick
      */
     public void tick() {
         if (true) {
