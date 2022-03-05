@@ -7,13 +7,15 @@ public class ShooterConstants {
 
     public ShooterConstants(){
         setPoints = new ArrayList<double[]>();
-        this.setPoint(7, .75, 8400);
-        this.setPoint(-12, 1.0, 10000);
+        this.setPoint(7, .75, 10000);
+        this.setPoint(-1, 0.9, 13000);
+        this.setPoint(-12, 1.0, 14000);
     }
 
     public ArrayList<double[]> getSetPoints(){
         return setPoints;
     }
+    
     /**
      * //TODO: determine what units these should be in
      * @param yAngle limelight.getYAngle() 

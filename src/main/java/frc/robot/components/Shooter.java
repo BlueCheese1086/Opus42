@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.sensors.Limelight;
 
@@ -223,6 +224,21 @@ public class Shooter {
         hood.set(hoodAngle);
     }
 
+    public void shootAuto(){
+        limelight.setLights(3);
+        setMotorVelo(SmartDashboard.getNumber("Shooter Velocity", 0));
+
+        double ty = limelight.getYAngle();
+        double[] setPoint = shooterConstants.getSetpoint(shooterConstants.getNearestSetpointID(ty));
+        double hoodAngle = setPoint[1];
+        hood.set(hoodAngle);
+
+        if (Math.abs(x.getSelectedSensorVelocity() - SmartDashboard.getNumber("Shooter Velocity", 0)) < 300 && Math.abs(hood.getPos() - hoodAngle) < 2) {
+            one.set(0.5);
+            indexer.in();
+        }
+    }
+
     public void shoot(){
         limelight.setLights(3);
         //ok, so our inconveniently written algorithm is:
@@ -271,7 +287,7 @@ public class Shooter {
         setMotorVelo(targetVelocity);
 
         //pewpew
-        if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 300 && Math.abs(hood.getPos() - hoodAngle) < 2) {
+        if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 500 && Math.abs(hood.getPos() - hoodAngle) < 1.0) {
             one.set(0.5);
             indexer.in();
         }

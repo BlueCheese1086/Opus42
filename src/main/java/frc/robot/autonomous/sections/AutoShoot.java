@@ -43,7 +43,7 @@ public class AutoShoot extends AutoSection {
     public void update() {
         //robot.limelight.setLights(3);
         //robot.shooter.setVelocity(SmartDashboard.getNumber("Shooter Velocity", 0));
-        robot.shooter.setVelocity(12000);
+        robot.shooter.setVelocity(13000);
         //shooter.shoot();
         robot.shooter.shoot();
 
