@@ -17,8 +17,8 @@ public class Control {
     static Primary primDriver;
     static Secondary suckondeeznutzDriver;
 
-    XboxController primary = new XboxController(0);
-    XboxController secondary = new XboxController(1);
+    public XboxController primary = new XboxController(0);
+    public XboxController secondary = new XboxController(1);
 
     
     /*Joystick left = new Joystick(2);
@@ -169,9 +169,9 @@ public class Control {
      * @return Returns t/f for secondary shoot button
      */
     public boolean getLauncherShoot() {
-        switch (suckondeeznutzDriver) {
-            case Toshi:
-                return secondary.getXButton();
+        switch (primDriver) {
+            case RyanBox:
+                return primary.getXButton();
             default:
                 return false;
         }

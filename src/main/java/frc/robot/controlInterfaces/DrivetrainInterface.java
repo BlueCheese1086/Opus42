@@ -10,7 +10,7 @@ public class DrivetrainInterface extends Interface{
     //Constructor
     public DrivetrainInterface(Robot robot, Control c){
         super(robot, c);
-        drivetrain = robot.drivetrain;
+        drivetrain = robot.getDrivetrain();
     }
 
     /**

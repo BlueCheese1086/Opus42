@@ -17,23 +17,22 @@ public class IntakeInterface extends Interface {
      * what the zuc will do every tick
      */
     public void tick() {
-        // Check for loading in
-        if (intake.getPos()) {
-            if (c.getIntakeIn()) {
-                robot.indexer.in();
-                intake.in();
-            }
-            // Check for jamming
-            else if (c.getIntakeOut()) {
-                robot.indexer.out();
-                intake.out();
-            }
-            // stop loading
-            else {
-                intake.neutral();
-            }
+        if (c.getIntakeIn()) {
+            robot.indexer.in();
+            intake.in();
         }
-        if (c.getIntakeToggle()) {
+        // Check for jamming
+        else if (c.getIntakeOut()) {
+            robot.indexer.out();
+            intake.out();
+        }
+        // stop loading
+        else {
+            intake.neutral();
+        }
+        if (c.getIntakeToggle())
+
+        {
             intake.toggle();
         }
     }

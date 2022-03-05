@@ -14,7 +14,6 @@ public class PIDController {
             this.type = type;
             this.value = value;
             this.controller = controller;
-
     }
 
     public void initPID(double ff, double kp, double ki, double kd) {

@@ -87,9 +87,9 @@ public class Meth {
      * @return Returns rates and deadzone
      */
     public static double doTurnMagik(double d) {
-        double deadzone = .05;
+        double deadzone = .01;
         if (Math.abs(d) >= deadzone) {
-            return rates(10.0, 1000, .65, d);
+            return rates(250.0, 700, .28, d);
         }
         return 0;
     }

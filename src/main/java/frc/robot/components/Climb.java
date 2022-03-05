@@ -22,10 +22,6 @@ public class Climb {
      * @param c How fast you want the motors to go
      */
     public void set(double c) {
-        c = c/2.0;
-        if(Math.abs(c) >= 0.30) {
-            c *= 0.30/Math.abs(c);
-        }
         left.set(c);
     }
 
