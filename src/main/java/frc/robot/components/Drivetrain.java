@@ -129,4 +129,29 @@ public class Drivetrain {
         steering_adjust *= -1;
         this.set(steering_adjust, steering_adjust);
     }
+    
+    double P, I, D = 1.0;
+    double integral, previous_error, setpoint = 0.0;
+
+    //maybe angle pid gyro based
+    public void anglePID(double setpoint){
+        this.setpoint = setpoint;
+        double error = setpoint - gyro.getAngle(); // Error = Target - Actual
+        this.integral += (error*.02); // Integral is increased by the error*time (which is .02 seconds using normal IterativeRobot)
+        derivative = (error - this.previous_error) / .02;
+        //this.rcw = P*error + I*this.integral + D*derivative;
+
+        double Kp = 0.05;
+        double min_command = 0.01;
+
+        double turn_adjust = P*error + I*this.integral + D*derivative;
+        if( Math.abs(error) > 1.0) turn_adjust -= min_command;
+        else if(error) < 1.0) turn_adjust+=min_command;
+        steering_adjust *= -1;
+        this.set(steering_adjust, steering_adjust);
+    }
+
+    public boolean getAnglePIDStatus(){
+        return setpoint - gyro.getAngle() < 1 && setpoint - gyro.getAngle() > -1;
+    }
 }
