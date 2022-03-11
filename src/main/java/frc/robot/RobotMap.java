@@ -9,7 +9,7 @@ public class RobotMap {
     public static final int BACK_LEFT_ID = 3;
     public static final int BACK_RIGHT_ID = 4;
 
-    public static final int CLIMB_LEFT_ID = 11; 
+    public static final int CLIMB_LEFT_ID = 11;
     public static final int CLIMB_RIGHT_ID = 12;
 
     public static final int INDEXER_LEFT_ID = 21;

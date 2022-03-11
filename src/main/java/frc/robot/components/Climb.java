@@ -1,6 +1,7 @@
 package frc.robot.components;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -13,6 +14,9 @@ public class Climb {
         left = new CANSparkMax(leftID, MotorType.kBrushless);
         right = new CANSparkMax(rightID, MotorType.kBrushless);
         lock = new Solenoid(PneumaticsModuleType.CTREPCM, solenoidID);
+
+        left.setIdleMode(IdleMode.kBrake);
+        right.setIdleMode(IdleMode.kBrake);
     }
 
     /**
@@ -30,7 +34,7 @@ public class Climb {
     /**
      * Locks climb solenoid
      */
-    public void lock() {
+    public void enable() {
         lock.set(true);
     }
 
@@ -45,7 +49,7 @@ public class Climb {
     /**
      * Unlocks lock solenoid
      */
-    public void unlock() {
+    public void disable() {
         lock.set(false);
     }
 }
