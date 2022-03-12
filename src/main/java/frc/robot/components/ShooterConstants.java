@@ -34,6 +34,11 @@ public class ShooterConstants {
         //setPoints.set(0, entry);
     }
 
+    /**
+     * 
+     * @param yAngle current yangle
+     * @return the id of the setpoint in the arraylist
+     */
     public int getNearestSetpointID(double yAngle){
         double difference = Double.MAX_VALUE;
         int setPointID = 0;
@@ -47,7 +52,14 @@ public class ShooterConstants {
 
         return setPointID;
     }
-
+  
+         /**
+          * ID 0 - target yAngle
+          ID 1 - target hoodAngle
+          ID 2 - target velocity
+          * @param yAngle current yAngle
+          * @return the double[] of the nearest setpoint
+        */
     public double[] getNearestSetpoint(double yAngle) {
         double difference = Double.MAX_VALUE;
         int setPointID = 0;
@@ -62,6 +74,11 @@ public class ShooterConstants {
         return setPoints.get(setPointID);
     }
 
+    /**
+     * get the. get the point. the setted point
+     * @param ID the ID in the arraylist
+     * @return THE SETTED POINTd
+     */
     public double[] getSetpoint(int ID){
         return setPoints.get(ID);
     }

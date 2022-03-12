@@ -9,14 +9,12 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.sensors.Limelight;
 
 public class Drivetrain {
-    CANSparkMax frontLeft, frontRight, backLeft, backRight;
+    public CANSparkMax frontLeft, frontRight, backLeft, backRight;
     Limelight limelight;
     //AHRS gyro;
 
 
     boolean brake = true;
-
-    //import IDs in the constructor and leave them as variables. don't hard-code them in.
 
     public Drivetrain(int frontLeftID, int frontRightID, int backLeftID, int backRightID, Limelight limelight/*, AHRS gyro /*need to add in robot*/) {
         frontLeft = new CANSparkMax(frontLeftID, MotorType.kBrushless);
@@ -110,7 +108,7 @@ public class Drivetrain {
     }
 
     /**
-     * will be used to autoalign before launching. don't worry about writing this method if you're not working on the launcher.
+     * Aligns robot until x-angle is 0.
      */
     public void autoAlign(){
         double Kp = -0.01;
@@ -124,7 +122,10 @@ public class Drivetrain {
         this.set(-1 * steering_adjust, steering_adjust);
     }
 
-    //not sure how to work this yet, so i've just made it the same as auto align for now - kai
+    /**
+     * Aligns the robot to the y-angle setpoint
+     * @param targetYAngle the setpoint the robot will align to
+     */
     public void setPointAlign(double targetYAngle){
         double Kp = 0.05;
         double min_command = 0.01;
@@ -162,4 +163,5 @@ public class Drivetrain {
         return setpoint - gyro.getAngle() < 1 && setpoint - gyro.getAngle() > -1;
 
     }*/
+}
 
