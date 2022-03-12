@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 //import com.kauailabs.navx.frc.AHRS;
 
+
 import frc.robot.sensors.Limelight;
 
 public class Drivetrain {
@@ -12,9 +13,11 @@ public class Drivetrain {
     Limelight limelight;
     //AHRS gyro;
 
+
     boolean brake = true;
 
     //import IDs in the constructor and leave them as variables. don't hard-code them in.
+
     public Drivetrain(int frontLeftID, int frontRightID, int backLeftID, int backRightID, Limelight limelight/*, AHRS gyro /*need to add in robot*/) {
         frontLeft = new CANSparkMax(frontLeftID, MotorType.kBrushless);
         frontRight = new CANSparkMax(frontRightID, MotorType.kBrushless);
@@ -157,5 +160,6 @@ public class Drivetrain {
 
     public boolean getAnglePIDStatus(){
         return setpoint - gyro.getAngle() < 1 && setpoint - gyro.getAngle() > -1;
+
     }*/
-}
+
