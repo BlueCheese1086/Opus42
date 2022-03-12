@@ -9,7 +9,7 @@ public class AutoWait extends AutoSection {
 
     @Override
     public void update() {
-
+        //Jank solution for waiting on hood
     }
 
     @Override

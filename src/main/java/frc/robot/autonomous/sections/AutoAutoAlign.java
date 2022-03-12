@@ -19,14 +19,19 @@ public class AutoAutoAlign extends AutoSection {
     @Override
     public void update() {
         // TODO Auto-generated method stub
+        //robot.drivetrain.autoAlign();
         robot.drivetrain.autoAlign();
-        
     }
 
     @Override
     public void disabled() {
         // TODO Auto-generated method stub
         
+    }
+
+    @Override
+    public boolean disableCondition() {
+        return robot.shooter.alignSetpoint();
     }
     
 }

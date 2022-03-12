@@ -2,7 +2,6 @@
 package frc.robot.autonomous.sections;
 
 import frc.robot.Robot;
-import frc.robot.components.ShooterConstants;
 
 //test
 import frc.robot.components.Indexer;
@@ -14,7 +13,6 @@ public class AutoShoot extends AutoSection {
     
     //Shooter shooter;
     Robot robot;
-    ShooterConstants sc;
 
     //test
     Intake intake;
@@ -43,23 +41,25 @@ public class AutoShoot extends AutoSection {
     public void update() {
         //robot.limelight.setLights(3);
         //robot.shooter.setVelocity(SmartDashboard.getNumber("Shooter Velocity", 0));
-        robot.shooter.setVelocity(13000);
+        //robot.shooter.setVelocity(13000);
         //shooter.shoot();
-        robot.shooter.shoot();
-
+        //if (robot.shooter.alignSetpoint()) {
+        robot.drivetrain.set(0, 0);
+        robot.shooter.autonomousShoot(8500.0);
+        //}
+        //robot.shooter.shoot();
         //sc.setPoint(robot.limelight.getYAngle(), robot.hood.getPos(), SmartDashboard.getNumber("Shooter Velocity", 0));
 
         //test
         /**intake.in();
         indexer.in();*/
-
-
     }
 
     @Override
     public void disabled() {
         //robot.limelight.setLights(1);
         robot.shooter.stopEverything();
+        robot.indexer.stop();
 
         //test
         /**intake.up();

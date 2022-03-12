@@ -30,6 +30,7 @@ import frc.robot.components.Hood;
 import frc.robot.components.Indexer;
 import frc.robot.components.Intake;
 import frc.robot.components.Shooter;
+import frc.robot.components.ShooterConstants;
 import frc.robot.controlInterfaces.ClimbInterface;
 import frc.robot.controlInterfaces.DrivetrainInterface;
 import frc.robot.controlInterfaces.IndexerInterface;
@@ -37,6 +38,7 @@ import frc.robot.controlInterfaces.IntakeInterface;
 import frc.robot.controlInterfaces.Interface;
 import frc.robot.controlInterfaces.ShooterInterface;
 import frc.robot.sensors.Limelight;
+//import com.kauailabs.navx.frc.AHRS;
 
 import com.ctre.phoenix.music.Orchestra;
 
@@ -53,6 +55,7 @@ public class Robot extends TimedRobot {
   public Control c;
   public ArrayList<Interface> interfaces;
   public Orchestra o;
+  //public AHRS gyro;
 
   public SendableChooser<Primary> primaryDrivers;
   public SendableChooser<Secondary> secondaryDrivers;
@@ -77,7 +80,8 @@ public class Robot extends TimedRobot {
     climb = new Climb(RobotMap.CLIMB_LEFT_ID, RobotMap.CLIMB_RIGHT_ID, RobotMap.CLIMB_SOLENOID_ID);
     indexer = new Indexer(RobotMap.INDEXER_LEFT_ID, RobotMap.INDEXER_RIGHT_ID);
     intake = new Intake(RobotMap.INTAKE_MOTOR_ID, RobotMap.INTAKE_SOLENOID_ID);
-    shooter = new Shooter(RobotMap.LAUNCHER_X_ID, RobotMap.LAUNCHER_Y_ID, RobotMap.LAUNCHER_ONE_ID, RobotMap.LAUNCHER_TWO_ID, RobotMap.LAUNCHER_THREE_ID, RobotMap.LAUNCHER_FOUR_ID, limelight, hood, indexer, drivetrain);
+    shooter = new Shooter(this, RobotMap.LAUNCHER_X_ID, RobotMap.LAUNCHER_Y_ID, RobotMap.LAUNCHER_ONE_ID, RobotMap.LAUNCHER_TWO_ID, RobotMap.LAUNCHER_THREE_ID, RobotMap.LAUNCHER_FOUR_ID, limelight, hood, indexer, drivetrain);
+    //gyro = new AHRS();
 
     // Initializing interfaces
     interfaces = new ArrayList<>();
@@ -157,6 +161,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Shooter Velocity", SmartDashboard.getNumber("Shooter Velocity", 0));
     SmartDashboard.getNumber("Shooter Velocity", 0);
 
+    SmartDashboard.putNumber("3Ball Turn Speed", SmartDashboard.getNumber("3Ball Turn Speed", 0));
+    SmartDashboard.getNumber("3Ball Turn Speed", 0);
+
     // Currents
     SmartDashboard.putNumber("Front Right Current", drivetrain.getFrontRight().getOutputCurrent());
     SmartDashboard.putNumber("Front Left Current", drivetrain.getFrontLeft().getOutputCurrent());
@@ -171,11 +178,18 @@ public class Robot extends TimedRobot {
 
     // Distance -> Velo Data
     SmartDashboard.putData(distanceVelo);
+
+    // Servo
+    SmartDashboard.putNumber("Hood Angle", hood.getPos());
   }
 
   @Override
   public void autonomousInit() {
-    m.getAuto();
+    m = null;
+    m = new AutoManager(this);
+    //m.getAuto();
+    hood.setMax();
+    hood.setMin();
   }
 
   /** This function is called periodically during autonomous. */
@@ -198,6 +212,12 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     // Ticks each interface
     interfaces.forEach(Interface::tick);
+    /*if(c.primary.getAButton()){
+      drivetrain.autoAlign();
+    }
+    else{
+      drivetrain.set(0, 0);
+    }*/
   }
 
   long timeOff;

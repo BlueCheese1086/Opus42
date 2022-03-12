@@ -3,19 +3,22 @@ package frc.robot.components;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.kauailabs.navx.frc.AHRS;
+//import com.kauailabs.navx.frc.AHRS;
+
 
 import frc.robot.sensors.Limelight;
 
 public class Drivetrain {
     CANSparkMax frontLeft, frontRight, backLeft, backRight;
     Limelight limelight;
-    AHRS gyro;
+    //AHRS gyro;
+
 
     boolean brake = true;
 
     //import IDs in the constructor and leave them as variables. don't hard-code them in.
-    public Drivetrain(int frontLeftID, int frontRightID, int backLeftID, int backRightID, Limelight limelight/*, AHRS gyro*/ //need to add in robot){
+
+    public Drivetrain(int frontLeftID, int frontRightID, int backLeftID, int backRightID, Limelight limelight/*, AHRS gyro /*need to add in robot*/) {
         frontLeft = new CANSparkMax(frontLeftID, MotorType.kBrushless);
         frontRight = new CANSparkMax(frontRightID, MotorType.kBrushless);
         backLeft = new CANSparkMax(backLeftID, MotorType.kBrushless);
@@ -137,7 +140,7 @@ public class Drivetrain {
     double P, I, D = 1.0;
     double integral, previous_error, setpoint = 0.0;
 
-    //maybe angle pid gyro based
+    /*//maybe angle pid gyro based
     public void anglePID(double setpoint){
         this.setpoint = setpoint;
         double error = setpoint - gyro.getAngle(); // Error = Target - Actual
@@ -157,5 +160,6 @@ public class Drivetrain {
 
     public boolean getAnglePIDStatus(){
         return setpoint - gyro.getAngle() < 1 && setpoint - gyro.getAngle() > -1;
-    }
-}
+
+    }*/
+

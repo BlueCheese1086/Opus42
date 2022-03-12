@@ -13,7 +13,8 @@ public class Control {
 
     // Enum of secondary drivers
     public enum Secondary {
-        Toshi;
+        Toshi,
+        Primary;
     }
 
     static Primary primDriver;
@@ -98,6 +99,8 @@ public class Control {
         switch (suckondeeznutzDriver) {
             case Toshi:
                 return secondary.getPOV() == 0;
+            case Primary:
+                return primary.getRightBumper();
             default:
                 return false;
         }
@@ -110,6 +113,8 @@ public class Control {
         switch (suckondeeznutzDriver) {
             case Toshi:
                 return secondary.getPOV() == 180;
+            case Primary:
+                return primary.getLeftBumper();
             default:
                 return false;
         }
@@ -122,6 +127,8 @@ public class Control {
         switch (suckondeeznutzDriver) {
             case Toshi:
                 return secondary.getBButtonPressed();
+            case Primary:
+                return primary.getYButtonPressed();
             default:
                 return false;
         }
@@ -193,7 +200,7 @@ public class Control {
             case RyanBox:
                 return primary.getAButton();
             default:
-                return primary.getAButton();
+                return false;
         }
     }
 }

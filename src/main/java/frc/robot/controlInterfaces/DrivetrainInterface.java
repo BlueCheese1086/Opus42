@@ -21,6 +21,10 @@ public class DrivetrainInterface extends Interface{
             drivetrain.drive(c.getDriveForward(), c.getDriveTurn());
         }
 
+        /*if (c.primary.getRightBumperPressed()) {
+            drivetrain.driveDistance(24);
+        }*/
+
         if (c.getBrakeToggle()) {
             drivetrain.toggleMode();
         }
