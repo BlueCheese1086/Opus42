@@ -130,26 +130,24 @@ public class Shooter {
      * @return whether the robot is aligned or not
      */
     public boolean alignSetpoint() {
+        double ty = limelight.getYAngle();
+        double[] setPoint = shooterConstants.getNearestSetpoint(ty);
+        double targetYAngle = setPoint[0]; // as in, the angle we want to   reach, not the limelight target
+        double hoodAngle = setPoint[1];
+        hood.set(hoodAngle);
 
         //face the target/x angle autoalign
         double tx = limelight.getXAngle();
-        if (Math.abs(tx) > 2.0) {
+        if (Math.abs(tx) > 1.0) {
             drivetrain.autoAlign();
         }
+        else{
+            // change the hood angle
 
-        double ty = limelight.getYAngle();
-        double[] setPoint = shooterConstants.getNearestSetpoint(ty);
-        double targetYAngle = setPoint[0]; // as in, the angle we want to reach, not the limelight target
-        double hoodAngle = setPoint[1];
-
-        
-
-        // change the hood angle
-        hood.set(hoodAngle);
-
-        //autoalign to that yangle (note - aligns to ALL setpoints)
-        if(Math.abs(ty - targetYAngle) < 2.0){
-            drivetrain.setPointAlign(targetYAngle);
+            //autoalign to that yangle (note - aligns to ALL setpoints)
+            if(Math.abs(ty - targetYAngle) > 1.0){
+                drivetrain.setPointAlign(targetYAngle);
+            }
         }
 
         //are we aligned?

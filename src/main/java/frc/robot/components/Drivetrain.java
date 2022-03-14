@@ -111,6 +111,7 @@ public class Drivetrain {
      * Aligns robot until x-angle is 0.
      */
     public void autoAlign(){
+        limelight.setLights(3);
         double Kp = -0.01;
         double min_command = 0.001;
         double tx = limelight.getXAngle();

@@ -10,11 +10,11 @@ public class ShooterConstants {
 
     public ShooterConstants(Limelight limelight){
         setPoints = new ArrayList<double[]>();
-        //this.setPoint(-1.2, 0, 8500);
+        this.setPoint(-1.2, 0, 8350); //tuned
         //this.setPoint(-1, 0.9, 13000);
         //this.setPoint(-12, 1.0, 14000);
-        setPoints.add(new double[]{0, 0, 8500});
-        setPoints.add(new double[]{-16.7, 1, 11111});
+        //setPoints.add(new double[]{0, 0, 8500});
+        setPoints.add(new double[]{-16.7, 1, 8300}); //tuned
         //this.setPoint(limelight.getYAngle(), 0, 8500);
     }
 
