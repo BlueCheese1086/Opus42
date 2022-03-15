@@ -132,6 +132,7 @@ public class Drivetrain {
      * will be used to autoalign before launching. don't worry about writing this method if you're not working on the launcher.
      */
     public void autoAlign(){
+        limelight.setLights(3);
         double Kp = -0.01;
         double min_command = 0.001;
         double tx = limelight.getXAngle();
