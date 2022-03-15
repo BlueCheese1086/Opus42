@@ -10,12 +10,12 @@ public class ShooterConstants {
 
     public ShooterConstants(Limelight limelight){
         setPoints = new ArrayList<double[]>();
-        this.setPoint(-1.2, 0, 8350); //tuned
-        //this.setPoint(-1, 0.9, 13000);
-        //this.setPoint(-12, 1.0, 14000);
-        //setPoints.add(new double[]{0, 0, 8500});
+        this.setPoint(69, 0, 8350); //our shot right up against the tower. 
+        this.setPoint(-1.2, 0, 8350); 
         setPoints.add(new double[]{-16.7, 1, 8300}); //tuned
         //this.setPoint(limelight.getYAngle(), 0, 8500);
+
+        this.limelight = limelight;
     }
 
     public ArrayList<double[]> getSetPoints(){
@@ -63,11 +63,13 @@ public class ShooterConstants {
     public double[] getNearestSetpoint(double yAngle) {
         double difference = Double.MAX_VALUE;
         int setPointID = 0;
-        for(int i=0; i<setPoints.size(); i++){
-            double[] entry = setPoints.get(i);
-            if(Math.abs(entry[0] - yAngle) < difference){
-                difference = Math.abs(entry[0] - yAngle);
-                setPointID = i;
+        if(!(limelight.getXAngle() == 0.0 && yAngle == 0)){
+            for(int i=0; i<setPoints.size(); i++){
+                double[] entry = setPoints.get(i);
+                if(Math.abs(entry[0] - yAngle) < difference){
+                   difference = Math.abs(entry[0] - yAngle);
+                    setPointID = i;
+                }
             }
         }
 
