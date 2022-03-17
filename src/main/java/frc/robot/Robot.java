@@ -3,6 +3,9 @@ package frc.robot;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.ctre.phoenix.music.Orchestra;
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -24,9 +27,6 @@ import frc.robot.controlInterfaces.IntakeInterface;
 import frc.robot.controlInterfaces.Interface;
 import frc.robot.controlInterfaces.ShooterInterface;
 import frc.robot.sensors.Limelight;
-//import com.kauailabs.navx.frc.AHRS;
-
-import com.ctre.phoenix.music.Orchestra;
 
 public class Robot extends TimedRobot {
 
@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
   public Control c;
   public ArrayList<Interface> interfaces;
   public Orchestra o;
-  //public AHRS gyro;
+  public AHRS gyro;
 
   public SendableChooser<Primary> primaryDrivers;
   public SendableChooser<Secondary> secondaryDrivers;
@@ -61,8 +61,9 @@ public class Robot extends TimedRobot {
 
     // Initializing components
     limelight = new Limelight();
+    gyro = new AHRS(); 
     hood = new Hood(RobotMap.HOOD_SERVO_ID);
-    drivetrain = new Drivetrain(RobotMap.FRONT_LEFT_ID, RobotMap.FRONT_RIGHT_ID, RobotMap.BACK_LEFT_ID, RobotMap.BACK_RIGHT_ID, limelight);
+    drivetrain = new Drivetrain(RobotMap.FRONT_LEFT_ID, RobotMap.FRONT_RIGHT_ID, RobotMap.BACK_LEFT_ID, RobotMap.BACK_RIGHT_ID, limelight, gyro);
     climb = new Climb(RobotMap.CLIMB_LEFT_ID, RobotMap.CLIMB_RIGHT_ID, RobotMap.CLIMB_SOLENOID_ID);
     indexer = new Indexer(RobotMap.INDEXER_LEFT_ID, RobotMap.INDEXER_RIGHT_ID);
     intake = new Intake(RobotMap.INTAKE_MOTOR_ID, RobotMap.INTAKE_SOLENOID_ID);

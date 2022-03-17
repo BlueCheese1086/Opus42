@@ -136,14 +136,17 @@ public class Shooter {
         double hoodAngle = setPoint[1];
         hood.set(hoodAngle);
 
+        //assuring the robot will not align at the safe spot
+        if(targetYAngle == -16.7){
+            targetYAngle = ty;
+        }
+
         //face the target/x angle autoalign
         double tx = limelight.getXAngle();
-        if (Math.abs(tx) > 1.0) {
+        if (Math.abs(tx) > 1.0 && targetYAngle != -16.7) {
             drivetrain.autoAlign();
         }
         else{
-            // change the hood angle
-
             //autoalign to that yangle (note - aligns to ALL setpoints)
             if(Math.abs(ty - targetYAngle) > 1.0){
                 drivetrain.setPointAlign(targetYAngle);
