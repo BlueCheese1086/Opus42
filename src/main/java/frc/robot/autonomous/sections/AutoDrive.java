@@ -3,16 +3,16 @@ package frc.robot.autonomous.sections;
 
 import frc.robot.components.Drivetrain;
 import frc.robot.Robot;
-import frc.robot.PIDController;
+import frc.robot.PIDControl;
 import frc.robot.Constants;
+
 
 public class AutoDrive extends AutoSection {
 
     Drivetrain drivetrain;
     double current;
-    double distance; // rotaions
-    PIDController rDrivePIDController;
-    PIDController lDrivePIDController;
+    double distance; 
+    PIDControl rDrivePIDController, lDrivePIDController;
     boolean isDistBased;
     boolean invert;
 
@@ -20,10 +20,14 @@ public class AutoDrive extends AutoSection {
     public AutoDrive(double distance, Robot robot){
         this.drivetrain = robot.drivetrain;
         this.distance = (distance * 0.001) * Constants.DRIVETRAIN_POSITION_SCALE;
-        this.rDrivePIDController = new PIDController("distance", drivetrain.getFrontRight(), distance);
-        this.lDrivePIDController = new PIDController("distance", drivetrain.getFrontLeft(), distance);
+    
+        rDrivePIDController = new PIDControl("distance", this.drivetrain.frontRight, distance);
+        lDrivePIDController = new PIDControl("distance", this.drivetrain.frontLeft, distance);
+
         lDrivePIDController.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
         rDrivePIDController.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
+
+        
         this.isDistBased = true;
 
     }

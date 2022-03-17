@@ -2,16 +2,15 @@ package frc.robot.autonomous.sections;
 
 import frc.robot.components.Drivetrain;
 import frc.robot.Robot;
-import frc.robot.PIDController;
 import frc.robot.Constants;
+import frc.robot.PIDControl;
 
 public class AutoTurn extends AutoSection{
 
     Drivetrain drivetrain;
     double current;
     double turningDist; // rotaions
-    PIDController rTurnPIDController;
-    PIDController lTurnPIDController;
+    PIDControl rTurnPIDController,lTurnPIDController;
     boolean isAngleBased;
     boolean isRight;
     double power;
@@ -22,8 +21,8 @@ public class AutoTurn extends AutoSection{
         this.robot = robot;
         this.drivetrain = robot.drivetrain;
         this.turningDist = (((2 * Math.PI * Constants.WHEEL_TO_WHEEL_RADIUS) * (angle / 360 )) * 0.001) * Constants.DRIVETRAIN_POSITION_SCALE;
-        this.rTurnPIDController = new PIDController("angle", drivetrain.frontRight, angle);
-        this.lTurnPIDController = new PIDController("angle", drivetrain.frontLeft, angle);
+        this.rTurnPIDController = new PIDControl("angle", drivetrain.frontRight, angle);
+        this.lTurnPIDController = new PIDControl("angle", drivetrain.frontLeft, angle);
         //drivetrain.frontLeft.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
         //drivetrain.frontRight.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
         this.isAngleBased = true;
