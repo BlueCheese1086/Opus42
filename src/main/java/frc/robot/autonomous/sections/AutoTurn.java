@@ -29,8 +29,9 @@ public class AutoTurn extends AutoSection{
 
     }
 
-    public AutoTurn(int length, boolean isRight, double power){
+    public AutoTurn(Robot robot, int length, boolean isRight, double power){
         super(length);
+        this.robot = robot;
         this.drivetrain = robot.drivetrain;
         this.isAngleBased = false;
         this.isRight = isRight;
