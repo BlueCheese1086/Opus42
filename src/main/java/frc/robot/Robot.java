@@ -17,7 +17,6 @@ import frc.robot.components.Hood;
 import frc.robot.components.Indexer;
 import frc.robot.components.Intake;
 import frc.robot.components.Shooter;
-import frc.robot.components.ShooterConstants;
 import frc.robot.controlInterfaces.ClimbInterface;
 import frc.robot.controlInterfaces.DrivetrainInterface;
 import frc.robot.controlInterfaces.IndexerInterface;
