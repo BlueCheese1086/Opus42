@@ -14,7 +14,6 @@ public class AutoTurn extends AutoSection{
     boolean isAngleBased;
     boolean isRight;
     double power;
-    Robot robot;
 
     /** angle = degrees */
     public AutoTurn(double angle, Robot robot){
@@ -30,8 +29,7 @@ public class AutoTurn extends AutoSection{
     }
 
     public AutoTurn(Robot robot, int length, boolean isRight, double power){
-        super(length);
-        this.robot = robot;
+        super(length, robot);
         this.drivetrain = robot.drivetrain;
         this.isAngleBased = false;
         this.isRight = isRight;

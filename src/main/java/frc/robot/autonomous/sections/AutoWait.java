@@ -1,10 +1,12 @@
 
 package frc.robot.autonomous.sections;
 
+import frc.robot.Robot;
+
 public class AutoWait extends AutoSection {
 
-    public AutoWait(double length) {
-        super(length);
+    public AutoWait(double length, Robot robot) {
+        super(length, robot);
     }
 
     @Override

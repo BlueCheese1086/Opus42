@@ -33,7 +33,7 @@ public class AutoDrive extends AutoSection {
     }
 
     public AutoDrive(double length, Robot robot, boolean invert){
-        super(length);
+        super(length, robot);
         this.drivetrain = robot.drivetrain;
         this.isDistBased = false;
         this.invert = invert;

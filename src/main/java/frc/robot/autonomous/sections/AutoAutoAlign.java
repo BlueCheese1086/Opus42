@@ -3,12 +3,9 @@ package frc.robot.autonomous.sections;
 import frc.robot.Robot;
 
 public class AutoAutoAlign extends AutoSection {
-
-    Robot robot;
-
+    
     public AutoAutoAlign(int length, Robot robot){
-        super(length);
-        this.robot = robot;
+        super(length, robot);
     }
 
     @Override

@@ -12,15 +12,13 @@ import frc.robot.components.Intake;
 public class AutoShoot extends AutoSection {
     
     //Shooter shooter;
-    Robot robot;
 
     //test
     Intake intake;
     Indexer indexer;
 
     public AutoShoot(double length, Robot robot){
-        super(length);
-        this.robot = robot;
+        super(length, robot);
         //this.shooter = Robot.shooter;
         //sc = new ShooterConstants();
 
