@@ -23,9 +23,9 @@ public class AutoPath extends AutoSection {
     RamseteController controller;
     DifferentialDriveWheelSpeeds wheelSpeeds;
     
-    public AutoPath(String pathName){
-        this.drivetrain = Robot.drivetrain;
-        t = Robot.trajectories.getTrajectories().get(pathName);
+    public AutoPath(String pathName, Robot robot){
+        this.drivetrain = robot.drivetrain;
+        //t = robot.trajectories.getTrajectories().get(pathName);
         odomee = new DifferentialDriveOdometry(new Rotation2d(drivetrain.gyro.getAngle()), new Pose2d(0, 0, new Rotation2d()));
         controller = new RamseteController();
 
