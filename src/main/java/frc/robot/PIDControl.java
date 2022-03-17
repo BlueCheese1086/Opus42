@@ -3,18 +3,25 @@ package frc.robot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 
-public class PIDController {
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+
+public class PIDControl {
 
     String type;
     double value;
     CANSparkMax controller;
     SparkMaxPIDController pid;
 
-    public PIDController(String type, CANSparkMax controller, double value) {
+    public PIDControl(String type, CANSparkMax controller, double value) {
             this.type = type;
             this.value = value;
             this.controller = controller;
     }
+
+    public PIDControl(String type, CANSparkMax controller) {
+        this.type = type;
+        this.controller = controller;
+}
 
     public void initPID(double ff, double kp, double ki, double kd) {
         pid = controller.getPIDController();
@@ -41,6 +48,10 @@ public class PIDController {
     public void driveDistance(double distance) {
         value = distance;
         pid.setReference(distance, CANSparkMax.ControlType.kPosition, 0);
+    }
+
+    public void setVelocity(double speed){
+        pid.setReference(speed, CANSparkMax.ControlType.kVelocity, 0);
     }
     
 }
