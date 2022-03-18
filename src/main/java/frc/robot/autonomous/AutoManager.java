@@ -93,19 +93,19 @@ public class AutoManager {
 
         */
 
-        auto2.addSection(new AutoWait(3), 0);
+        auto2.addSection(new AutoWait(3, robot), 0);
         auto2.addSection(new AutoShoot(3, robot), 0);
         auto2.addSection(new AutoDrive(1, robot, false), 0);
 
-        auto2.addSection(new AutoWait(6), 1);
+        auto2.addSection(new AutoWait(6, robot), 1);
         auto2.addSection(new AutoIntake(1.4, robot), 1);
 
-        twoBallAuto.addSection(new AutoWait(2), 0);
+        twoBallAuto.addSection(new AutoWait(2, robot), 0);
         twoBallAuto.addSection(new AutoShoot(3, robot), 0);
         twoBallAuto.addSection(new AutoDrive(1.05, robot, false), 0);
-        twoBallAuto.addSection(new AutoWait(5), 1);
+        twoBallAuto.addSection(new AutoWait(5, robot), 1);
         twoBallAuto.addSection(new AutoIntake(2.5, robot), 1);
-        twoBallAuto.addSection(new AutoWait(1.5), 0);
+        twoBallAuto.addSection(new AutoWait(1.5, robot), 0);
         twoBallAuto.addSection(new AutoDrive(1, robot, true), 0);
         twoBallAuto.addSection(new AutoShoot(3, robot), 0);
 

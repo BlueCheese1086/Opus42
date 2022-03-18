@@ -1,15 +1,19 @@
 
 package frc.robot.autonomous.sections;
 
+import frc.robot.Robot;
+
 public abstract class AutoSection {
 
     double length;
     double startTime;
     double endTime;
     boolean started;
+    Robot robot;
 
-    public AutoSection(double length) {
+    public AutoSection(double length, Robot robot) {
         this.length = length * 1000;
+        this.robot = robot;
         started = false;
     }
 

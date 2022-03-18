@@ -14,7 +14,6 @@ public class AutoTurn extends AutoSection{
     boolean isAngleBased;
     boolean isRight;
     double power;
-    Robot robot;
 
     /** angle = degrees */
     public AutoTurn(double angle, Robot robot){
@@ -29,8 +28,8 @@ public class AutoTurn extends AutoSection{
 
     }
 
-    public AutoTurn(int length, boolean isRight, double power){
-        super(length);
+    public AutoTurn(Robot robot, int length, boolean isRight, double power){
+        super(length, robot);
         this.drivetrain = robot.drivetrain;
         this.isAngleBased = false;
         this.isRight = isRight;
@@ -56,11 +55,9 @@ public class AutoTurn extends AutoSection{
             //lturnPIDController.rotateToAngle(turningDist * -1);
         } else {
             if(isRight){
-                drivetrain.frontLeft.set(power);
-                drivetrain.frontRight.set(-power);
+                drivetrain.set(power, -power);
             } else {
-                drivetrain.frontLeft.set(power);
-                drivetrain.frontRight.set(power);
+                drivetrain.set(power, power);
             }
         }
 
