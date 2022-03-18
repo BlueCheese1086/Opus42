@@ -55,11 +55,9 @@ public class AutoTurn extends AutoSection{
             //lturnPIDController.rotateToAngle(turningDist * -1);
         } else {
             if(isRight){
-                drivetrain.frontLeft.set(power);
-                drivetrain.frontRight.set(-power);
+                drivetrain.set(power, -power);
             } else {
-                drivetrain.frontLeft.set(power);
-                drivetrain.frontRight.set(power);
+                drivetrain.set(power, power);
             }
         }
 
