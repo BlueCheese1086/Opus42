@@ -93,131 +93,7 @@ public class Shooter {
         y.set(TalonFXControlMode.PercentOutput, velo);
     }
 
-    /*
-     * notes for future kai and emily-
-     * | upper hub
-     * |
-     * | X
-     * |
-     * x |
-     * opus42 ----------------
-     * Y
-     * X = 264 cm
-     * x = camera mounting angle + ty from limelight(converted to degrees)
-     * ^ use that to set the hood angle ^
-     * 
-     * Y = (X - cameraHeight)/tan(x) (this is what is in Limelight.java)
-     * ^ use that to set launching velocity^
-     * 1) set hood angle
-     * 2) have falcons approach launching velocity
-     * 3) *after* falcons are at that velocity, run indexer & internal cansparkmaxes
-     * 4) PEW PEW
-     */
 
-    /*
-     * public void shoot(){
-     * //all of these values are in meters or m/s
-     * double targetVelocity = Constants.LAUNCHER_DEFAULT_VELOCITY;
-     * double groundDistance =
-     * limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT);
-     * double height = Constants.UPPER_HUB_HEIGHT + Constants.CARGO_DIAMETER -
-     * Constants.CAMERA_HEIGHT + 2;
-     * //0) autoalign
-     * double tx = limelight.getXAngle();
-     * while(Math.abs(tx)>1.0){
-     * drivetrain.autoAlign();
-     * tx = limelight.getXAngle();
-     * }
-     * //1) set hood angle
-     * double targetAngle = getLaunchAngle(targetVelocity, groundDistance, height) +
-     * 45;
-     * hood.set(targetAngle);
-     * //2) have falcons approaching launching velocity
-     * x.config_kP(0, Constants.LAUNCHER_KP);
-     * x.config_kI(0, Constants.LAUNCHER_KI);
-     * x.config_kD(0, Constants.LAUNCHER_KD);
-     * /*
-     *
-     * See documentation for calculation details.
-     * If using velocity, motion magic, or motion profile,
-     * use (1023 * duty-cycle / sensor-velocity-sensor-units-per-100ms).
-     * 
-     * 
-     * 
-     * x.config_kF(0, Constants.LAUNCHER_KF);
-     * x.set(TalonFXControlMode.Velocity, targetVelocity /
-     * (Constants.LAUNCHER_WHEEL_CIRCUMFERENCE *
-     * Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION * 10));
-     * //3) *after* falcons are at that velocity, run indexer & internal
-     * cansparkmaxes
-     * if(x.getSelectedSensorVelocity(0) * Constants.LAUNCHER_WHEEL_CIRCUMFERENCE *
-     * Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION * 10 >= 0.9*targetVelocity){
-     * one.set(0.5);
-     * indexer.in();
-     * }
-     * }
-     */
-
-    /**
-     * pew pew
-     */
-    /*
-     * public void shoot(){
-     * ///all of these values are in meters or m/s
-     * //double targetVelocity = Constants.LAUNCHER_DEFAULT_VELOCITY;
-     * double groundDistance =
-     * limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT);
-     * double height = Constants.UPPER_HUB_HEIGHT + Constants.CARGO_DIAMETER -
-     * Constants.CAMERA_HEIGHT + 2;
-     * double targetAngle = Constants.LAUNCHER_MIN_ANGLE;
-     * 
-     * //0) autoalign
-     * double tx = limelight.getXAngle();
-     * while(Math.abs(tx)>1.0){
-     * drivetrain.autoAlign();
-     * tx = limelight.getXAngle();
-     * }
-     * 
-     * 
-     * //1) set hood angle
-     * //double targetAngle = getLaunchAngle(targetVelocity, groundDistance, height)
-     * + 45;
-     * //hood.set(targetAngle);
-     * hood.setMax();
-     * 
-     * groundDistance= 2.0;
-     * //2) have falcons approaching launching velocity
-     * //double targetVelocity = getLaunchVelocity(targetAngle, groundDistance,
-     * height);
-     * x.config_kP(0, Constants.LAUNCHER_KP);
-     * x.config_kI(0, Constants.LAUNCHER_KI);
-     * x.config_kD(0, Constants.LAUNCHER_KD);
-     * 
-     * 
-     * x.config_kF(0, Constants.LAUNCHER_KF);
-     * 
-     * //x.set(TalonFXControlMode.Velocity, targetVelocity *
-     * Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION /
-     * (Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * 10));
-     * x.set(TalonFXControlMode.Velocity, velocity);
-     * 
-     * //3) *after* falcons are at that velocity, run indexer & internal
-     * cansparkmaxes
-     * //if(x.getSelectedSensorVelocity(0) * Constants.LAUNCHER_WHEEL_CIRCUMFERENCE
-     * * 10 / Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION >= 0.9*targetVelocity){
-     * if (Math.abs(x.getSelectedSensorVelocity() - velocity) <= 500
-     * ) {
-     * 
-     * one.set(0.5);
-     * indexer.in();
-     * }
-     * //}
-     * }
-     */
-
-    /**
-     * setpoints version of shoot method
-     */
 
     public boolean alignSetpoint() {
         limelight.setLights(3);
@@ -322,7 +198,11 @@ public class Shooter {
         }
         setMotorVelo(targetVelocity);
 
-    
+        long startTime = System.currentTimeMillis();
+        while (startTime + (.3*1000) > System.currentTimeMillis()) {
+            continue;
+        }
+
         // pewpew
         if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 100) {
             one.set(.75);

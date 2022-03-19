@@ -16,8 +16,6 @@ package frc.robot;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,6 +25,7 @@ import frc.robot.autonomous.AutoManager;
 import frc.robot.autonomous.AutoMode;
 import frc.robot.components.Climb;
 import frc.robot.components.Drivetrain;
+import frc.robot.components.Lights;
 import frc.robot.components.Hood;
 import frc.robot.components.Indexer;
 import frc.robot.components.Intake;
@@ -37,6 +36,7 @@ import frc.robot.controlInterfaces.IndexerInterface;
 import frc.robot.controlInterfaces.IntakeInterface;
 import frc.robot.controlInterfaces.Interface;
 import frc.robot.controlInterfaces.ShooterInterface;
+import frc.robot.controlInterfaces.LightsInterface;
 import frc.robot.sensors.Limelight;
 //import com.kauailabs.navx.frc.AHRS;
 
@@ -55,8 +55,8 @@ public class Robot extends TimedRobot {
   public Control c;
   public ArrayList<Interface> interfaces;
   public Orchestra o;
-  public AddressableLED leds;
-  public AddressableLEDBuffer buffer;
+  public Lights lights;
+  public LightsInterface lightsInter;
   //public AHRS gyro;
 
   public SendableChooser<Primary> primaryDrivers;
@@ -75,16 +75,9 @@ public class Robot extends TimedRobot {
     c.setSecondary(Secondary.Toshi);
 
     //LIGHTS
-    buffer = new AddressableLEDBuffer(300);
-    leds = new AddressableLED(2);
-    leds.setLength(buffer.getLength());
-
-    for (int i1 = 0; i1 < buffer.getLength(); i1++) {
-      buffer.setRGB(i1, 0, 0, 255);
-    }
-
-    leds.setData(buffer);
-    leds.start();
+    lights = new Lights(300);
+    lightsInter = new LightsInterface(this, c);
+    lightsInter.setControlMode(LightsInterface.ControlMode.Rainbow);
 
     // Initializing components
     limelight = new Limelight();
@@ -129,16 +122,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-
-    // LEDS WOOOOOO
-    for (int i1 = 0; i1 < buffer.getLength(); i1++) {
-      buffer.setRGB(i1, 0, 0, 255);
-    }
-    leds.setData(buffer);
-
     /********************
      * TELEMETRY WOOOOO *
      ********************/
+
+    lightsInter.tick();
 
     // Hood
     SmartDashboard.putNumber("Hood Raw", hood.getPos());

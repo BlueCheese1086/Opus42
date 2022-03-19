@@ -10,12 +10,25 @@ public class ShooterInterface extends Interface {
     Shooter shooter;
     ShooterConstants constants;
     boolean shotYet;
+    Shoot shoot;
+
+    private class Shoot extends Thread {
+        public void shoot() {
+            Shoot thread = new Shoot();
+            thread.start();
+        }
+
+        public void run() {
+            robot.shooter.shoot();
+        }
+    }
 
     public ShooterInterface(Robot robot, Control c) {
         super(robot, c);
         shotYet = false;
         // shooter = Robot.shooter;
         constants = new ShooterConstants(robot.limelight);
+        shoot = new Shoot();
     }
 
     /**
@@ -23,7 +36,8 @@ public class ShooterInterface extends Interface {
      */
     public void tick() {
         if (c.getLauncherShoot()) {
-            robot.shooter.shoot();
+            //robot.shooter.shoot();
+            shoot.shoot();
             shotYet = true;
         } else if (c.getLauncherAlign()) {
             robot.shooter.setMotorVelo(7000);
