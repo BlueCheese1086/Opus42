@@ -5,6 +5,7 @@ import frc.robot.Control;
 import frc.robot.Robot;
 import frc.robot.components.Shooter;
 import frc.robot.components.ShooterConstants;
+import frc.robot.controlInterfaces.LightsInterface.ControlMode;
 
 public class ShooterInterface extends Interface {
     Shooter shooter;
@@ -43,15 +44,17 @@ public class ShooterInterface extends Interface {
             robot.shooter.setMotorVelo(7000);
             //robot.limelight.setLights(3);
             if (robot.shooter.alignSetpoint()) {
-                c.primary.setRumble(RumbleType.kRightRumble, 1);
-                c.primary.setRumble(RumbleType.kLeftRumble, 1);
+                /*c.primary.setRumble(RumbleType.kRightRumble, 1);
+                c.primary.setRumble(RumbleType.kLeftRumble, 1);*/
+                robot.lights.rainbow();
             }
         } else if (c.primary.getRightStickButton()) {
             robot.drivetrain.autoAlign();
         } else {
             // robot.limelight.setLights(1);
-            c.primary.setRumble(RumbleType.kRightRumble, 0);
-            c.primary.setRumble(RumbleType.kLeftRumble, 0);
+            /*c.primary.setRumble(RumbleType.kRightRumble, 0);
+            c.primary.setRumble(RumbleType.kLeftRumble, 0);*/
+            robot.lights.setLights(0, 0, 255);
             robot.shooter.stopEverything();
             shotYet = false;
         }

@@ -9,6 +9,7 @@ package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
 import frc.robot.autonomous.sections.*;
@@ -16,9 +17,7 @@ import frc.robot.autonomous.sections.*;
 public class AutoManager {
 
     SendableChooser<AutoMode> autoChooser;
-    AutoMode auto1, auto2;
-    public AutoMode auto3;
-    AutoMode auto4;
+    AutoMode auto1, auto2, auto3, auto4, auto5, twoBallAuto, twoBallNoAlign;
 
     Robot robot;
 
@@ -27,47 +26,56 @@ public class AutoManager {
         autoChooser = robot.autoMode;
         this.robot = robot;
 
-        auto1 = new AutoMode("2ball");
+        auto1 = new AutoMode("test");
         auto2 = new AutoMode("1ball");
-        auto3 = new AutoMode("test");
+        twoBallAuto = new AutoMode("2Ball - USE ME");
+        twoBallNoAlign = new AutoMode("2ball -  NO AUTOALIGN");
+        auto3 = new AutoMode("2ball official");
+        auto4 = new AutoMode("3ball");
+        auto5 = new AutoMode("taxi");
 
-        
-        
-        /**auto4 = new AutoMode("3ball");
+        auto5.addSection(new AutoDrive(1.2, robot, false), 0);
+        auto5.addSection(new AutoIntake(1.8, robot), 1);
 
-        auto4.addSection(new AutoAutoAlign(1), 0);
-        auto4.addSection(new AutoShoot(2), 0);
-        auto4.addSection(new AutoDrive(1, robot, false), 0);
-        auto4.addSection(new AutoDrive(1, robot, true), 0);
-        auto4.addSection(new AutoTurn(1, true, 0.5), 0);
+        //auto4.addSection(new AutoTurn(1, true, SmartDashboard.getNumber("3Ball Turn Speed", 0), robot), 0);
+/** 
+
+        //auto4.addSection(new AutoAutoAlign(1, robot), 0);
+        //auto4.addSection(new AutoShoot(2, robot), 0);
+        //auto4.addSection(new AutoTurn(1, true, 0.05, robot), 0);
+        auto4.addSection(new AutoDrive(3, robot, false), 0);
+        auto4.addSection(new AutoTurn(1, false, 0.05, robot), 0);
+        auto4.addSection(new AutoShoot(2, robot), 0);
+        //auto4.addSection(new AutoTurn(1, true, 0.05, robot), 0);
+        //auto4.addSection(new AutoDrive(1, robot, true), 0);
+        auto4.addSection(new AutoTurn(1, true, SmartDashboard.getNumber("3Ball Turn Speed", 0), robot), 0);
         auto4.addSection(new AutoDrive(2, robot, false), 0);
-        auto4.addSection(new AutoTurn(1, true, 0.5), 0);
-        auto4.addSection(new AutoAutoAlign(1), 0);
-        auto4.addSection(new AutoShoot(3), 0);
+        auto4.addSection(new AutoTurn(1, false, SmartDashboard.getNumber("3Ball Turn Speed", 0), robot), 0);
+        auto4.addSection(new AutoAutoAlign(1, robot), 0);
+        auto4.addSection(new AutoShoot(3, robot), 0);
 
-        auto4.addSection(new AutoWait(3), 1);
-        auto4.addSection(new AutoIntake(1), 1);
-        auto4.addSection(new AutoWait(2), 1);
-        auto4.addSection(new AutoIntake(2), 1);
-    
-        */
+        //auto4.addSection(new AutoWait(3), 1);
+        auto4.addSection(new AutoIntake(3, robot), 1);
+        auto4.addSection(new AutoWait(6), 1);
+        auto4.addSection(new AutoIntake(2, robot), 1);
 
-        //auto3.addSection(new AutoTurn(1,true, 0.25), 0);
-        //auto3.addSection(new AutoTurn(230, 1), 0);
-        auto3.addSection(new AutoTurn(180.0, robot), 0);
+        
+*/
 
 
-        // auto3.addSection(new AutoDrive(1, robot, false), 0);
-        // auto3.addSection(new AutoDrive(1, robot, true), 0);
-        // auto3.addSection(new AutoAutoAlign(1, robot), 0);
-        // auto3.addSection(new AutoShoot(3, robot), 0);
 
-        // auto3.addSection(new AutoWait(1), 1);
-        // auto3.addSection(new AutoIntake(1, robot), 1);
+        
+        auto3.addSection(new AutoDrive(1.15, robot, false), 0);
+        auto3.addSection(new AutoDrive(1, robot, true), 0);
+        //auto3.addSection(new AutoAutoAlign(1, robot), 0);
+        auto3.addSection(new AutoShoot(3, robot), 0);
 
-        auto1.addSection(new AutoDrive(2, robot, true), 0);
-        auto1.addSection(new AutoIntake(2.2, robot), 1);
+        //auto3.addSection(new AutoWait(1), 1);
+        auto3.addSection(new AutoIntake(1.2, robot), 1);
+
         auto1.addSection(new AutoDrive(2, robot, false), 0);
+        auto1.addSection(new AutoIntake(2.2, robot), 1);
+        auto1.addSection(new AutoDrive(2, robot, true), 0);
         auto1.addSection(new AutoShoot(4, robot), 0);
 
         /**
@@ -86,12 +94,48 @@ public class AutoManager {
 
         */
 
+        auto2.addSection(new AutoWait(3), 0);
         auto2.addSection(new AutoShoot(3, robot), 0);
-        auto2.addSection(new AutoDrive(2, robot, false), 0);
+        auto2.addSection(new AutoDrive(1, robot, false), 0);
 
-        autoChooser.setDefaultOption(auto1.getName(), auto1);
+        auto2.addSection(new AutoWait(6), 1);
+        auto2.addSection(new AutoIntake(1.4, robot), 1);
+
+        twoBallAuto.addSection(new AutoWait(2), 0);
+        twoBallAuto.addSection(new AutoAutoAlign(1, robot), 0);
+        twoBallAuto.addSection(new AutoShoot(3, robot), 0);
+        twoBallAuto.addSection(new AutoDrive(1.05, robot, false), 0);
+        twoBallAuto.addSection(new AutoWait(5), 1);
+        twoBallAuto.addSection(new AutoIntake(4, robot), 1);
+        twoBallAuto.addSection(new AutoWait(1.5), 0);
+        twoBallAuto.addSection(new AutoDrive(1, robot, true), 0);
+        twoBallAuto.addSection(new AutoAutoAlign(1, robot), 0);
+        twoBallAuto.addSection(new AutoShoot(3, robot), 0);
+
+        twoBallNoAlign.addSection(new AutoWait(2), 0);
+        twoBallNoAlign.addSection(new AutoShoot(3, robot), 0);
+        twoBallNoAlign.addSection(new AutoDrive(1.05, robot, false), 0);
+        twoBallNoAlign.addSection(new AutoWait(5), 1);
+        twoBallNoAlign.addSection(new AutoIntake(4, robot), 1);
+        twoBallNoAlign.addSection(new AutoWait(1.5), 0);
+        twoBallNoAlign.addSection(new AutoDrive(1, robot, true), 0);
+        twoBallNoAlign.addSection(new AutoShoot(3, robot), 0);
+
+
+        /*
+        auto2.addSection(new AutoDrive(1.15, robot, false), 0);
+        auto2.addSection(new AutoShoot(3, robot), 0);
+
+        auto2.addSection(new AutoIntake(1.2, robot), 1);
+        
+        */
+
+        autoChooser.addOption(auto1.getName(), auto1);
         autoChooser.addOption(auto2.getName(), auto2);
         autoChooser.addOption(auto3.getName(), auto3);
+        autoChooser.addOption(auto4.getName(), auto4);
+        autoChooser.addOption(auto5.getName(), auto5);
+        autoChooser.setDefaultOption(twoBallAuto.getName(), twoBallAuto);
 
         //SmartDashboard.putData("Auto Mode Selector", autoChooser);
 
@@ -99,7 +143,6 @@ public class AutoManager {
 
     public AutoMode getAuto() {
         return (AutoMode)autoChooser.getSelected();
-        
     }
 
     public void update() {

@@ -122,19 +122,19 @@ public class Shooter {
         // autoalign to that setpoint
         hood.set(hoodAngle);
         double tx = limelight.getXAngle();
-        if (targetYAngle != -15.5 && Math.abs(tx)>2.0) {
+        if (Math.abs(tx)>1.5) {
             drivetrain.autoAlign();
         }
         else{
             //autoalign to that yangle (note - aligns to ALL setpoints)
-            if(Math.abs(ty - targetYAngle) > 1.0){
+            if(targetYAngle != -15.5 && Math.abs(ty - targetYAngle) > 1.0){
                 drivetrain.setPointAlign(targetYAngle);
             }
         }
 
         //are we aligned?
-        if (Math.abs(ty - targetYAngle) < 2.0 && Math.abs(tx) < 2.0) return true;
-        else return false;
+        if (Math.abs(ty - targetYAngle) < 1.5 && Math.abs(tx) < 1.5) return true;
+        return false;
     }
 
     /**

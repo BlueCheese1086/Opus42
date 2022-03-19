@@ -3,6 +3,9 @@ package frc.robot;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.ctre.phoenix.music.Orchestra;
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,7 +44,7 @@ public class Robot extends TimedRobot {
   public Orchestra o;
   public Lights lights;
   public LightsInterface lightsInter;
-  //public AHRS gyro;
+  public AHRS gyro;
 
   public SendableChooser<Primary> primaryDrivers;
   public SendableChooser<Secondary> secondaryDrivers;

@@ -14,7 +14,7 @@ public class LightsInterface extends Interface {
 
     public LightsInterface(Robot robot, Control c) {
         super(robot, c);
-        control = ControlMode.Rainbow;
+        control = ControlMode.StaticColor;
     }
 
     public void setControlMode(ControlMode con) {
@@ -22,12 +22,6 @@ public class LightsInterface extends Interface {
     }
 
     public void tick() {
-        switch (control) {
-            case StaticColor:
-                robot.lights.setLights(0, 0, 255);
-            case Rainbow:
-                robot.lights.rainbow();
-        }
         robot.lights.update();
     }
     

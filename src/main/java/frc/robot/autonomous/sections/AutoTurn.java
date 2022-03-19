@@ -3,11 +3,10 @@ package frc.robot.autonomous.sections;
 import frc.robot.components.Drivetrain;
 import frc.robot.Robot;
 import frc.robot.PIDControl;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Constants;
 
 public class AutoTurn extends AutoSection{
-
+    
     Drivetrain drivetrain;
     double current;
     double turningDist; // rotaions
