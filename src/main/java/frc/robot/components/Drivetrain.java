@@ -11,13 +11,15 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
+import javax.print.event.PrintEvent;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.sensors.Limelight;
 
 
 public class Drivetrain {
-    public CANSparkMax frontLeft, frontRight, backLeft, backRight;
+    CANSparkMax frontLeft, frontRight, backLeft, backRight;
     Limelight limelight;
     public AHRS gyro;
     public DifferentialDriveKinematics kinematics;
@@ -29,7 +31,7 @@ public class Drivetrain {
     double P, I, D = 1.0;
     double integral, previous_error, setpoint = 0.0;
     double turn_adjust, kp, min_command, error, derivative;
-    public PIDController pid;
+    public static PIDController pid;
 
     //import IDs in the constructor and leave them as variables. don't hard-code them in.
     public Drivetrain(int frontLeftID, int frontRightID, int backLeftID, int backRightID, Limelight limelight, AHRS gyro){
@@ -60,6 +62,7 @@ public class Drivetrain {
         backRight.setOpenLoopRampRate(0);
         frontLeft.setOpenLoopRampRate(0);
         backLeft.setOpenLoopRampRate(0);
+
     }
 
     /**
@@ -132,7 +135,6 @@ public class Drivetrain {
      * will be used to autoalign before launching. don't worry about writing this method if you're not working on the launcher.
      */
     public void autoAlign(){
-        limelight.setLights(3);
         double Kp = -0.01;
         double min_command = 0.001;
         double tx = limelight.getXAngle();
@@ -159,13 +161,21 @@ public class Drivetrain {
     }
 
 
+    public double power = 0.0;
+
+    public static void initPID(){
+        pid = new PIDController(1.0/90.0, 0, 0);
+        pid.setTolerance(5);
+
+    }
+
     //maybe angle pid gyro based
     public void anglePID(double setpoint){
-        this.setpoint = setpoint;
+        //this.set(0.3, -0.3);
         
-        pid = new PIDController(1.0/90.0, 0,0);
+        this.setpoint = setpoint;
 
-        double power = pid.calculate(gyro.getAngle(), setpoint);
+        power = pid.calculate(gyro.getAngle(), setpoint);
 
         this.set(power, -power);
 
