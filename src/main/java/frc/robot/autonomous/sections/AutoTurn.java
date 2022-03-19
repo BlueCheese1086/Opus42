@@ -16,19 +16,18 @@ public class AutoTurn extends AutoSection{
     boolean isAngleBased;
     boolean isRight;
     double power;
-    double angle;
-
+    Robot robot;
 
     /** angle = degrees */
-    public AutoTurn(double angle, Robot robot/*, double length*/){
-        //super(length);
+    public AutoTurn(double angle, Robot robot){
+        this.robot = robot;
         this.drivetrain = robot.drivetrain;
-        this.angle = angle;
-        // this.turningDist = (((2 * Math.PI * Constants.WHEEL_TO_WHEEL_RADIUS) * (angle / 360 )) * 0.001) * Constants.DRIVETRAIN_POSITION_SCALE;
-        // this.rTurnPIDController = new PIDController("angle", drivetrain.frontRight, angle);
-        // this.lTurnPIDController = new PIDController("angle", drivetrain.frontleft, angle);
-        // drivetrain.frontLeft.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
-        // drivetrain.frontRight.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
+        this.turningDist = (((2 * Math.PI * Constants.WHEEL_TO_WHEEL_RADIUS) * (angle / 360 )) * 0.001) * Constants.DRIVETRAIN_POSITION_SCALE;
+        this.rTurnPIDController = new PIDControl("angle", drivetrain.frontRight, angle);
+        this.lTurnPIDController = new PIDControl("angle", drivetrain.frontLeft, angle);
+        //drivetrain.frontLeft.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
+        //drivetrain.frontRight.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
+
         this.isAngleBased = true;
 
     }
@@ -46,15 +45,8 @@ public class AutoTurn extends AutoSection{
     public void init(){
         super.init();
         if (isAngleBased){
-            // drivetrian.frontLeft.getEncoder().setPosition(0);
-            // drivetrain.frontRight.getEncoder().setPosition(0);
-
-            //drivetrain.initPID();
-            drivetrain.gyro.reset();
-            //drivetrain.pid.setTolerance(1);
-
-            // drivetrain.getFrontLeft().set(0.25);
-            // drivetrain.getFrontRight().set(-0.25);
+            drivetrain.frontLeft.getEncoder().setPosition(0);
+            drivetrain.frontRight.getEncoder().setPosition(0);
         }
 
     }
@@ -77,7 +69,6 @@ public class AutoTurn extends AutoSection{
 
             // drivetrain.getFrontLeft().set(0.25);
             // drivetrain.getFrontRight().set(-0.25);
-
         } else {
             if(isRight){
                 drivetrain.getFrontLeft().set(power);

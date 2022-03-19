@@ -3,10 +3,10 @@ package frc.robot;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import com.ctre.phoenix.music.Orchestra;
 import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,6 +41,9 @@ public class Robot extends TimedRobot {
   public Control c;
   public ArrayList<Interface> interfaces;
   public Orchestra o;
+  public AddressableLED leds;
+  public AddressableLEDBuffer buffer;
+
   public AHRS gyro;
 
   public SendableChooser<Primary> primaryDrivers;
@@ -58,6 +61,17 @@ public class Robot extends TimedRobot {
     c.setPrimary(Primary.RyanBox);
     c.setSecondary(Secondary.Toshi);
 
+    //LIGHTS
+    buffer = new AddressableLEDBuffer(300);
+    leds = new AddressableLED(2);
+    leds.setLength(buffer.getLength());
+
+    for (int i1 = 0; i1 < buffer.getLength(); i1++) {
+      buffer.setRGB(i1, 0, 0, 255);
+    }
+
+    leds.setData(buffer);
+    leds.start();
 
     // Initializing components
     limelight = new Limelight();
@@ -103,6 +117,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
+
+    // LEDS WOOOOOO
+    for (int i1 = 0; i1 < buffer.getLength(); i1++) {
+      buffer.setRGB(i1, 0, 0, 255);
+    }
+    leds.setData(buffer);
+
     /********************
      * TELEMETRY WOOOOO *
      ********************/
@@ -111,7 +132,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Hood Raw", hood.getPos());
 
     // Battery Voltage
-    SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
+    //SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
 
     // Driver Selection
     SmartDashboard.putData("Primary Driver", primaryDrivers);
@@ -148,13 +169,13 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Shooter Velocity", SmartDashboard.getNumber("Shooter Velocity", 0));
     SmartDashboard.getNumber("Shooter Velocity", 0);
 
-    SmartDashboard.putNumber("3Ball Turn Speed", SmartDashboard.getNumber("3Ball Turn Speed", 0));
-    SmartDashboard.getNumber("3Ball Turn Speed", 0);
+    //SmartDashboard.putNumber("3Ball Turn Speed", SmartDashboard.getNumber("3Ball Turn Speed", 0));
+    //SmartDashboard.getNumber("3Ball Turn Speed", 0);
 
     // Currents
-    SmartDashboard.putNumber("Front Right Current", drivetrain.getFrontRight().getOutputCurrent());
-    SmartDashboard.putNumber("Front Left Current", drivetrain.getFrontLeft().getOutputCurrent());
-
+    //SmartDashboard.putNumber("Front Right Current", drivetrain.getFrontRight().getOutputCurrent());
+    //SmartDashboard.putNumber("Front Left Current", drivetrain.getFrontLeft().getOutputCurrent());
+//orionwas here
     // SPEEEEED
     SmartDashboard.putNumber("Speed", (drivetrain.getFrontRight().get() + drivetrain.getFrontLeft().get())/2.0);
 
@@ -162,6 +183,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Ground Number", limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT - Constants.CAMERA_HEIGHT + Constants.CARGO_DIAMETER));
     SmartDashboard.putNumber("Y Angle", limelight.getYAngle());
     SmartDashboard.putNumber("X Angle", limelight.getXAngle());
+
+    // Climb
+    SmartDashboard.putNumber("Left Climb Position", climb.left.getEncoder().getPosition());
+    SmartDashboard.putNumber("Right Climb Position", climb.right.getEncoder().getPosition());
 
     // Distance -> Velo Data
     SmartDashboard.putData(distanceVelo);

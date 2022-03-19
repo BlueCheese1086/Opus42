@@ -130,22 +130,24 @@ public class Shooter {
      * @return whether the robot is aligned or not
      */
     public boolean alignSetpoint() {
+        limelight.setLights(3);
+
         double ty = limelight.getYAngle();
-        double[] setPoint = shooterConstants.getNearestSetpoint(ty);
-        double targetYAngle = setPoint[0]; // as in, the angle we want to   reach, not the limelight target
+        // double ty = 1.0;
+        double[] setPoint = shooterConstants.getNearestSetpoint(ty);//shooterConstants.getSetpoint(shooterConstants.getNearestSetpointID(ty));
+        double targetYAngle = setPoint[0]; // as in, the angle we want to get to, not the limelight target
         double hoodAngle = setPoint[1];
+        /*
+         * 0 - yAngle
+         * 1 - hoodAngle
+         * 2 - velocity
+         */
+
+        // autoalign to that setpoint
         hood.set(hoodAngle);
+        if (targetYAngle != -15.5) {
+            if (Math.abs(ty - targetYAngle) > 2.0) {
 
-        //assuring the robot will not align at the safe spot
-        if(targetYAngle == -16.7){
-            targetYAngle = ty;
-        }
-
-        //face the target/x angle autoalign
-        double tx = limelight.getXAngle();
-        if (Math.abs(tx) > 1.0 && targetYAngle != -16.7) {
-            drivetrain.autoAlign();
-        }
         else{
             //autoalign to that yangle (note - aligns to ALL setpoints)
             if(Math.abs(ty - targetYAngle) > 1.0){
@@ -171,6 +173,7 @@ public class Shooter {
             drivetrain.autoAlign();
         }
         setMotorVelo(SmartDashboard.getNumber("Shooter Velocity", 0));
+
 
         //Auto Align The Rowed Bot To Y Angle
         double ty = limelight.getYAngle();
@@ -239,6 +242,7 @@ public class Shooter {
          * 2 - velocity
          */
 
+
         // set the velocity of the falcons
         if (robot.c.primary.getYButton()) {
             targetVelocity = SmartDashboard.getNumber("Shooter Velocity", 0);
@@ -247,6 +251,7 @@ public class Shooter {
 
     
         // pewpew
+
         if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 200) {
             one.set(0.5);
             indexer.in();
