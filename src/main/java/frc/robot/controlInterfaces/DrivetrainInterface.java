@@ -3,7 +3,6 @@ package frc.robot.controlInterfaces;
 import frc.robot.Control;
 import frc.robot.Robot;
 import frc.robot.components.Drivetrain;
-import frc.robot.sensors.Limelight;
 
 public class DrivetrainInterface extends Interface{
     Drivetrain drivetrain;
@@ -21,10 +20,6 @@ public class DrivetrainInterface extends Interface{
         if (true) {
             drivetrain.drive(c.getDriveForward(), c.getDriveTurn());
         }
-
-        /*if (c.primary.getRightBumperPressed()) {
-            drivetrain.driveDistance(24);
-        }*/
 
         if (c.getBrakeToggle()) {
             drivetrain.toggleMode();
