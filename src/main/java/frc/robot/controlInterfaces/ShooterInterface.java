@@ -23,18 +23,17 @@ public class ShooterInterface extends Interface {
      */
     public void tick() {
         if (c.getLauncherShoot()) {
-            robot.limelight.setLights(3);
-            // robot.shooter.setVelocity(SmartDashboard.getNumber("Shooter Velocity", 0));
-            // shooter.shoot();
             robot.shooter.shoot();
             shotYet = true;
         } else if (c.getLauncherAlign()) {
             robot.shooter.setMotorVelo(7000);
-            robot.limelight.setLights(3);
+            //robot.limelight.setLights(3);
             if (robot.shooter.alignSetpoint()) {
                 c.primary.setRumble(RumbleType.kRightRumble, 1);
                 c.primary.setRumble(RumbleType.kLeftRumble, 1);
             }
+        } else if (c.primary.getRightStickButton()) {
+            robot.shooter.autoAlign();
         } else {
             // robot.limelight.setLights(1);
             c.primary.setRumble(RumbleType.kRightRumble, 0);
@@ -42,15 +41,7 @@ public class ShooterInterface extends Interface {
             robot.shooter.stopEverything();
             shotYet = false;
         }
-
-        /*
-         * if (c.primary.getPOV() == 270) {
-         * constants.setPoint(robot.limelight.getYAngle(), robot.hood.getPos(),
-         * robot.shooter.getVelocity());
-         * //robot.distanceVelo.addOption("name", object);
-         * }
-         */
-
+        
         if (c.primary.getPOV() == 0) {
             robot.hood.set(1.0);
         } else if (c.primary.getPOV() == 90) {

@@ -8,7 +8,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.sensors.Limelight;
 
 public class Drivetrain {
-    CANSparkMax frontLeft, frontRight, backLeft, backRight;
+    public CANSparkMax frontLeft, frontRight, backLeft, backRight;
     Limelight limelight;
     //AHRS gyro;
 

@@ -220,6 +220,7 @@ public class Shooter {
      */
 
     public boolean alignSetpoint() {
+        limelight.setLights(3);
         double tx = limelight.getXAngle();
         if (Math.abs(tx) > 2.0) {
             drivetrain.autoAlign();
@@ -239,7 +240,7 @@ public class Shooter {
 
         // autoalign to that setpoint
         hood.set(hoodAngle);
-        if (targetYAngle != -16.7) {
+        if (targetYAngle != -15.5) {
             if (Math.abs(ty - targetYAngle) > 2.0) {
                 drivetrain.setPointAlign(targetYAngle);
                 // drivetrain.autoAlign();
@@ -248,13 +249,18 @@ public class Shooter {
             targetYAngle = ty;
         }
 
-        if (Math.abs(ty - targetYAngle) < 2.0 && Math.abs(tx) < 2.0) {
+        if (Math.abs(ty - targetYAngle) < 2.0 && Math.abs(tx) < 1.5) {
             return true;
         } else
             return false;
 
         // change the hood angle
         // hood.setSpeed(1);
+    }
+
+    public void autoAlign() {
+        limelight.setLights(3);
+        drivetrain.autoAlign();
     }
 
     public void shootAuto() {
@@ -265,7 +271,7 @@ public class Shooter {
             // tx = limelight.getXAngle();
         }
         setMotorVelo(SmartDashboard.getNumber("Shooter Velocity", 0));
-
+//lol
         double ty = limelight.getYAngle();
         double[] setPoint = shooterConstants.getSetpoint(shooterConstants.getNearestSetpointID(ty));
         double hoodAngle = setPoint[1];
@@ -309,6 +315,7 @@ public class Shooter {
          */
         //hood.set(hoodAngle);
 
+
         // set the velocity of the falcons
         if (robot.c.primary.getYButton()) {
             targetVelocity = SmartDashboard.getNumber("Shooter Velocity", 0);
@@ -317,8 +324,8 @@ public class Shooter {
 
     
         // pewpew
-        if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 200) {
-            one.set(0.35);
+        if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 100) {
+            one.set(.75);
             indexer.in();
             return true;
         } else

@@ -1,13 +1,13 @@
 package frc.robot.autonomous.sections;
 
-import frc.robot.Drivetrain;
+import frc.robot.components.Drivetrain;
 import frc.robot.Robot;
 import frc.robot.PIDController;
 import frc.robot.Constants;
 
 public class AutoTurn extends AutoSection{
 
-    Drivetrian drivetrain;
+    Drivetrain drivetrain;
     double current;
     double turningDist; // rotaions
     PIDController rTurnPIDController;
@@ -15,22 +15,24 @@ public class AutoTurn extends AutoSection{
     boolean isAngleBased;
     boolean isRight;
     double power;
+    Robot robot;
 
     /** angle = degrees */
-    public AutoTurn(double angle){
-        this.drivetrain = Robot.drivetrain;
+    public AutoTurn(double angle, Robot robot){
+        this.robot = robot;
+        this.drivetrain = robot.drivetrain;
         this.turningDist = (((2 * Math.PI * Constants.WHEEL_TO_WHEEL_RADIUS) * (angle / 360 )) * 0.001) * Constants.DRIVETRAIN_POSITION_SCALE;
         this.rTurnPIDController = new PIDController("angle", drivetrain.frontRight, angle);
-        this.lTurnPIDController = new PIDController("angle", drivetrain.frontleft, angle);
-        drivetrain.frontLeft.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
-        drivetrain.frontRight.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
+        this.lTurnPIDController = new PIDController("angle", drivetrain.frontLeft, angle);
+        //drivetrain.frontLeft.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
+        //drivetrain.frontRight.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
         this.isAngleBased = true;
 
     }
 
     public AutoTurn(int length, boolean isRight, double power){
         super(length);
-        this.drivetrain = Robot.drivetrain;
+        this.drivetrain = robot.drivetrain;
         this.isAngleBased = false;
         this.isRight = isRight;
         this.power = power;
@@ -42,7 +44,7 @@ public class AutoTurn extends AutoSection{
         super.startTime = System.currentTimeMillis();
         super.started = true;
         if (isAngleBased){
-            drivetrian.frontLeft.getEncoder().setPosition(0);
+            drivetrain.frontLeft.getEncoder().setPosition(0);
             drivetrain.frontRight.getEncoder().setPosition(0);
         }
 
@@ -51,8 +53,8 @@ public class AutoTurn extends AutoSection{
     @Override
     public void update() {
         if (isAngleBased){
-            rturnPIDController.rotateToAngle(turningDist);
-            lturnPIDController.rotateToAngle(turningDist * -1);
+            //rturnPIDController.rotateToAngle(turningDist);
+            //lturnPIDController.rotateToAngle(turningDist * -1);
         } else {
             if(isRight){
                 drivetrain.frontLeft.set(power);
@@ -74,6 +76,7 @@ public class AutoTurn extends AutoSection{
 
     @Override
     public boolean disableCondition() {
-        return turningDist - Constants.TURN_ERROR < drivetrain.frontRight.getEncoder().getPosition() < angle + Constants.TURN_ERROR : false;
+        return false;
+        //return turningDist - Constants.TURN_ERROR < drivetrain.frontRight.getEncoder().getPosition() < angle + Constants.TURN_ERROR : false;
     }
 }

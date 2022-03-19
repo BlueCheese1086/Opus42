@@ -37,8 +37,6 @@ public class Control {
         suckondeeznutzDriver = sux;
     }
 
-
-
     /**
      * @return Returns acceleration value based on driver profile
      */

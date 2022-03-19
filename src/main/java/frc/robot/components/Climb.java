@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class Climb {
-    CANSparkMax left, right;
+    public CANSparkMax left, right;
     Solenoid lock;
     public Climb(int leftID, int rightID, int solenoidID) {
         left = new CANSparkMax(leftID, MotorType.kBrushless);
