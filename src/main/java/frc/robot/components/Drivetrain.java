@@ -1,32 +1,53 @@
 package frc.robot.components;
 
+import frc.robot.PIDControl;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-//import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+
+import javax.print.event.PrintEvent;
+
+import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.sensors.Limelight;
 
-public class Drivetrain {
-    public CANSparkMax frontLeft, frontRight, backLeft, backRight;
-    Limelight limelight;
-    //AHRS gyro;
 
+public class Drivetrain {
+    CANSparkMax frontLeft, frontRight, backLeft, backRight;
+    Limelight limelight;
+    public AHRS gyro;
+    public DifferentialDriveKinematics kinematics;
+    public PIDControl leftPID;
+    public PIDControl rightPID;
 
     boolean brake = true;
 
-    //import IDs in the constructor and leave them as variables. don't hard-code them in.
+    double P, I, D = 1.0;
+    double integral, previous_error, setpoint = 0.0;
+    double turn_adjust, kp, min_command, error, derivative;
+    public static PIDController pid;
 
-    public Drivetrain(int frontLeftID, int frontRightID, int backLeftID, int backRightID, Limelight limelight/*, AHRS gyro /*need to add in robot*/) {
+    //import IDs in the constructor and leave them as variables. don't hard-code them in.
+    public Drivetrain(int frontLeftID, int frontRightID, int backLeftID, int backRightID, Limelight limelight, AHRS gyro){
         frontLeft = new CANSparkMax(frontLeftID, MotorType.kBrushless);
         frontRight = new CANSparkMax(frontRightID, MotorType.kBrushless);
         backLeft = new CANSparkMax(backLeftID, MotorType.kBrushless);
         backRight = new CANSparkMax(backRightID, MotorType.kBrushless);
-        
-        //this.gyro = gyro;
+
+        leftPID = new PIDControl("velocity", frontLeft);
+        rightPID = new PIDControl("velocity", frontRight);
+
+        kinematics = new DifferentialDriveKinematics(0.52705);
         
         this.limelight = limelight;
+        this.gyro = gyro;
+
 
         backLeft.follow(frontLeft);
         backRight.follow(frontRight);
@@ -41,6 +62,7 @@ public class Drivetrain {
         backRight.setOpenLoopRampRate(0);
         frontLeft.setOpenLoopRampRate(0);
         backLeft.setOpenLoopRampRate(0);
+
     }
 
     /**
@@ -124,6 +146,7 @@ public class Drivetrain {
         this.set(-1 * steering_adjust, steering_adjust);
     }
 
+
     //not sure how to work this yet, so i've just made it the same as auto align for now - kai
     public void setPointAlign(double targetYAngle){
         double Kp = 0.05;
@@ -136,31 +159,54 @@ public class Drivetrain {
         steering_adjust *= -1;
         this.set(steering_adjust, steering_adjust);
     }
-    
-    double P, I, D = 1.0;
-    double integral, previous_error, setpoint = 0.0;
 
-    /*//maybe angle pid gyro based
+
+    public double power = 0.0;
+
+    public static void initPID(){
+        pid = new PIDController(1.0/90.0, 0, 0);
+        pid.setTolerance(5);
+
+    }
+
+    //maybe angle pid gyro based
     public void anglePID(double setpoint){
+        //this.set(0.3, -0.3);
+        
         this.setpoint = setpoint;
-        double error = setpoint - gyro.getAngle(); // Error = Target - Actual
+
+        power = pid.calculate(gyro.getAngle(), setpoint);
+
+        this.set(power, -power);
+
+        /*sad unnessecarily complicated code:((((
+            why jameeeeeee! whyyyyyyy *crying emote*
+
+        error = setpoint - gyro.getAngle(); // Error = Target - Actual
+
         this.integral += (error*.02); // Integral is increased by the error*time (which is .02 seconds using normal IterativeRobot)
         derivative = (error - this.previous_error) / .02;
         //this.rcw = P*error + I*this.integral + D*derivative;
 
-        double Kp = 0.05;
-        double min_command = 0.01;
+        kp = 0.05;
+        min_command = 0.01;
 
-        double turn_adjust = P*error + I*this.integral + D*derivative;
+        turn_adjust = P*error + I*this.integral + D*derivative;
         if( Math.abs(error) > 1.0) turn_adjust -= min_command;
-        else if(error) < 1.0) turn_adjust+=min_command;
-        steering_adjust *= -1;
-        this.set(steering_adjust, steering_adjust);
+        else if(error < 1.0) turn_adjust+=min_command;
+        int steering_adjust = -1;
+        this.set(0, 0);
+
+        this.frontLeft.set(0.25);
+        this.frontRight.set(-0.25);*/
     }
 
     public boolean getAnglePIDStatus(){
-        return setpoint - gyro.getAngle() < 1 && setpoint - gyro.getAngle() > -1;
+        return this.pid.atSetpoint();
+        // return setpoint - gyro.getAngle() < 1 && setpoint - gyro.getAngle() > -1;
+    }
 
-    }*/
+    public void setSpeed(DifferentialDriveWheelSpeeds speeds){
 
+    }
 }

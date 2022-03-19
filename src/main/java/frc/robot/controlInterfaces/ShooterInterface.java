@@ -47,7 +47,7 @@ public class ShooterInterface extends Interface {
                 c.primary.setRumble(RumbleType.kLeftRumble, 1);
             }
         } else if (c.primary.getRightStickButton()) {
-            robot.shooter.autoAlign();
+            robot.drivetrain.autoAlign();
         } else {
             // robot.limelight.setLights(1);
             c.primary.setRumble(RumbleType.kRightRumble, 0);
@@ -70,6 +70,11 @@ public class ShooterInterface extends Interface {
             robot.limelight.setLights(3);
             constants.setPoint(robot.limelight.getYAngle(), robot.hood.getPos(), robot.shooter.getVelocity());
             robot.limelight.setLights(1);
+        }
+
+        if(c.secondary.getXButton()){
+            robot.limelight.setLights(3);
+            robot.drivetrain.autoAlign();
         }
 
     }

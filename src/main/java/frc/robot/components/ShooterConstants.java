@@ -11,10 +11,13 @@ public class ShooterConstants {
     public ShooterConstants(Limelight limelight){
         setPoints = new ArrayList<double[]>();
 
+
         setPoints.add(new double[]{0, 0, 7800});
         setPoints.add(new double[]{-15.5, .75, 9000});
         setPoints.add(new double[]{-11, .25, 8750});
         //this.setPoint(limelight.getYAngle(), 0, 8500);
+
+        this.limelight = limelight;
     }
 
     public ArrayList<double[]> getSetPoints(){
@@ -33,6 +36,11 @@ public class ShooterConstants {
         //setPoints.set(0, entry);
     }
 
+    /**
+     * 
+     * @param yAngle current yangle
+     * @return the id of the setpoint in the arraylist
+     */
     public int getNearestSetpointID(double yAngle){
         double difference = Double.MAX_VALUE;
         int setPointID = 0;
@@ -46,21 +54,35 @@ public class ShooterConstants {
 
         return setPointID;
     }
-
+  
+         /**
+          * ID 0 - target yAngle
+          ID 1 - target hoodAngle
+          ID 2 - target velocity
+          * @param yAngle current yAngle
+          * @return the double[] of the nearest setpoint
+        */
     public double[] getNearestSetpoint(double yAngle) {
         double difference = Double.MAX_VALUE;
         int setPointID = 0;
-        for(int i=0; i<setPoints.size(); i++){
-            double[] entry = setPoints.get(i);
-            if(Math.abs(entry[0] - yAngle) < difference){
-                difference = Math.abs(entry[0] - yAngle);
-                setPointID = i;
+        if(!(limelight.getXAngle() == 0.0 && yAngle == 0)){
+            for(int i=0; i<setPoints.size(); i++){
+                double[] entry = setPoints.get(i);
+                if(Math.abs(entry[0] - yAngle) < difference){
+                   difference = Math.abs(entry[0] - yAngle);
+                    setPointID = i;
+                }
             }
         }
 
         return setPoints.get(setPointID);
     }
 
+    /**
+     * get the. get the point. the setted point
+     * @param ID the ID in the arraylist
+     * @return THE SETTED POINTd
+     */
     public double[] getSetpoint(int ID){
         return setPoints.get(ID);
     }
