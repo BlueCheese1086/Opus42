@@ -32,6 +32,7 @@ public class AutoMode {
         }
     }
 
+
     public void update() {
 
         for (AutoThread t : threads) t.update();

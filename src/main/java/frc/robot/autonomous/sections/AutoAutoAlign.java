@@ -4,8 +4,11 @@ import frc.robot.Robot;
 
 public class AutoAutoAlign extends AutoSection {
 
+    Robot robot;
+
     public AutoAutoAlign(int length, Robot robot){
-        super(length, robot);
+        super(length);
+        this.robot = robot;
     }
 
     @Override
@@ -15,16 +18,15 @@ public class AutoAutoAlign extends AutoSection {
 
     @Override
     public void update() {
+        // TODO Auto-generated method stub
         robot.drivetrain.autoAlign();
+        
     }
 
     @Override
-    public void disabled() {        
-    }
-
-    @Override
-    public boolean disableCondition() {
-        return robot.shooter.alignSetpoint();
+    public void disabled() {
+        // TODO Auto-generated method stub
+        
     }
     
 }

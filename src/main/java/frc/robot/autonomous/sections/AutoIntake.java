@@ -14,7 +14,7 @@ public class AutoIntake extends AutoSection{
     Indexer indexer;
     
     public AutoIntake(double length, Robot robot){
-        super(length, robot);
+        super(length);
         this.intake = robot.intake;
         //this.drivetrain = robot.drivetrain;
         this.indexer = robot.indexer;
@@ -23,8 +23,7 @@ public class AutoIntake extends AutoSection{
 
     @Override
     public void init(){
-        super.startTime = System.currentTimeMillis();
-        super.started = true;
+        super.init();
         intake.down();
 
     }

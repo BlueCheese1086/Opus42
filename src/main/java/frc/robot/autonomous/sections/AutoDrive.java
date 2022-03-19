@@ -6,13 +6,13 @@ import frc.robot.Robot;
 import frc.robot.PIDControl;
 import frc.robot.Constants;
 
-
 public class AutoDrive extends AutoSection {
 
     Drivetrain drivetrain;
     double current;
-    double distance; 
-    PIDControl rDrivePIDController, lDrivePIDController;
+    double distance; // rotaions
+    PIDControl rDrivePIDController;
+    PIDControl lDrivePIDController;
     boolean isDistBased;
     boolean invert;
 
@@ -20,20 +20,16 @@ public class AutoDrive extends AutoSection {
     public AutoDrive(double distance, Robot robot){
         this.drivetrain = robot.drivetrain;
         this.distance = (distance * 0.001) * Constants.DRIVETRAIN_POSITION_SCALE;
-    
-        rDrivePIDController = new PIDControl("distance", this.drivetrain.frontRight, distance);
-        lDrivePIDController = new PIDControl("distance", this.drivetrain.frontLeft, distance);
-
+        this.rDrivePIDController = new PIDControl("distance", drivetrain.getFrontRight(), distance);
+        this.lDrivePIDController = new PIDControl("distance", drivetrain.getFrontLeft(), distance);
         lDrivePIDController.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
         rDrivePIDController.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
-
-        
         this.isDistBased = true;
 
     }
 
-    public AutoDrive(double length, Robot robot, boolean invert){
-        super(length, robot);
+    public AutoDrive(int length, Robot robot, boolean invert){
+        super(length);
         this.drivetrain = robot.drivetrain;
         this.isDistBased = false;
         this.invert = invert;

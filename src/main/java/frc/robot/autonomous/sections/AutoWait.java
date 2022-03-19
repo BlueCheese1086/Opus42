@@ -1,17 +1,15 @@
 
 package frc.robot.autonomous.sections;
 
-import frc.robot.Robot;
-
 public class AutoWait extends AutoSection {
 
-    public AutoWait(double length, Robot robot) {
-        super(length, robot);
+    public AutoWait(double length) {
+        super(length);
     }
 
     @Override
     public void update() {
-        //Jank solution for waiting on hood
+
     }
 
     @Override
