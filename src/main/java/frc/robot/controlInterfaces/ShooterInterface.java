@@ -58,6 +58,11 @@ public class ShooterInterface extends Interface {
             robot.limelight.setLights(1);
         }
 
+        if(c.secondary.getXButton()){
+            robot.limelight.setLights(3);
+            robot.drivetrain.autoAlign();
+        }
+
     }
 
 }

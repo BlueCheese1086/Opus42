@@ -9,6 +9,7 @@ package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
 import frc.robot.autonomous.sections.*;
@@ -16,9 +17,7 @@ import frc.robot.autonomous.sections.*;
 public class AutoManager {
 
     SendableChooser<AutoMode> autoChooser;
-    AutoMode auto1, auto2;
-    public AutoMode auto3;
-    AutoMode auto4;
+    AutoMode auto1, auto2, auto3, auto4;
 
     Robot robot;
 

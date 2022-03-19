@@ -3,7 +3,6 @@ package frc.robot.autonomous.sections;
 import frc.robot.components.Drivetrain;
 import frc.robot.Robot;
 import frc.robot.PIDControl;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Constants;
 
 public class AutoTurn extends AutoSection{
@@ -16,18 +15,19 @@ public class AutoTurn extends AutoSection{
     boolean isAngleBased;
     boolean isRight;
     double power;
-    Robot robot;
+    double angle;
+
 
     /** angle = degrees */
-    public AutoTurn(double angle, Robot robot){
-        this.robot = robot;
+    public AutoTurn(double angle, Robot robot/*, double length*/){
+        //super(length);
         this.drivetrain = robot.drivetrain;
-        this.turningDist = (((2 * Math.PI * Constants.WHEEL_TO_WHEEL_RADIUS) * (angle / 360 )) * 0.001) * Constants.DRIVETRAIN_POSITION_SCALE;
-        this.rTurnPIDController = new PIDControl("angle", drivetrain.frontRight, angle);
-        this.lTurnPIDController = new PIDControl("angle", drivetrain.frontLeft, angle);
-        //drivetrain.frontLeft.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
-        //drivetrain.frontRight.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
-
+        this.angle = angle;
+        // this.turningDist = (((2 * Math.PI * Constants.WHEEL_TO_WHEEL_RADIUS) * (angle / 360 )) * 0.001) * Constants.DRIVETRAIN_POSITION_SCALE;
+        // this.rTurnPIDController = new PIDController("angle", drivetrain.frontRight, angle);
+        // this.lTurnPIDController = new PIDController("angle", drivetrain.frontleft, angle);
+        // drivetrain.frontLeft.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
+        // drivetrain.frontRight.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
         this.isAngleBased = true;
 
     }
@@ -45,30 +45,30 @@ public class AutoTurn extends AutoSection{
     public void init(){
         super.init();
         if (isAngleBased){
-            drivetrain.frontLeft.getEncoder().setPosition(0);
-            drivetrain.frontRight.getEncoder().setPosition(0);
+            // drivetrian.frontLeft.getEncoder().setPosition(0);
+            // drivetrain.frontRight.getEncoder().setPosition(0);
+
+            //drivetrain.initPID();
+            drivetrain.gyro.reset();
+            //drivetrain.pid.setTolerance(1);
+
+            // drivetrain.getFrontLeft().set(0.25);
+            // drivetrain.getFrontRight().set(-0.25);
         }
 
     }
 
-    //@Override
+    @Override
     public void update() {
-        //KAI HERE! i think the problem is that all of this test code itself doesn't actually do anything?
-        //Robot.limelight.setLights(0);
-        /*drivetrain.getFrontLeft().set(0.25);
-        drivetrain.getFrontRight().set(-0.25);*/
-
-        //this may not do what you want, but at least it will do something
-        drivetrain.drive(0.25, 0.5);
-
-        /*if (isAngleBased){
+        if (isAngleBased){
             // rturnPIDController.rotateToAngle(turningDist);
             // lturnPIDController.rotateToAngle(turningDist * -1);
 
             //drivetrain.anglePID(angle);
 
-            // drivetrain.getFrontLeft().set(0.25);
-            // drivetrain.getFrontRight().set(-0.25);
+            drivetrain.getFrontLeft().set(0.25);
+            drivetrain.getFrontRight().set(-0.25);
+
         } else {
             if(isRight){
                 drivetrain.getFrontLeft().set(power);
@@ -77,7 +77,7 @@ public class AutoTurn extends AutoSection{
                 drivetrain.getFrontLeft().set(power);
                 drivetrain.getFrontRight().set(power);
             }
-        }*/
+        }
 
     }
 

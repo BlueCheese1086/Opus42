@@ -1,3 +1,17 @@
+/*                                                     __________  __________  ___     ___      __________  __________  ___     ___
+ +--^----------,--------,-----,--------^-,            /  ____   / /  _______/ /  /___ /  /     /  ____   / /  _______/ /  /___ /  /
+ | |||||||||   `--------'     |          O           /  /___/  / /  /___     /  /   /   /     /  /___/  / /  /___     /  /   /   /
+ `+---------------------------^----------|          /  _______/ /  ____/    /  /   /   /     /  _______/ /  ____/    /  /   /   /
+   `\_,---------,---------,--------------'         /  /        /  /______  /   ___    /     /  /        /  /______  /   ___    /
+     / XXXXXX /'|       /'                        /__/        /_________/ /___/  /___/     /__/        /_________/ /___/  /___/
+    / XXXXXX /  `\    /'
+   / XXXXXX /`-------'
+  / XXXXXX /
+ / XXXXXX /
+(________(                
+ `------'              
+*/
+
 package frc.robot.components;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -12,8 +26,6 @@ import frc.robot.sensors.Limelight;
 
 public class Shooter {
     // this will be madness and i will figure it out eventually - kai
-
-    // todo: find appropriate names
     public TalonFX x, y;
     public CANSparkMax one, two, three, four;
     Limelight limelight;
@@ -24,9 +36,7 @@ public class Shooter {
     public ShooterConstants shooterConstants;
     Robot robot;
 
-    // 4 cansparkmaxes????????? tbd
-    public Shooter(Robot robot, int xID, int yID, int oneID, int twoID, int threeID, int fourID, Limelight limelight,
-            Hood hood, Indexer indexer, Drivetrain drivetrain) {
+    public Shooter(Robot robot, int xID, int yID, int oneID, int twoID, int threeID, int fourID, Limelight limelight, Hood hood, Indexer indexer, Drivetrain drivetrain) {
         x = new TalonFX(xID);
         y = new TalonFX(yID);
         one = new CANSparkMax(oneID, MotorType.kBrushless);
@@ -114,118 +124,13 @@ public class Shooter {
      * 4) PEW PEW
      */
 
-    /*
-     * public void shoot(){
-     * //all of these values are in meters or m/s
-     * double targetVelocity = Constants.LAUNCHER_DEFAULT_VELOCITY;
-     * double groundDistance =
-     * limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT);
-     * double height = Constants.UPPER_HUB_HEIGHT + Constants.CARGO_DIAMETER -
-     * Constants.CAMERA_HEIGHT + 2;
-     * //0) autoalign
-     * double tx = limelight.getXAngle();
-     * while(Math.abs(tx)>1.0){
-     * drivetrain.autoAlign();
-     * tx = limelight.getXAngle();
-     * }
-     * //1) set hood angle
-     * double targetAngle = getLaunchAngle(targetVelocity, groundDistance, height) +
-     * 45;
-     * hood.set(targetAngle);
-     * //2) have falcons approaching launching velocity
-     * x.config_kP(0, Constants.LAUNCHER_KP);
-     * x.config_kI(0, Constants.LAUNCHER_KI);
-     * x.config_kD(0, Constants.LAUNCHER_KD);
-     * /*
-     *
-     * See documentation for calculation details.
-     * If using velocity, motion magic, or motion profile,
-     * use (1023 * duty-cycle / sensor-velocity-sensor-units-per-100ms).
-     * 
-     * 
-     * 
-     * x.config_kF(0, Constants.LAUNCHER_KF);
-     * x.set(TalonFXControlMode.Velocity, targetVelocity /
-     * (Constants.LAUNCHER_WHEEL_CIRCUMFERENCE *
-     * Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION * 10));
-     * //3) *after* falcons are at that velocity, run indexer & internal
-     * cansparkmaxes
-     * if(x.getSelectedSensorVelocity(0) * Constants.LAUNCHER_WHEEL_CIRCUMFERENCE *
-     * Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION * 10 >= 0.9*targetVelocity){
-     * one.set(0.5);
-     * indexer.in();
-     * }
-     * }
-     */
 
     /**
-     * pew pew
+     * aligns the robot to a setpoint
+     * @return whether the robot is aligned or not
      */
-    /*
-     * public void shoot(){
-     * ///all of these values are in meters or m/s
-     * //double targetVelocity = Constants.LAUNCHER_DEFAULT_VELOCITY;
-     * double groundDistance =
-     * limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT);
-     * double height = Constants.UPPER_HUB_HEIGHT + Constants.CARGO_DIAMETER -
-     * Constants.CAMERA_HEIGHT + 2;
-     * double targetAngle = Constants.LAUNCHER_MIN_ANGLE;
-     * 
-     * //0) autoalign
-     * double tx = limelight.getXAngle();
-     * while(Math.abs(tx)>1.0){
-     * drivetrain.autoAlign();
-     * tx = limelight.getXAngle();
-     * }
-     * 
-     * 
-     * //1) set hood angle
-     * //double targetAngle = getLaunchAngle(targetVelocity, groundDistance, height)
-     * + 45;
-     * //hood.set(targetAngle);
-     * hood.setMax();
-     * 
-     * groundDistance= 2.0;
-     * //2) have falcons approaching launching velocity
-     * //double targetVelocity = getLaunchVelocity(targetAngle, groundDistance,
-     * height);
-     * x.config_kP(0, Constants.LAUNCHER_KP);
-     * x.config_kI(0, Constants.LAUNCHER_KI);
-     * x.config_kD(0, Constants.LAUNCHER_KD);
-     * 
-     * 
-     * x.config_kF(0, Constants.LAUNCHER_KF);
-     * 
-     * //x.set(TalonFXControlMode.Velocity, targetVelocity *
-     * Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION /
-     * (Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * 10));
-     * x.set(TalonFXControlMode.Velocity, velocity);
-     * 
-     * //3) *after* falcons are at that velocity, run indexer & internal
-     * cansparkmaxes
-     * //if(x.getSelectedSensorVelocity(0) * Constants.LAUNCHER_WHEEL_CIRCUMFERENCE
-     * * 10 / Constants.LAUNCHER_ENCODER_UNITS_PER_ROTATION >= 0.9*targetVelocity){
-     * if (Math.abs(x.getSelectedSensorVelocity() - velocity) <= 500
-     * ) {
-     * 
-     * one.set(0.5);
-     * indexer.in();
-     * }
-     * //}
-     * }
-     */
-
-    /**
-     * setpoints version of shoot method
-     */
-
     public boolean alignSetpoint() {
         limelight.setLights(3);
-        double tx = limelight.getXAngle();
-        if (Math.abs(tx) > 2.0) {
-            drivetrain.autoAlign();
-            // tx = limelight.getXAngle();
-        }
 
         double ty = limelight.getYAngle();
         // double ty = 1.0;
@@ -242,78 +147,100 @@ public class Shooter {
         hood.set(hoodAngle);
         if (targetYAngle != -15.5) {
             if (Math.abs(ty - targetYAngle) > 2.0) {
+
+        else{
+            //autoalign to that yangle (note - aligns to ALL setpoints)
+            if(Math.abs(ty - targetYAngle) > 1.0){
                 drivetrain.setPointAlign(targetYAngle);
-                // drivetrain.autoAlign();
             }
-        } else {
-            targetYAngle = ty;
         }
 
-        if (Math.abs(ty - targetYAngle) < 2.0 && Math.abs(tx) < 1.5) {
-            return true;
-        } else
-            return false;
-
-        // change the hood angle
-        // hood.setSpeed(1);
+        //are we aligned?
+        if (Math.abs(ty - targetYAngle) < 2.0 && Math.abs(tx) < 2.0) return true;
+        else return false;
     }
 
-    public void autoAlign() {
-        limelight.setLights(3);
-        drivetrain.autoAlign();
-    }
-
+    /**
+     * shoots according to the velocity chosen in Smart Dashboard
+     */
     public void shootAuto() {
+        //turn the limelight on
         limelight.setLights(3);
+
+        //Auto Align The Rowed Bot To X Angle
         double tx = limelight.getXAngle();
         if (Math.abs(tx) > 2.0) {
             drivetrain.autoAlign();
-            // tx = limelight.getXAngle();
         }
         setMotorVelo(SmartDashboard.getNumber("Shooter Velocity", 0));
-//lol
+
+
+        //Auto Align The Rowed Bot To Y Angle
         double ty = limelight.getYAngle();
         double[] setPoint = shooterConstants.getSetpoint(shooterConstants.getNearestSetpointID(ty));
         double hoodAngle = setPoint[1];
+
+        //Set The Hood Angle Appropriately
         hood.set(hoodAngle);
 
-        if (Math.abs(x.getSelectedSensorVelocity() - SmartDashboard.getNumber("Shooter Velocity", 0)) < 300
+        //Pew Pew
+        pewPew(SmartDashboard.getNumber("Shooter Velocity", 0), hoodAngle);
+    }
+
+    /**
+     * checks if robot is at correct velocity and angle, then PEW PEW
+     * @param targetVelocity target velocity
+     * @param hoodAngle target hood angle
+     */
+    public void pewPew(double targetVelocity, double hoodAngle){
+        if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 300
                 && Math.abs(hood.getPos() - hoodAngle) < 2) {
             one.set(0.5);
             indexer.in();
         }
     }
 
+
     public void autonomousShoot(double targetVelocity) {
+        //turn the limelight on
         limelight.setLights(3);
+
+        //PEW but like only the shooterwheel
         setMotorVelo(targetVelocity);
+
+        //align turnways
         double tx = limelight.getXAngle();
         if (Math.abs(tx) > 2.0) {
             drivetrain.autoAlign();
-            // tx = limelight.getXAngle();
         }
+
+        //frickneg hood
         hood.set(0);
-        if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 200) {
-            one.set(0.35);
-            indexer.in();
-        }
+
+        pewPew(targetVelocity, 0);
     }
 
+    /**
+     * pew the. the shoot. do the pew. the fricken. do the yeet
+     * @return IS IT PEW O CLOCK??? HAS THE VELOCITY BEEN AN REACHED?????
+     */
     public boolean shoot() {
+        //BLIND THE ROOKIES
         limelight.setLights(3);
 
+        //orion was here
+
+        //get Values
         double ty = limelight.getYAngle();
         double[] setPoint = shooterConstants.getSetpoint(shooterConstants.getNearestSetpointID(ty));
-        double targetYAngle = setPoint[0]; // as in, the angle we want to get to, not the limelight target
-        double hoodAngle = setPoint[1];
         double targetVelocity = setPoint[2];
         velocity = targetVelocity;
+
         /*
          * 0 - yAngle
          * 1 - hoodAngle
          * 2 - velocity
          */
-        //hood.set(hoodAngle);
 
 
         // set the velocity of the falcons
@@ -324,8 +251,9 @@ public class Shooter {
 
     
         // pewpew
-        if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 100) {
-            one.set(.75);
+
+        if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 200) {
+            one.set(0.5);
             indexer.in();
             return true;
         } else
@@ -333,7 +261,7 @@ public class Shooter {
     }
 
     /**
-     * figuring out target velocity
+     * figuring out target angole
      * 
      * @param targetVelocity the velocity the ball will travel at
      * @param groundDistance the distance between the robot and the upper hub

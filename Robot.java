@@ -1,13 +1,24 @@
+/*
+░░███╗░░░█████╗░░█████╗░░█████╗░  ██████╗░██╗░░░░░███████╗░██╗░░░░░░░██╗  ░█████╗░██╗░░██╗███████╗███████╗
+░████║░░██╔══██╗██╔═══╝░██╔══██╗  ██╔══██╗██║░░░░░██╔════╝░██║░░██╗░░██║  ██╔══██╗██║░░██║██╔════╝╚════██║
+██╔██║░░██║░░██║██████╗░╚█████╔╝  ██████╦╝██║░░░░░█████╗░░░╚██╗████╗██╔╝  ██║░░╚═╝███████║█████╗░░░░███╔═╝
+╚═╝██║░░██║░░██║██╔══██╗██╔══██╗  ██╔══██╗██║░░░░░██╔══╝░░░░████╔═████║░  ██║░░██╗██╔══██║██╔══╝░░██╔══╝░░
+███████╗╚█████╔╝╚█████╔╝╚█████╔╝  ██████╦╝███████╗███████╗░░╚██╔╝░╚██╔╝░  ╚█████╔╝██║░░██║███████╗███████╗
+╚══════╝░╚════╝░░╚════╝░░╚════╝░  ╚═════╝░╚══════╝╚══════╝░░░╚═╝░░░╚═╝░░  ░╚════╝░╚═╝░░╚═╝╚══════╝╚══════╝
+
+█▄─██─▄█▄─█▀▀▀█─▄█▄─██─▄███▄─▀█▀─▄█▄─█─▄███▄─▀█▄─▄█▄─██─▄█─▄─▄─█░▄▄░▄█
+██─██─███─█─█─█─███─██─█████─█▄█─███▄─▄█████─█▄▀─███─██─████─████▀▄█▀█
+▀▀▄▄▄▄▀▀▀▄▄▄▀▄▄▄▀▀▀▄▄▄▄▀▀▀▀▄▄▄▀▄▄▄▀▀▄▄▄▀▀▀▀▄▄▄▀▀▄▄▀▀▄▄▄▄▀▀▀▄▄▄▀▀▄▄▄▄▄▀
+*/
+
 package frc.robot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import com.ctre.phoenix.music.Orchestra;
-import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Control.Primary;
@@ -27,6 +38,10 @@ import frc.robot.controlInterfaces.IntakeInterface;
 import frc.robot.controlInterfaces.Interface;
 import frc.robot.controlInterfaces.ShooterInterface;
 import frc.robot.sensors.Limelight;
+import frc.robot.autonomous.Paths;
+
+import com.ctre.phoenix.music.Orchestra;
+import com.kauailabs.navx.frc.AHRS;
 
 public class Robot extends TimedRobot {
 
@@ -41,10 +56,8 @@ public class Robot extends TimedRobot {
   public Control c;
   public ArrayList<Interface> interfaces;
   public Orchestra o;
-  public AddressableLED leds;
-  public AddressableLEDBuffer buffer;
-
-  public AHRS gyro;
+  public static AHRS gyro;
+  public static Paths trajectories;
 
   public SendableChooser<Primary> primaryDrivers;
   public SendableChooser<Secondary> secondaryDrivers;
@@ -61,28 +74,16 @@ public class Robot extends TimedRobot {
     c.setPrimary(Primary.RyanBox);
     c.setSecondary(Secondary.Toshi);
 
-    //LIGHTS
-    buffer = new AddressableLEDBuffer(300);
-    leds = new AddressableLED(2);
-    leds.setLength(buffer.getLength());
-
-    for (int i1 = 0; i1 < buffer.getLength(); i1++) {
-      buffer.setRGB(i1, 0, 0, 255);
-    }
-
-    leds.setData(buffer);
-    leds.start();
 
     // Initializing components
     limelight = new Limelight();
-    gyro = new AHRS(); 
+    gyro = new AHRS();
     hood = new Hood(RobotMap.HOOD_SERVO_ID);
     drivetrain = new Drivetrain(RobotMap.FRONT_LEFT_ID, RobotMap.FRONT_RIGHT_ID, RobotMap.BACK_LEFT_ID, RobotMap.BACK_RIGHT_ID, limelight, gyro);
     climb = new Climb(RobotMap.CLIMB_LEFT_ID, RobotMap.CLIMB_RIGHT_ID, RobotMap.CLIMB_SOLENOID_ID);
     indexer = new Indexer(RobotMap.INDEXER_LEFT_ID, RobotMap.INDEXER_RIGHT_ID);
     intake = new Intake(RobotMap.INTAKE_MOTOR_ID, RobotMap.INTAKE_SOLENOID_ID);
-    shooter = new Shooter(this, RobotMap.LAUNCHER_X_ID, RobotMap.LAUNCHER_Y_ID, RobotMap.LAUNCHER_ONE_ID, RobotMap.LAUNCHER_TWO_ID, RobotMap.LAUNCHER_THREE_ID, RobotMap.LAUNCHER_FOUR_ID, limelight, hood, indexer, drivetrain);
-    //gyro = new AHRS();
+    shooter = new Shooter(RobotMap.LAUNCHER_X_ID, RobotMap.LAUNCHER_Y_ID, RobotMap.LAUNCHER_ONE_ID, RobotMap.LAUNCHER_TWO_ID, RobotMap.LAUNCHER_THREE_ID, RobotMap.LAUNCHER_FOUR_ID, limelight, hood, indexer, drivetrain);
 
     // Initializing interfaces
     interfaces = new ArrayList<>();
@@ -94,8 +95,9 @@ public class Robot extends TimedRobot {
     secondaryDrivers = new SendableChooser<>();
     autoMode = new SendableChooser<>();
 
-    // Auto Manager
+    // Auto stuff
     m = new AutoManager(this);
+    trajectories = new Paths();
 
     // Driver selection
     for (Primary p : Primary.values()) {
@@ -113,17 +115,12 @@ public class Robot extends TimedRobot {
     o.addInstrument(shooter.y);
     o.loadMusic("somethingjustlikethis.chrp");
 
+    Drivetrain.initPID();
+
   }
 
   @Override
   public void robotPeriodic() {
-
-    // LEDS WOOOOOO
-    for (int i1 = 0; i1 < buffer.getLength(); i1++) {
-      buffer.setRGB(i1, 0, 0, 255);
-    }
-    leds.setData(buffer);
-
     /********************
      * TELEMETRY WOOOOO *
      ********************/
@@ -132,7 +129,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Hood Raw", hood.getPos());
 
     // Battery Voltage
-    //SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
+    SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
 
     // Driver Selection
     SmartDashboard.putData("Primary Driver", primaryDrivers);
@@ -169,13 +166,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Shooter Velocity", SmartDashboard.getNumber("Shooter Velocity", 0));
     SmartDashboard.getNumber("Shooter Velocity", 0);
 
-    //SmartDashboard.putNumber("3Ball Turn Speed", SmartDashboard.getNumber("3Ball Turn Speed", 0));
-    //SmartDashboard.getNumber("3Ball Turn Speed", 0);
-
     // Currents
-    //SmartDashboard.putNumber("Front Right Current", drivetrain.getFrontRight().getOutputCurrent());
-    //SmartDashboard.putNumber("Front Left Current", drivetrain.getFrontLeft().getOutputCurrent());
-//orionwas here
+    SmartDashboard.putNumber("Front Right Current", drivetrain.getFrontRight().getOutputCurrent());
+    SmartDashboard.putNumber("Front Left Current", drivetrain.getFrontLeft().getOutputCurrent());
+
     // SPEEEEED
     SmartDashboard.putNumber("Speed", (drivetrain.getFrontRight().get() + drivetrain.getFrontLeft().get())/2.0);
 
@@ -184,24 +178,17 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Y Angle", limelight.getYAngle());
     SmartDashboard.putNumber("X Angle", limelight.getXAngle());
 
-    // Climb
-    SmartDashboard.putNumber("Left Climb Position", climb.left.getEncoder().getPosition());
-    SmartDashboard.putNumber("Right Climb Position", climb.right.getEncoder().getPosition());
+    //anglePID Testing
+    SmartDashboard.putNumber("Angle", gyro.getAngle());
+    SmartDashboard.putNumber("Power Output", drivetrain.power);
 
     // Distance -> Velo Data
     SmartDashboard.putData(distanceVelo);
-
-    // Servo
-    SmartDashboard.putNumber("Hood Angle", hood.getPos());
   }
 
   @Override
   public void autonomousInit() {
-    m = null;
-    m = new AutoManager(this);
-    //m.getAuto();
-    hood.setMax();
-    hood.setMin();
+    m.getAuto();
   }
 
   /** This function is called periodically during autonomous. */
@@ -224,12 +211,16 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     // Ticks each interface
     interfaces.forEach(Interface::tick);
-    /*if(c.primary.getAButton()){
-      drivetrain.autoAlign();
+
+    //anglePID test stuff
+    /*if (c.primary.getYButton()){
+      drivetrain.anglePID(180.0);
+      //drivetrain.set(0.3, -0.3);
     }
-    else{
+    else {
       drivetrain.set(0, 0);
     }*/
+    
   }
 
   long timeOff;
@@ -266,4 +257,8 @@ public class Robot extends TimedRobot {
   @Override
   public void simulationPeriodic() {
   }
+
+// public static Drivetrain getDrivetrain() {
+//     return drivetrain;
+// }
 }
