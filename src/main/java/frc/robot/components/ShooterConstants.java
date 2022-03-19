@@ -13,7 +13,7 @@ public class ShooterConstants {
 
 
         setPoints.add(new double[]{0, 0, 7800});
-        setPoints.add(new double[]{-15.5, .75, 9000});
+        setPoints.add(new double[]{-15.5, .5, 9000});
         setPoints.add(new double[]{-11, .25, 8750});
         //this.setPoint(limelight.getYAngle(), 0, 8500);
 

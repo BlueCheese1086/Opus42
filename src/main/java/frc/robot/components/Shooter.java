@@ -103,32 +103,8 @@ public class Shooter {
         y.set(TalonFXControlMode.PercentOutput, velo);
     }
 
-    /*
-     * notes for future kai and emily-
-     * | upper hub
-     * |
-     * | X
-     * |
-     * x |
-     * opus42 ----------------
-     * Y
-     * X = 264 cm
-     * x = camera mounting angle + ty from limelight(converted to degrees)
-     * ^ use that to set the hood angle ^
-     * 
-     * Y = (X - cameraHeight)/tan(x) (this is what is in Limelight.java)
-     * ^ use that to set launching velocity^
-     * 1) set hood angle
-     * 2) have falcons approach launching velocity
-     * 3) *after* falcons are at that velocity, run indexer & internal cansparkmaxes
-     * 4) PEW PEW
-     */
 
 
-    /**
-     * aligns the robot to a setpoint
-     * @return whether the robot is aligned or not
-     */
     public boolean alignSetpoint() {
         limelight.setLights(3);
 
@@ -146,19 +122,19 @@ public class Shooter {
         // autoalign to that setpoint
         hood.set(hoodAngle);
         double tx = limelight.getXAngle();
-        if (targetYAngle != -15.5 && Math.abs(tx)>2.0) {
+        if (Math.abs(tx)>1.5) {
             drivetrain.autoAlign();
         }
         else{
             //autoalign to that yangle (note - aligns to ALL setpoints)
-            if(Math.abs(ty - targetYAngle) > 1.0){
+            if(targetYAngle != -15.5 && Math.abs(ty - targetYAngle) > 1.0){
                 drivetrain.setPointAlign(targetYAngle);
             }
         }
 
         //are we aligned?
-        if (Math.abs(ty - targetYAngle) < 2.0 && Math.abs(tx) < 2.0) return true;
-        else return false;
+        if (Math.abs(ty - targetYAngle) < 1.5 && Math.abs(tx) < 1.5) return true;
+        return false;
     }
 
     /**
@@ -250,7 +226,11 @@ public class Shooter {
         }
         setMotorVelo(targetVelocity);
 
-    
+        long startTime = System.currentTimeMillis();
+        while (startTime + (.3*1000) > System.currentTimeMillis()) {
+            continue;
+        }
+
         // pewpew
 
         if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 200) {

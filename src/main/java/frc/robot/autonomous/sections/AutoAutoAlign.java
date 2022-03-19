@@ -18,6 +18,7 @@ public class AutoAutoAlign extends AutoSection {
 
     @Override
     public void update() {
+        robot.limelight.setLights(3);
         // TODO Auto-generated method stub
         robot.drivetrain.autoAlign();
         
