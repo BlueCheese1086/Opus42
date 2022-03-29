@@ -101,10 +101,7 @@ public class Robot extends TimedRobot {
     secondaryDrivers.setDefaultOption("Secondary - " + Secondary.values()[0].name(), Secondary.values()[0]);
 
     // Singing Falcon FX
-    o = new Orchestra();
-    o.addInstrument(shooter.x);
-    o.addInstrument(shooter.y);
-    o.loadMusic("somethingjustlikethis.chrp");
+    //toshi moved this lol
 
   }
 
@@ -114,10 +111,14 @@ public class Robot extends TimedRobot {
      * TELEMETRY WOOOOO *
      ********************/
 
+    //lights.rainbow();
     lightsInter.tick();
 
     // Hood
     SmartDashboard.putNumber("Hood Raw", hood.getPos());
+
+    //Alignment
+    //SmartDashboard.putBoolean("Aligned", shooter.isAligned());
 
     // Battery Voltage
     //SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
@@ -231,6 +232,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
+    //lights.setLights(255, 0, 0);
     // Updates time disabled counter
     SmartDashboard.putNumber("Time Disabled", (System.currentTimeMillis() - timeOff)/1000.0);
   }
@@ -238,11 +240,28 @@ public class Robot extends TimedRobot {
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
+    //initiate the sus
+    o = new Orchestra();
+    o.addInstrument(shooter.x);
+    o.addInstrument(shooter.y);
+    o.loadMusic("toto.chrp");
   }
+  
 
   /** This function is called periodically during test mode. */
+  int lightId = 0;
   @Override
   public void testPeriodic() {
+    /*SmartDashboard.putNumber("Light ID", lightId);
+    if (c.primary.getRightBumperPressed()) {
+      lightId++;
+    }
+    if (c.primary.getLeftBumperPressed()) {
+      lightId--;
+    }
+    lights.setLights(0, 0, 0);
+    lights.setLightsTo(0, lightId, 0, 0, 255);*/
+    o.play();
   }
 
   /** This function is called once when the robot is first started up. */
