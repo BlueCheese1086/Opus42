@@ -10,10 +10,14 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Climb {
     public CANSparkMax left, right;
     Solenoid lock;
+    double rightPos, leftPos;
     public Climb(int leftID, int rightID, int solenoidID) {
         left = new CANSparkMax(leftID, MotorType.kBrushless);
         right = new CANSparkMax(rightID, MotorType.kBrushless);
         lock = new Solenoid(PneumaticsModuleType.CTREPCM, solenoidID);
+
+        left.getEncoder().setPosition(0);
+        right.getEncoder().setPosition(0);
 
         left.setIdleMode(IdleMode.kBrake);
         right.setIdleMode(IdleMode.kBrake);

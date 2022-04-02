@@ -32,6 +32,13 @@ public class ClimbInterface extends Interface{
             climb.setRight(0);
         }
 
+        /*if (climb.getLock()) {
+            robot.lights.setLightsTo(137, 174, 0, 0, 0);
+            robot.lights.setLightsTo(137, 137 + (int) (Math.abs(climb.right.getEncoder().getPosition()) % 250)/(174-137), 0, 255, 0);
+            robot.lights.setLightsTo(113, 135, 0, 0, 0);
+            robot.lights.setLightsTo(113, 113 + (int) (Math.abs(climb.left.getEncoder().getPosition()) % 250)/(135-113), 0, 255, 0);
+        }*/
+
         if (Math.abs(c.getRightClimb()) < .2 && Math.abs(c.getLeftClimb()) < .2) {
             climb.disable();
             climb.setLeft(0);

@@ -51,6 +51,8 @@ public class Shooter {
         this.drivetrain = drivetrain;
         this.robot = robot;
 
+        //y.set(ControlMode.Follower, x.getDeviceID());
+        //y.setInverted(TalonFXInvertType.OpposeMaster);
         y.setInverted(true);
 
         x.setInverted(false);
@@ -133,8 +135,20 @@ public class Shooter {
         }
 
         //are we aligned?
-        if (Math.abs(ty - targetYAngle) < 1.5 && Math.abs(tx) < 1.5) return true;
-        return false;
+        return isAligned();
+    }
+
+    public boolean isAligned() {
+        limelight.setLights(3);
+
+        double ty = limelight.getYAngle();
+        double tx = limelight.getXAngle();
+        double[] setPoint = shooterConstants.getNearestSetpoint(ty);//shooterConstants.getSetpoint(shooterConstants.getNearestSetpointID(ty));
+        double targetYAngle = setPoint[0]; // as in, the angle we want to get to, not the limelight target
+
+
+        //are we aligned?
+        return (Math.abs(ty - targetYAngle) < 1.0 && Math.abs(tx) < 1.5);
     }
 
     /**
@@ -227,14 +241,14 @@ public class Shooter {
         setMotorVelo(targetVelocity);
 
         long startTime = System.currentTimeMillis();
-        while (startTime + (.3*1000) > System.currentTimeMillis()) {
+        while (startTime + (.15*1000) > System.currentTimeMillis()) {
             continue;
         }
 
         // pewpew
 
         if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 200) {
-            one.set(0.5);
+            one.set(1);
             indexer.in();
             return true;
         } else

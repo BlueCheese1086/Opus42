@@ -22,6 +22,7 @@ public class LightsInterface extends Interface {
     }
 
     public void tick() {
+        //robot.lights.rainbow();
         robot.lights.update();
     }
     

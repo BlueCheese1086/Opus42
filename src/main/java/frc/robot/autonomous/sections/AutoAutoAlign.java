@@ -29,5 +29,10 @@ public class AutoAutoAlign extends AutoSection {
         // TODO Auto-generated method stub
         
     }
+
+    @Override
+    public boolean disableCondition() {
+        return robot.drivetrain.isAligned();
+    }
     
 }
