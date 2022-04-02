@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import com.ctre.phoenix.music.Orchestra;
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -73,7 +74,7 @@ public class Robot extends TimedRobot {
     limelight = new Limelight();
     gyro = new AHRS(); 
     hood = new Hood(RobotMap.HOOD_SERVO_ID);
-    drivetrain = new Drivetrain(RobotMap.FRONT_LEFT_ID, RobotMap.FRONT_RIGHT_ID, RobotMap.BACK_LEFT_ID, RobotMap.BACK_RIGHT_ID, limelight, gyro);
+    drivetrain = new Drivetrain(RobotMap.FRONT_LEFT_ID, RobotMap.FRONT_RIGHT_ID, RobotMap.BACK_LEFT_ID, RobotMap.BACK_RIGHT_ID, limelight, gyro, this);
     climb = new Climb(RobotMap.CLIMB_LEFT_ID, RobotMap.CLIMB_RIGHT_ID, RobotMap.CLIMB_SOLENOID_ID);
     indexer = new Indexer(RobotMap.INDEXER_LEFT_ID, RobotMap.INDEXER_RIGHT_ID);
     intake = new Intake(RobotMap.INTAKE_MOTOR_ID, RobotMap.INTAKE_SOLENOID_ID);
@@ -206,6 +207,7 @@ public class Robot extends TimedRobot {
     //m.getAuto();
     hood.setMax();
     hood.setMin();
+    drivetrain.setMode(IdleMode.kBrake);
   }
 
   /** This function is called periodically during autonomous. */
@@ -239,6 +241,7 @@ public class Robot extends TimedRobot {
   long timeOff;
   @Override
   public void disabledInit() {
+    drivetrain.setMode(IdleMode.kCoast);
     // Sets up counter for disabled time
     timeOff = 0;
     timeOff = System.currentTimeMillis();
@@ -259,7 +262,7 @@ public class Robot extends TimedRobot {
     o = new Orchestra();
     o.addInstrument(shooter.x);
     o.addInstrument(shooter.y);
-    o.loadMusic("toto.chrp");
+    o.loadMusic("sus.chrp");
   }
   
 

@@ -17,6 +17,7 @@ package frc.robot.components;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,7 +33,7 @@ public class Shooter {
     Hood hood;
     Indexer indexer;
     Drivetrain drivetrain;
-    double velocity;
+    public double velocity;
     public ShooterConstants shooterConstants;
     Robot robot;
 
@@ -75,24 +76,11 @@ public class Shooter {
         three.follow(one, true);
         // 44 - Front Top
         four.follow(one, false);
-    }
 
-    /**
-     * Gets target velocity
-     * 
-     * @return Returns target velocity
-     */
-    public double getVelocity() {
-        return this.velocity;
-    }
-
-    /**
-     * Sets target velocity
-     * 
-     * @param velocity Target velocity
-     */
-    public void setVelocity(double velocity) {
-        this.velocity = velocity;
+        one.setIdleMode(IdleMode.kBrake);
+        two.setIdleMode(IdleMode.kBrake);
+        three.setIdleMode(IdleMode.kBrake);
+        four.setIdleMode(IdleMode.kBrake);
     }
 
     public void setMotorVelo(double velo) {
@@ -125,90 +113,36 @@ public class Shooter {
         hood.set(hoodAngle);
         double tx = limelight.getXAngle();
         if (Math.abs(tx)>1.5) {
-            drivetrain.autoAlign();
+            drivetrain.xAlign();
         }
         else{
             //autoalign to that yangle (note - aligns to ALL setpoints)
             if(targetYAngle != -15.5 && Math.abs(ty - targetYAngle) > 1.0){
-                drivetrain.setPointAlign(targetYAngle);
+                drivetrain.yAlign(targetYAngle);
             }
         }
 
         //are we aligned?
-        return isAligned();
+        return robot.drivetrain.isAligned();
     }
 
-    public boolean isAligned() {
-        limelight.setLights(3);
-
-        double ty = limelight.getYAngle();
-        double tx = limelight.getXAngle();
-        double[] setPoint = shooterConstants.getNearestSetpoint(ty);//shooterConstants.getSetpoint(shooterConstants.getNearestSetpointID(ty));
-        double targetYAngle = setPoint[0]; // as in, the angle we want to get to, not the limelight target
-
-
-        //are we aligned?
-        return (Math.abs(ty - targetYAngle) < 1.0 && Math.abs(tx) < 1.5);
-    }
-
-    /**
-     * shoots according to the velocity chosen in Smart Dashboard
-     */
-    public void shootAuto() {
-        //turn the limelight on
-        limelight.setLights(3);
-
-        //Auto Align The Rowed Bot To X Angle
-        double tx = limelight.getXAngle();
-        if (Math.abs(tx) > 2.0) {
-            drivetrain.autoAlign();
-        }
-        setMotorVelo(SmartDashboard.getNumber("Shooter Velocity", 0));
-
-
-        //Auto Align The Rowed Bot To Y Angle
-        double ty = limelight.getYAngle();
-        double[] setPoint = shooterConstants.getSetpoint(shooterConstants.getNearestSetpointID(ty));
-        double hoodAngle = setPoint[1];
-
-        //Set The Hood Angle Appropriately
+    public boolean shootVeloHoodAngle(double velo, double hoodAngle) {
+        setMotorVelo(velo);
         hood.set(hoodAngle);
 
-        //Pew Pew
-        pewPew(SmartDashboard.getNumber("Shooter Velocity", 0), hoodAngle);
-    }
+        long startTime = System.currentTimeMillis();
+        while (startTime + (.15*1000) > System.currentTimeMillis()) {
+            continue;
+        }
 
-    /**
-     * checks if robot is at correct velocity and angle, then PEW PEW
-     * @param targetVelocity target velocity
-     * @param hoodAngle target hood angle
-     */
-    public void pewPew(double targetVelocity, double hoodAngle){
-        if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 300
-                && Math.abs(hood.getPos() - hoodAngle) < 2) {
-            one.set(0.5);
+        // pewpew
+
+        if (Math.abs(x.getSelectedSensorVelocity() - velo) < 200) {
+            one.set(.8);
             indexer.in();
-        }
-    }
-
-
-    public void autonomousShoot(double targetVelocity) {
-        //turn the limelight on
-        limelight.setLights(3);
-
-        //PEW but like only the shooterwheel
-        setMotorVelo(targetVelocity);
-
-        //align turnways
-        double tx = limelight.getXAngle();
-        if (Math.abs(tx) > 2.0) {
-            drivetrain.autoAlign();
-        }
-
-        //frickneg hood
-        hood.set(0);
-
-        pewPew(targetVelocity, 0);
+            return true;
+        } else
+            return false;
     }
 
     /**
@@ -248,47 +182,11 @@ public class Shooter {
         // pewpew
 
         if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 200) {
-            one.set(1);
+            one.set(.8);
             indexer.in();
             return true;
         } else
             return false;
-    }
-
-    /**
-     * figuring out target angole
-     * 
-     * @param targetVelocity the velocity the ball will travel at
-     * @param groundDistance the distance between the robot and the upper hub
-     * @param height         the height the ball needs to be at when it reaches
-     */
-    public double getLaunchAngle(double targetVelocity, double groundDistance, double height) {
-        // this formula was obtained with help from lokesh pillai
-        return Math.atan(((2 * Math.pow(targetVelocity, 2)) + Math.sqrt((4 * Math.pow(targetVelocity, 4) - (4
-                * Constants.GRAVITY
-                * ((2 * Math.pow(targetVelocity, 2) * height) + (Constants.GRAVITY * Math.pow(groundDistance, 2)))))))
-                / (2 * Constants.GRAVITY * groundDistance));
-    }
-
-    /**
-     * figuring out target velocity
-     * 
-     * @param targetAngle    the angle the hood is at
-     * @param groundDistance the distance between the robot and the upper hub
-     * @param height         the height the ball needs to be at when it reaches
-     */
-    public double getLaunchVelocity(double targetAngle, double groundDistance, double height) {
-        return Math.sqrt((-1 * Constants.GRAVITY * Math.pow(groundDistance, 2) * Math.pow(sec(targetAngle), 2))
-                / (2 * (height - (groundDistance * Math.tan(targetAngle)))));
-    }
-
-    /**
-     * literally just 1/cos for sec bc i could not be bothered to be literate
-     * 
-     * @param a the angle
-     */
-    public double sec(double a) {
-        return 1.0 / Math.cos(a);
     }
 
     /**
@@ -297,15 +195,5 @@ public class Shooter {
     public void stopEverything() {
         setMotorPercentage(0);
         one.set(0);
-        limelight.setLights(1);
-    }
-
-    /**
-     * Run tower belts
-     * 
-     * @param x Speed that tower belts will run at
-     */
-    public void runBelts(double x) {
-        one.set(x);
     }
 }

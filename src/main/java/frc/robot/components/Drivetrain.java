@@ -1,6 +1,8 @@
 package frc.robot.components;
 
+import frc.robot.OogaBoogaPID;
 import frc.robot.PIDControl;
+import frc.robot.Robot;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -29,13 +31,18 @@ public class Drivetrain {
     double integral, previous_error, setpoint = 0.0;
     double turn_adjust, kp, min_command, error, derivative;
     public PIDController pid;
+    Robot robot;
+
+    OogaBoogaPID xAlignPID, yAlignPID;
 
     //import IDs in the constructor and leave them as variables. don't hard-code them in.
-    public Drivetrain(int frontLeftID, int frontRightID, int backLeftID, int backRightID, Limelight limelight, AHRS gyro){
+    public Drivetrain(int frontLeftID, int frontRightID, int backLeftID, int backRightID, Limelight limelight, AHRS gyro, Robot robot){
         frontLeft = new CANSparkMax(frontLeftID, MotorType.kBrushless);
         frontRight = new CANSparkMax(frontRightID, MotorType.kBrushless);
         backLeft = new CANSparkMax(backLeftID, MotorType.kBrushless);
         backRight = new CANSparkMax(backRightID, MotorType.kBrushless);
+
+        this.robot = robot;
 
         leftPID = new PIDControl("velocity", frontLeft);
         rightPID = new PIDControl("velocity", frontRight);
@@ -52,13 +59,15 @@ public class Drivetrain {
         frontRight.setInverted(false);
         frontLeft.setInverted(true);
 
-        frontLeft.setIdleMode(IdleMode.kBrake);
-        frontRight.setIdleMode(IdleMode.kBrake);
+        setMode(IdleMode.kBrake);
 
         frontRight.setOpenLoopRampRate(0);
         backRight.setOpenLoopRampRate(0);
         frontLeft.setOpenLoopRampRate(0);
         backLeft.setOpenLoopRampRate(0);
+
+        xAlignPID = new OogaBoogaPID(1.6, 0, .05, 15, 1.5, .6);
+        yAlignPID = new OogaBoogaPID(1, 0, .05, 5, .5, .6);
 
     }
 
@@ -96,17 +105,28 @@ public class Drivetrain {
         frontRight.set(forward - turn);
     }
 
+    private void setRawMode(IdleMode mode) {
+        frontRight.setIdleMode(mode);
+        backRight.setIdleMode(mode);
+        frontLeft.setIdleMode(mode);
+        backLeft.setIdleMode(mode);
+    }
+
     /**
      * Toggle Control Mode (Brake, Coast)
      */
     public void toggleMode() {
         brake = !brake;
         if (brake) {
-            frontLeft.setIdleMode(IdleMode.kBrake);
-            frontRight.setIdleMode(IdleMode.kBrake);
+            setRawMode(IdleMode.kBrake);
         } else {
-            frontLeft.setIdleMode(IdleMode.kCoast);
-            frontRight.setIdleMode(IdleMode.kCoast);
+            setRawMode(IdleMode.kCoast);
+        }
+    }
+
+    public void setMode(IdleMode mode) {
+        if (!(getMode() == (mode == IdleMode.kBrake ? true : false))) {
+            toggleMode();
         }
     }
 
@@ -131,30 +151,27 @@ public class Drivetrain {
     /**
      * will be used to autoalign before launching. don't worry about writing this method if you're not working on the launcher.
      */
-    public void autoAlign(){
-        double Kp = -0.01;
-        double min_command = 0.001;
+    public void xAlign(){
         double tx = limelight.getXAngle();
-
-        double steering_adjust = (tx) * Kp;
-        if(tx > 1.0) steering_adjust -=min_command;
-        else if(tx<1.0) steering_adjust+=min_command;
-          
-        this.set(-1 * steering_adjust, steering_adjust);
+        double speed = xAlignPID.calculate(tx, 0);
+        if (xAlignPID.atSetpoint()) {
+           speed = 0;
+        }
+        this.set(-speed, speed);
     }
 
 
     //not sure how to work this yet, so i've just made it the same as auto align for now - kai
-    public void setPointAlign(double targetYAngle){
-        double Kp = 0.05;
-        double min_command = 0.01;
+    public void yAlign(double targetYAngle){
         double ty = limelight.getYAngle();
 
-        double steering_adjust = (ty - targetYAngle) * Kp * -1;
-        if( Math.abs(ty - targetYAngle) > 1.0) steering_adjust -= min_command;
-        else if(Math.abs(ty-targetYAngle) < 1.0) steering_adjust+=min_command;
-        steering_adjust *= -1;
-        this.set(steering_adjust, steering_adjust);
+        double speed = yAlignPID.calculate(ty, targetYAngle);
+
+        if (!yAlignPID.atSetpoint()) {
+            speed = 0;
+        }
+
+        this.set(speed, speed);
     }
 
 
@@ -166,8 +183,16 @@ public class Drivetrain {
 
     }
 
-    public boolean isAligned() {
+    public boolean isXAligned() {
         return Math.abs(limelight.getXAngle()) < 1.5;
+    }
+
+    public boolean isYAligned() {
+        return Math.abs(limelight.getYAngle() - robot.shooter.shooterConstants.getNearestSetpoint(limelight.getYAngle())[0]) < 1;
+    }
+
+    public boolean isAligned() {
+        return isXAligned() && isYAligned();
     }
 
     //maybe angle pid gyro based
