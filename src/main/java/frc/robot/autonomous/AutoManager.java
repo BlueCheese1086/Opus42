@@ -17,7 +17,7 @@ import frc.robot.autonomous.sections.*;
 public class AutoManager {
 
     SendableChooser<AutoMode> autoChooser;
-    AutoMode auto1, auto2, threeBall;
+    AutoMode auto1, auto2, threeBall, autoDriveTest;
     public AutoMode auto3;
     AutoMode auto4;
 
@@ -33,6 +33,7 @@ public class AutoManager {
         auto2 = new AutoMode("1ball");
         auto3 = new AutoMode("test");
         threeBall = new AutoMode("3ball");
+        autoDriveTest = new AutoMode("autoDriveTest");
 
         
         
@@ -90,6 +91,8 @@ public class AutoManager {
         threeBall.addSection(new AutoAutoAlign(10, robot), 0);
         threeBall.addSection(new AutoShoot(5, robot), 0);
 
+        autoDriveTest.addSection(new KaiAutoDrive(robot, 0.5, 2), 0);
+
         /**
         //AutoTurn autoTurn1 = new AutoTurn(-29, robot);
         //auto1.addSection(autoTurn1, 0);
@@ -113,6 +116,7 @@ public class AutoManager {
         autoChooser.addOption(auto2.getName(), auto2);
         autoChooser.addOption(auto3.getName(), auto3);
         autoChooser.addOption(threeBall.getName(), threeBall);
+        autoChooser.addOption(autoDriveTest.getName(), autoDriveTest);
 
         //SmartDashboard.putData("Auto Mode Selector", autoChooser);
 
