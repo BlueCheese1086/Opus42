@@ -9,9 +9,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-
-import javax.print.event.PrintEvent;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -31,7 +28,7 @@ public class Drivetrain {
     double P, I, D = 1.0;
     double integral, previous_error, setpoint = 0.0;
     double turn_adjust, kp, min_command, error, derivative;
-    public static PIDController pid;
+    public PIDController pid;
 
     //import IDs in the constructor and leave them as variables. don't hard-code them in.
     public Drivetrain(int frontLeftID, int frontRightID, int backLeftID, int backRightID, Limelight limelight, AHRS gyro){
@@ -163,10 +160,14 @@ public class Drivetrain {
 
     public double power = 0.0;
 
-    public static void initPID(){
-        pid = new PIDController(1.0/90.0, 0, 0);
-        pid.setTolerance(5);
+    public void initPID(){
+        this.pid = new PIDController(1.0/90.0, 0, 0);
+        this.pid.setTolerance(5);
 
+    }
+
+    public boolean isAligned() {
+        return Math.abs(limelight.getXAngle()) < 1.5;
     }
 
     //maybe angle pid gyro based

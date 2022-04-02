@@ -1,11 +1,9 @@
 package frc.robot.controlInterfaces;
 
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import frc.robot.Control;
 import frc.robot.Robot;
 import frc.robot.components.Shooter;
 import frc.robot.components.ShooterConstants;
-import frc.robot.controlInterfaces.LightsInterface.ControlMode;
 
 public class ShooterInterface extends Interface {
     Shooter shooter;

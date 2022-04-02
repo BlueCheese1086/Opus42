@@ -2,6 +2,7 @@ package frc.robot.components;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class Lights {
     AddressableLEDBuffer underglowBuffer;
@@ -37,6 +38,14 @@ public class Lights {
         /*for (int i = 0; i < rightBuffer.getLength(); i++) {
             rightBuffer.setRGB(i, r, g, b);
         }*/
+    }
+
+    public void setAlliance() {
+        if (DriverStation.getAlliance().name().startsWith("B")) {
+            setLights(0, 0, 255);
+        } else {
+            setLights(255, 0, 0);
+        }
     }
 
     public void rainbow() {

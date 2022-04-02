@@ -6,6 +6,7 @@ import java.util.Arrays;
 import com.ctre.phoenix.music.Orchestra;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,6 +14,7 @@ import frc.robot.Control.Primary;
 import frc.robot.Control.Secondary;
 import frc.robot.autonomous.AutoManager;
 import frc.robot.autonomous.AutoMode;
+import frc.robot.autonomous.Paths;
 import frc.robot.components.Climb;
 import frc.robot.components.Drivetrain;
 import frc.robot.components.Lights;
@@ -45,6 +47,7 @@ public class Robot extends TimedRobot {
   public Lights lights;
   public LightsInterface lightsInter;
   public AHRS gyro;
+  public Paths trajectories;
 
   public SendableChooser<Primary> primaryDrivers;
   public SendableChooser<Secondary> secondaryDrivers;
@@ -90,6 +93,15 @@ public class Robot extends TimedRobot {
     // Auto Manager
     m = new AutoManager(this);
 
+    // Auto stuff
+    /*System.out.println("\n\n Auto Stuff Robot init");
+    trajectories = new Paths();
+    System.out.println("trajectories made...");
+    trajectories.init();
+    System.out.println("Trajectories initialized");
+    m = new AutoManager(this);
+    System.out.println("automanager made...");*/
+
     // Driver selection
     for (Primary p : Primary.values()) {
       primaryDrivers.addOption("Primary - " + p.name(), p);
@@ -112,7 +124,10 @@ public class Robot extends TimedRobot {
      ********************/
 
     //lights.rainbow();
+    lights.setAlliance();
     lightsInter.tick();
+
+    SmartDashboard.putBoolean("Blue Alliance", DriverStation.getAlliance().name().startsWith("B"));
 
     // Hood
     SmartDashboard.putNumber("Hood Raw", hood.getPos());
