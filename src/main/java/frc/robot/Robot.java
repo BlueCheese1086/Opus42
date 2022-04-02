@@ -115,6 +115,8 @@ public class Robot extends TimedRobot {
     // Singing Falcon FX
     //toshi moved this lol
 
+    gyro.calibrate();
+
   }
 
   @Override
