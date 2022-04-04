@@ -67,7 +67,7 @@ public class Drivetrain {
         backLeft.setOpenLoopRampRate(0);
 
         xAlignPID = new OogaBoogaPID(1.6, 0, .05, 15, 1.5, .6);
-        yAlignPID = new OogaBoogaPID(1, 0, .05, 5, .5, .6);
+        yAlignPID = new OogaBoogaPID(3.5, 0, .03, 3, 1, 1);
 
     }
 
@@ -151,27 +151,29 @@ public class Drivetrain {
     /**
      * will be used to autoalign before launching. don't worry about writing this method if you're not working on the launcher.
      */
-    public void xAlign(){
+    public boolean xAlign(){
         double tx = limelight.getXAngle();
         double speed = xAlignPID.calculate(tx, 0);
         if (xAlignPID.atSetpoint()) {
            speed = 0;
         }
         this.set(-speed, speed);
+        return xAlignPID.atSetpoint();
     }
 
 
     //not sure how to work this yet, so i've just made it the same as auto align for now - kai
-    public void yAlign(double targetYAngle){
+    public boolean yAlign(double targetYAngle){
         double ty = limelight.getYAngle();
 
         double speed = yAlignPID.calculate(ty, targetYAngle);
 
-        if (!yAlignPID.atSetpoint()) {
+        if (yAlignPID.atSetpoint()) {
             speed = 0;
         }
 
-        this.set(speed, speed);
+        this.set(-speed, -speed);
+        return yAlignPID.atSetpoint();
     }
 
 

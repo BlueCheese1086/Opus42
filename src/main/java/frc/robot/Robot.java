@@ -94,15 +94,6 @@ public class Robot extends TimedRobot {
     // Auto Manager
     m = new AutoManager(this);
 
-    // Auto stuff
-    /*System.out.println("\n\n Auto Stuff Robot init");
-    trajectories = new Paths();
-    System.out.println("trajectories made...");
-    trajectories.init();
-    System.out.println("Trajectories initialized");
-    m = new AutoManager(this);
-    System.out.println("automanager made...");*/
-
     // Driver selection
     for (Primary p : Primary.values()) {
       primaryDrivers.addOption("Primary - " + p.name(), p);
@@ -125,20 +116,9 @@ public class Robot extends TimedRobot {
      ********************/
 
     //lights.rainbow();
-    lights.setAlliance();
+    //lights.setAlliance();
     lightsInter.tick();
-
-    SmartDashboard.putBoolean("Blue Alliance", DriverStation.getAlliance().name().startsWith("B"));
-
-    // Hood
-    SmartDashboard.putNumber("Hood Raw", hood.getPos());
-
-    //Alignment
-    //SmartDashboard.putBoolean("Aligned", shooter.isAligned());
-
-    // Battery Voltage
-    //SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
-
+    
     // Driver Selection
     SmartDashboard.putData("Primary Driver", primaryDrivers);
     SmartDashboard.putData("Secondary Driver", secondaryDrivers);
@@ -158,46 +138,13 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Shooter 1 Temp", shooter.x.getTemperature());
     SmartDashboard.putNumber("Shooter 2 Temp", shooter.y.getTemperature());
 
-    // Shooter
-    SmartDashboard.putBoolean("Shooter Button", c.getLauncherShoot());
-    SmartDashboard.putNumber("Shooter 1 Velo", shooter.x.getSelectedSensorVelocity());
-
-    // Shooter Currents
-    SmartDashboard.putNumber("Shooter 1 Current", shooter.x.getStatorCurrent());
-    SmartDashboard.putNumber("Shooter 2 Current", shooter.y.getStatorCurrent());
-
-    // Solenoids
-    SmartDashboard.putBoolean("Intake Solenoid", intake.getPos());
-    SmartDashboard.putBoolean("Climb Solenoid", climb.getLock());
-
     // Input
     SmartDashboard.putNumber("Shooter Velocity", SmartDashboard.getNumber("Shooter Velocity", 0));
     SmartDashboard.getNumber("Shooter Velocity", 0);
 
-    //SmartDashboard.putNumber("3Ball Turn Speed", SmartDashboard.getNumber("3Ball Turn Speed", 0));
-    //SmartDashboard.getNumber("3Ball Turn Speed", 0);
-
-    // Currents
-    //SmartDashboard.putNumber("Front Right Current", drivetrain.getFrontRight().getOutputCurrent());
-    //SmartDashboard.putNumber("Front Left Current", drivetrain.getFrontLeft().getOutputCurrent());
-//orionwas here
-    // SPEEEEED
-    SmartDashboard.putNumber("Speed", (drivetrain.getFrontRight().get() + drivetrain.getFrontLeft().get())/2.0);
-
-    // Limelight
-    SmartDashboard.putNumber("Ground Number", limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT - Constants.CAMERA_HEIGHT + Constants.CARGO_DIAMETER));
+    //Limelight
     SmartDashboard.putNumber("Y Angle", limelight.getYAngle());
     SmartDashboard.putNumber("X Angle", limelight.getXAngle());
-
-    // Climb
-    SmartDashboard.putNumber("Left Climb Position", climb.left.getEncoder().getPosition());
-    SmartDashboard.putNumber("Right Climb Position", climb.right.getEncoder().getPosition());
-
-    // Distance -> Velo Data
-    SmartDashboard.putData(distanceVelo);
-
-    // Servo
-    SmartDashboard.putNumber("Hood Angle", hood.getPos());
   }
 
   @Override

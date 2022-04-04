@@ -32,7 +32,18 @@ public class ShooterInterface extends Interface {
      * what the pewpew will do every tick
      */
     public void tick() {
+
+        if (c.getLauncherAlign()) {
+            robot.shooter.alignSetpoint();
+        }
         if (c.getLauncherShoot()) {
+            robot.shooter.shoot();
+        }
+        if (!c.getLauncherShoot() == !c.getLauncherAlign()) {
+            robot.shooter.stopEverything();
+        }
+
+        /*if (c.getLauncherShoot()) {
             robot.lights.rainbow();
             shoot.shoot();
         } else if (c.getLauncherAlign()) {
@@ -41,11 +52,11 @@ public class ShooterInterface extends Interface {
                 robot.lights.setLights(0, 255, 0);
             }
         } else if (c.primary.getRightStickButton()) {
-            robot.drivetrain.xAlign();
+            robot.drivetrain.yAlign(0);
         } else {
             robot.lights.setLights(0, 0, 255);
             robot.shooter.stopEverything();
-        }
+        }*/
         
         if (c.primary.getPOV() == 0) {
             robot.hood.set(1.0);

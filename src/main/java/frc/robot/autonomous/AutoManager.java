@@ -81,16 +81,16 @@ public class AutoManager {
 
         //hreeBall.addSection(new AutoAutoAlign(10, robot), 0);
         threeBall.addSection(new AutoHood(0, robot), 0);
-        threeBall.addSection(new AutoWait(3.3), 1);
+        threeBall.addSection(new AutoWait(4.7), 1);
         threeBall.addSection(new AutoShoot(7150, 0, 3, robot), 0);
         threeBall.addSection(new AutoDrive(1, robot, false), 0);
+        threeBall.addSection(new AutoIntake(2, robot), 1);
         threeBall.addSection(new AutoHood(.5, robot), 1);
-        threeBall.addSection(new AutoIntake(2.2, robot), 1);
-        threeBall.addSection(new AutoWait(.8), 1);
+        //threeBall.addSection(new AutoWait(1), 1);
         threeBall.addSection(new RyanAutoTurn(102, robot), 0);
         threeBall.addSection(new AutoDrive(2.5, robot, false), 0);
         threeBall.addSection(new AutoIntake(3, robot), 1);
-        threeBall.addSection(new RyanAutoTurn(-75, robot), 0);
+        threeBall.addSection(new RyanAutoTurn(-82, robot), 0);
         threeBall.addSection(new AutoAutoAlign(10, robot), 0);
         threeBall.addSection(new AutoShoot(8150, .5, 5, robot), 0);
 

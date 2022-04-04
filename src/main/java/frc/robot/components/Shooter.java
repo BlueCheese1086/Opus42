@@ -99,7 +99,7 @@ public class Shooter {
         limelight.setLights(3);
 
         double ty = limelight.getYAngle();
-        // double ty = 1.0;
+
         double[] setPoint = shooterConstants.getNearestSetpoint(ty);//shooterConstants.getSetpoint(shooterConstants.getNearestSetpointID(ty));
         double targetYAngle = setPoint[0]; // as in, the angle we want to get to, not the limelight target
         double hoodAngle = setPoint[1];
@@ -111,15 +111,9 @@ public class Shooter {
 
         // autoalign to that setpoint
         hood.set(hoodAngle);
-        double tx = limelight.getXAngle();
-        if (Math.abs(tx)>1.5) {
-            drivetrain.xAlign();
-        }
-        else{
-            //autoalign to that yangle (note - aligns to ALL setpoints)
-            if(targetYAngle != -15.5 && Math.abs(ty - targetYAngle) > 1.0){
-                drivetrain.yAlign(targetYAngle);
-            }
+
+        if (drivetrain.xAlign()) {
+            drivetrain.yAlign(targetYAngle);
         }
 
         //are we aligned?
