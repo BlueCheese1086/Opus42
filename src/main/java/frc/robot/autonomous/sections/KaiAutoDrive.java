@@ -28,8 +28,8 @@ public class KaiAutoDrive extends AutoSection{
         frontRightEncoder = robot.drivetrain.frontRight.getEncoder();
         this.robot = robot;
     
-        lPID = new PIDController(0, 0, 0);
-        rPID = new PIDController(0, 0, 0);
+        lPID = new PIDController(0.5, 0, 0);
+        rPID = new PIDController(0.5, 0, 0);
 
     }
 
@@ -45,13 +45,13 @@ public class KaiAutoDrive extends AutoSection{
     @Override
     public void init(){
         super.init();
+        frontLeftEncoder.setPosition(0);
+        frontRightEncoder.setPosition(0);
         currentDistance = frontLeftEncoder.getPosition();
-        frontLeftEncoder.setPositionConversionFactor(1/Constants.LAUNCHER_WHEEL_CIRCUMFERENCE);
-        frontRightEncoder.setPositionConversionFactor(1/Constants.LAUNCHER_WHEEL_CIRCUMFERENCE);
-        
-        targetDistance = distance * frontLeftEncoder.getPositionConversionFactor() + currentDistance;
+        frontLeftEncoder.setPositionConversionFactor(1/Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * 42);
+        frontRightEncoder.setPositionConversionFactor(1/Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * 42);
 
-        
+        targetDistance = distance * frontLeftEncoder.getPositionConversionFactor() + currentDistance;        
     }
 
     @Override
@@ -60,7 +60,8 @@ public class KaiAutoDrive extends AutoSection{
         currentDistance = frontLeftEncoder.getPosition();
         double rSpeed = rPID.calculate(currentDistance, targetDistance);
         double lSpeed = lPID.calculate(currentDistance, targetDistance);
-
+        
+        SmartDashboard.putNumber("CURRENT DISTANCE", currentDistance);
         robot.drivetrain.set(lSpeed, rSpeed);
         SmartDashboard.putNumber("Drive PID - Left", lSpeed);
         SmartDashboard.putNumber("Drive PID - Right", rSpeed);
@@ -69,7 +70,5 @@ public class KaiAutoDrive extends AutoSection{
     @Override
     public void disabled() {
         robot.drivetrain.set(0,0);
-    }
-
-    
+    }    
 }
