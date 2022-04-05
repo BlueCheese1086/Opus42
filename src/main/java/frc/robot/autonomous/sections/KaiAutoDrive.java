@@ -48,8 +48,8 @@ public class KaiAutoDrive extends AutoSection{
         frontLeftEncoder.setPosition(0);
         frontRightEncoder.setPosition(0);
         currentDistance = frontLeftEncoder.getPosition();
-        frontLeftEncoder.setPositionConversionFactor(1/Constants.LAUNCHER_WHEEL_CIRCUMFERENCE);
-        frontRightEncoder.setPositionConversionFactor(1/Constants.LAUNCHER_WHEEL_CIRCUMFERENCE);
+        frontLeftEncoder.setPositionConversionFactor(1/Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * 42);
+        frontRightEncoder.setPositionConversionFactor(1/Constants.LAUNCHER_WHEEL_CIRCUMFERENCE * 42);
 
         targetDistance = distance * frontLeftEncoder.getPositionConversionFactor() + currentDistance;        
     }
