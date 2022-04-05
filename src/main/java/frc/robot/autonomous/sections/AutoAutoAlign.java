@@ -18,21 +18,19 @@ public class AutoAutoAlign extends AutoSection {
 
     @Override
     public void update() {
-        robot.limelight.setLights(3);
         // TODO Auto-generated method stub
-        robot.drivetrain.autoAlign();
+        robot.drivetrain.xAlign();
         
     }
 
     @Override
     public void disabled() {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
     public boolean disableCondition() {
-        return robot.drivetrain.isAligned();
+        return robot.drivetrain.isXAligned();
     }
     
 }

@@ -8,7 +8,6 @@ import frc.robot.components.ShooterConstants;
 public class ShooterInterface extends Interface {
     Shooter shooter;
     ShooterConstants constants;
-    boolean shotYet;
     Shoot shoot;
 
     private class Shoot extends Thread {
@@ -24,7 +23,6 @@ public class ShooterInterface extends Interface {
 
     public ShooterInterface(Robot robot, Control c) {
         super(robot, c);
-        shotYet = false;
         // shooter = Robot.shooter;
         constants = new ShooterConstants(robot.limelight);
         shoot = new Shoot();
@@ -34,29 +32,31 @@ public class ShooterInterface extends Interface {
      * what the pewpew will do every tick
      */
     public void tick() {
+
+        if (c.getLauncherAlign()) {
+            robot.shooter.alignSetpoint();
+        }
         if (c.getLauncherShoot()) {
-            //robot.shooter.shoot();
+            robot.shooter.shoot();
+        }
+        if (!c.getLauncherShoot() == !c.getLauncherAlign()) {
+            robot.shooter.stopEverything();
+        }
+
+        /*if (c.getLauncherShoot()) {
             robot.lights.rainbow();
             shoot.shoot();
-            shotYet = true;
         } else if (c.getLauncherAlign()) {
             robot.shooter.setMotorVelo(7000);
-            //robot.limelight.setLights(3);
             if (robot.shooter.alignSetpoint()) {
                 robot.lights.setLights(0, 255, 0);
-                //c.primary.setRumble(RumbleType.kLeftRumble, 1);
-                //c.primary.setRumble(RumbleType.kRightRumble, 1);
             }
         } else if (c.primary.getRightStickButton()) {
-            robot.drivetrain.autoAlign();
+            robot.drivetrain.yAlign(0);
         } else {
-            // robot.limelight.setLights(1);
-            //c.primary.setRumble(RumbleType.kRightRumble, 0);
-            //c.primary.setRumble(RumbleType.kLeftRumble, 0);
             robot.lights.setLights(0, 0, 255);
             robot.shooter.stopEverything();
-            shotYet = false;
-        }
+        }*/
         
         if (c.primary.getPOV() == 0) {
             robot.hood.set(1.0);
@@ -70,13 +70,13 @@ public class ShooterInterface extends Interface {
 
         if (c.primary.getStartButtonPressed()) {
             robot.limelight.setLights(3);
-            constants.setPoint(robot.limelight.getYAngle(), robot.hood.getPos(), robot.shooter.getVelocity());
+            constants.setPoint(robot.limelight.getYAngle(), robot.hood.getPos(), robot.shooter.velocity);
             robot.limelight.setLights(1);
         }
 
         if(c.secondary.getXButton()){
             robot.limelight.setLights(3);
-            robot.drivetrain.autoAlign();
+            robot.drivetrain.xAlign();
         }
 
     }

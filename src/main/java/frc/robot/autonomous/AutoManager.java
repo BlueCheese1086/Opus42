@@ -24,6 +24,7 @@ public class AutoManager {
     Robot robot;
 
     public AutoManager(Robot robot) {
+        robot.limelight.setLights(3);
         System.out.println("AutoManager stuff...");
 
         autoChooser = robot.autoMode;
@@ -61,7 +62,8 @@ public class AutoManager {
         
         //auto3.addSection(new AutoTurn(180.0, robot), 0);
         //auto3.addSection(new AutoPath("test", robot), 0);
-        //auto3.addSection(new RyanAutoTurn(-360.0, robot), 0);
+        auto3.addSection(new RyanAutoTurn(90.0, robot), 0);
+        auto3.addSection(new RyanAutoTurn(-90.0, robot), 0);
         //auto3.addSection(new RyanAutoTurn(-360, robot), 0);
 
         // auto3.addSection(new AutoDrive(1, robot, false), 0);
@@ -79,17 +81,19 @@ public class AutoManager {
         auto1.addSection(new AutoShoot(4, robot), 0);
 
         //hreeBall.addSection(new AutoAutoAlign(10, robot), 0);
-        threeBall.addSection(new AutoWait(3), 1);
-        threeBall.addSection(new AutoShoot(3, robot), 0);
-        threeBall.addSection(new AutoDrive(1.5, robot, false), 0);
-        threeBall.addSection(new AutoIntake(2.2, robot), 1);
-        threeBall.addSection(new AutoWait(1), 1);
-        threeBall.addSection(new RyanAutoTurn(120, robot), 0);
+        threeBall.addSection(new AutoHood(0, robot), 0);
+        threeBall.addSection(new AutoWait(4.7), 1);
+        threeBall.addSection(new AutoShoot(7150, 0, 3, robot), 0);
+        threeBall.addSection(new AutoDrive(1, robot, false), 0);
+        threeBall.addSection(new AutoIntake(2, robot), 1);
+        threeBall.addSection(new AutoHood(.5, robot), 1);
+        //threeBall.addSection(new AutoWait(1), 1);
+        threeBall.addSection(new RyanAutoTurn(102, robot), 0);
         threeBall.addSection(new AutoDrive(2.5, robot, false), 0);
         threeBall.addSection(new AutoIntake(3, robot), 1);
-        threeBall.addSection(new RyanAutoTurn(-75, robot), 0);
+        threeBall.addSection(new RyanAutoTurn(-82, robot), 0);
         threeBall.addSection(new AutoAutoAlign(10, robot), 0);
-        threeBall.addSection(new AutoShoot(5, robot), 0);
+        threeBall.addSection(new AutoShoot(8150, .5, 5, robot), 0);
 
         autoDriveTest.addSection(new KaiAutoDrive(robot, 0.5, 2), 0);
 

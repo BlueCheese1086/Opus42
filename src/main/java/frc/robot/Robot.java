@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import com.ctre.phoenix.music.Orchestra;
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -73,7 +74,7 @@ public class Robot extends TimedRobot {
     limelight = new Limelight();
     gyro = new AHRS(); 
     hood = new Hood(RobotMap.HOOD_SERVO_ID);
-    drivetrain = new Drivetrain(RobotMap.FRONT_LEFT_ID, RobotMap.FRONT_RIGHT_ID, RobotMap.BACK_LEFT_ID, RobotMap.BACK_RIGHT_ID, limelight, gyro);
+    drivetrain = new Drivetrain(RobotMap.FRONT_LEFT_ID, RobotMap.FRONT_RIGHT_ID, RobotMap.BACK_LEFT_ID, RobotMap.BACK_RIGHT_ID, limelight, gyro, this);
     climb = new Climb(RobotMap.CLIMB_LEFT_ID, RobotMap.CLIMB_RIGHT_ID, RobotMap.CLIMB_SOLENOID_ID);
     indexer = new Indexer(RobotMap.INDEXER_LEFT_ID, RobotMap.INDEXER_RIGHT_ID);
     intake = new Intake(RobotMap.INTAKE_MOTOR_ID, RobotMap.INTAKE_SOLENOID_ID);
@@ -92,15 +93,6 @@ public class Robot extends TimedRobot {
 
     // Auto Manager
     m = new AutoManager(this);
-
-    // Auto stuff
-    /*System.out.println("\n\n Auto Stuff Robot init");
-    trajectories = new Paths();
-    System.out.println("trajectories made...");
-    trajectories.init();
-    System.out.println("Trajectories initialized");
-    m = new AutoManager(this);
-    System.out.println("automanager made...");*/
 
     // Driver selection
     for (Primary p : Primary.values()) {
@@ -126,20 +118,9 @@ public class Robot extends TimedRobot {
      ********************/
 
     //lights.rainbow();
-    lights.setAlliance();
+    //lights.setAlliance();
     lightsInter.tick();
-
-    SmartDashboard.putBoolean("Blue Alliance", DriverStation.getAlliance().name().startsWith("B"));
-
-    // Hood
-    SmartDashboard.putNumber("Hood Raw", hood.getPos());
-
-    //Alignment
-    //SmartDashboard.putBoolean("Aligned", shooter.isAligned());
-
-    // Battery Voltage
-    //SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
-
+    
     // Driver Selection
     SmartDashboard.putData("Primary Driver", primaryDrivers);
     SmartDashboard.putData("Secondary Driver", secondaryDrivers);
@@ -159,46 +140,13 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Shooter 1 Temp", shooter.x.getTemperature());
     SmartDashboard.putNumber("Shooter 2 Temp", shooter.y.getTemperature());
 
-    // Shooter
-    SmartDashboard.putBoolean("Shooter Button", c.getLauncherShoot());
-    SmartDashboard.putNumber("Shooter 1 Velo", shooter.x.getSelectedSensorVelocity());
-
-    // Shooter Currents
-    SmartDashboard.putNumber("Shooter 1 Current", shooter.x.getStatorCurrent());
-    SmartDashboard.putNumber("Shooter 2 Current", shooter.y.getStatorCurrent());
-
-    // Solenoids
-    SmartDashboard.putBoolean("Intake Solenoid", intake.getPos());
-    SmartDashboard.putBoolean("Climb Solenoid", climb.getLock());
-
     // Input
     SmartDashboard.putNumber("Shooter Velocity", SmartDashboard.getNumber("Shooter Velocity", 0));
     SmartDashboard.getNumber("Shooter Velocity", 0);
 
-    //SmartDashboard.putNumber("3Ball Turn Speed", SmartDashboard.getNumber("3Ball Turn Speed", 0));
-    //SmartDashboard.getNumber("3Ball Turn Speed", 0);
-
-    // Currents
-    //SmartDashboard.putNumber("Front Right Current", drivetrain.getFrontRight().getOutputCurrent());
-    //SmartDashboard.putNumber("Front Left Current", drivetrain.getFrontLeft().getOutputCurrent());
-//orionwas here
-    // SPEEEEED
-    SmartDashboard.putNumber("Speed", (drivetrain.getFrontRight().get() + drivetrain.getFrontLeft().get())/2.0);
-
-    // Limelight
-    SmartDashboard.putNumber("Ground Number", limelight.getGroundDistance(Constants.UPPER_HUB_HEIGHT - Constants.CAMERA_HEIGHT + Constants.CARGO_DIAMETER));
+    //Limelight
     SmartDashboard.putNumber("Y Angle", limelight.getYAngle());
     SmartDashboard.putNumber("X Angle", limelight.getXAngle());
-
-    // Climb
-    SmartDashboard.putNumber("Left Climb Position", climb.left.getEncoder().getPosition());
-    SmartDashboard.putNumber("Right Climb Position", climb.right.getEncoder().getPosition());
-
-    // Distance -> Velo Data
-    SmartDashboard.putData(distanceVelo);
-
-    // Servo
-    SmartDashboard.putNumber("Hood Angle", hood.getPos());
   }
 
   @Override
@@ -208,6 +156,7 @@ public class Robot extends TimedRobot {
     //m.getAuto();
     hood.setMax();
     hood.setMin();
+    drivetrain.setMode(IdleMode.kBrake);
   }
 
   /** This function is called periodically during autonomous. */
@@ -241,6 +190,7 @@ public class Robot extends TimedRobot {
   long timeOff;
   @Override
   public void disabledInit() {
+    drivetrain.setMode(IdleMode.kCoast);
     // Sets up counter for disabled time
     timeOff = 0;
     timeOff = System.currentTimeMillis();
@@ -261,7 +211,7 @@ public class Robot extends TimedRobot {
     o = new Orchestra();
     o.addInstrument(shooter.x);
     o.addInstrument(shooter.y);
-    o.loadMusic("toto.chrp");
+    o.loadMusic("sus.chrp");
   }
   
 
