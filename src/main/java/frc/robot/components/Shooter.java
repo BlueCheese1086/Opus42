@@ -36,6 +36,11 @@ public class Shooter {
     public double velocity;
     public ShooterConstants shooterConstants;
     Robot robot;
+    Shoot shoot;
+
+    double[] activeSetpoint;
+
+    public boolean overrideTower, overrideShooter;
 
     public Shooter(Robot robot, int xID, int yID, int oneID, int twoID, int threeID, int fourID, Limelight limelight, Hood hood, Indexer indexer, Drivetrain drivetrain) {
         x = new TalonFX(xID);
@@ -45,6 +50,11 @@ public class Shooter {
         three = new CANSparkMax(threeID, MotorType.kBrushless);
         four = new CANSparkMax(fourID, MotorType.kBrushless);
         shooterConstants = new ShooterConstants(robot.limelight);
+        
+        shoot = new Shoot();
+
+        overrideTower = false;
+        overrideShooter = true;
 
         this.limelight = limelight;
         this.hood = hood;
@@ -93,14 +103,45 @@ public class Shooter {
         y.set(TalonFXControlMode.PercentOutput, velo);
     }
 
+    public double getMotorVelocity() {
+        return x.getSelectedSensorVelocity();
+    }
 
+    public void overrideTower() {
+        overrideTower = true;
+    }
+
+    public void overrideShooter() {
+        overrideShooter = true;
+    }
+
+    public boolean getOverride() {
+        return overrideTower;
+    }
+
+    public void setSetpoint() {
+        double ty = limelight.getYAngle();
+        
+        if (overrideShooter) {
+            activeSetpoint = shooterConstants.getNearestSetpoint(ty);
+        } else {
+            activeSetpoint = shooterConstants.getNearestSetpointRegression(ty);
+        }
+    }
+
+    public double[] getSetpoint() {
+        return activeSetpoint;
+    }
 
     public boolean alignSetpoint() {
         limelight.setLights(3);
 
-        double ty = limelight.getYAngle();
+        //double ty = limelight.getYAngle();
 
-        double[] setPoint = shooterConstants.getNearestSetpoint(ty);//shooterConstants.getSetpoint(shooterConstants.getNearestSetpointID(ty));
+        double[] setPoint = activeSetpoint;//shooterConstants.getNearestSetpoint(ty);
+        //double[] setPoint = shooterConstants.getNearestSetpointRegression(ty);
+        //double[] setPoint = shooterConstants.getSetpointWeirdRegression(ty);
+
         double targetYAngle = setPoint[0]; // as in, the angle we want to get to, not the limelight target
         double hoodAngle = setPoint[1];
         /*
@@ -117,7 +158,7 @@ public class Shooter {
         }
 
         //are we aligned?
-        return robot.drivetrain.isAligned();
+        return robot.drivetrain.isXAligned() && robot.drivetrain.isYAligned(targetYAngle);
     }
 
     public boolean shootVeloHoodAngle(double velo, double hoodAngle) {
@@ -131,7 +172,7 @@ public class Shooter {
 
         // pewpew
 
-        if (Math.abs(x.getSelectedSensorVelocity() - velo) < 200) {
+        if (Math.abs(x.getSelectedSensorVelocity() - velo) < 250) {
             one.set(.8);
             indexer.in();
             return true;
@@ -139,11 +180,26 @@ public class Shooter {
             return false;
     }
 
+
+    private class Shoot extends Thread {
+
+        Shoot thread;
+
+        public void shoot() {
+            thread = new Shoot();
+            thread.start();
+        }
+
+        public void run() {
+            robot.shooter.shootWithDelay();
+        }
+    }
+//bruh 
     /**
      * pew the. the shoot. do the pew. the fricken. do the yeet
      * @return IS IT PEW O CLOCK??? HAS THE VELOCITY BEEN AN REACHED?????
      */
-    public boolean shoot() {
+    public boolean shootWithDelay() {
         //BLIND THE ROOKIES
         limelight.setLights(3);
 
@@ -151,7 +207,9 @@ public class Shooter {
 
         //get Values
         double ty = limelight.getYAngle();
-        double[] setPoint = shooterConstants.getSetpoint(shooterConstants.getNearestSetpointID(ty));
+        double[] setPoint = shooterConstants.getNearestSetpoint(ty);
+        //double[] setPoint = shooterConstants.getNearestSetpointRegression(ty);
+        //double[] setPoint = shooterConstants.getSetpointWeirdRegression(ty);
         double targetVelocity = setPoint[2];
         velocity = targetVelocity;
 
@@ -161,21 +219,32 @@ public class Shooter {
          * 2 - velocity
          */
 
-
         // set the velocity of the falcons
         if (robot.c.primary.getYButton()) {
-            targetVelocity = SmartDashboard.getNumber("Shooter Velocity", 0);
+            targetVelocity = SmartDashboard.getNumber("Target Velocity", 0);
         }
+
         setMotorVelo(targetVelocity);
 
         long startTime = System.currentTimeMillis();
-        while (startTime + (.15*1000) > System.currentTimeMillis()) {
-            continue;
+        if (overrideTower) {
+            while (startTime + (.15*1000) > System.currentTimeMillis()) {
+                continue;
+            }
+        } else {
+        while (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) > 500) {
+                if (System.currentTimeMillis() - startTime > 3000) break;
+                setMotorVelo(targetVelocity);
+                if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) > 500) {
+                    indexer.stop();
+                    one.set(0);
+                }
+            }
         }
 
         // pewpew
 
-        if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 200) {
+        if (Math.abs(x.getSelectedSensorVelocity() - targetVelocity) < 150) {
             one.set(.8);
             indexer.in();
             return true;
@@ -183,10 +252,19 @@ public class Shooter {
             return false;
     }
 
+    public void shoot() {
+        shoot.shoot();
+    }
+
+    public void stopEverything() {
+        shoot.interrupt();
+        interrupt();
+    }
+
     /**
      * Stops everything
      */
-    public void stopEverything() {
+    public void interrupt() {
         setMotorPercentage(0);
         one.set(0);
     }

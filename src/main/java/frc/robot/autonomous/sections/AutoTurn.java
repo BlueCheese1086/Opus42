@@ -1,99 +1,83 @@
 package frc.robot.autonomous.sections;
 
-import frc.robot.components.Drivetrain;
-import frc.robot.Robot;
-import frc.robot.PIDControl;
-import frc.robot.Constants;
+import java.util.Arrays;
 
-public class AutoTurn extends AutoSection{
-    
-    Drivetrain drivetrain;
-    double current;
-    double turningDist; // rotaions
-    PIDControl rTurnPIDController;
-    PIDControl lTurnPIDController;
-    boolean isAngleBased;
-    boolean isRight;
-    double power;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.OogaBoogaPID;
+import frc.robot.Robot;
+
+public class AutoTurn extends AutoSection {
+
+    double targetAngle;
+    double currentAngle;
+
+    double angle;
+
+    double motorSpeed;
+
+    OogaBoogaPID ooga;
+
+    int ticks = 0;
+    double[] pastAverages = new double[10];
+    double averageAngle;
+
     Robot robot;
 
-    /** angle = degrees */
-    public AutoTurn(double angle, Robot robot){
+    boolean reverse;
+
+    public AutoTurn(double angle, Robot robot) {
+        super();
         this.robot = robot;
-        this.drivetrain = robot.drivetrain;
-        this.turningDist = (((2 * Math.PI * Constants.WHEEL_TO_WHEEL_RADIUS) * (angle / 360 )) * 0.001) * Constants.DRIVETRAIN_POSITION_SCALE;
-        this.rTurnPIDController = new PIDControl("angle", drivetrain.frontRight, angle);
-        this.lTurnPIDController = new PIDControl("angle", drivetrain.frontLeft, angle);
-        //drivetrain.frontLeft.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
-        //drivetrain.frontRight.initPID(Constants.MP_DRIVE_FF, Constants.MP_DRIVE_KP, Constants.MP_DRIVE_KI, Constants.MP_DRIVE_KD);
 
-        this.isAngleBased = true;
+        Arrays.fill(pastAverages, 10);
+        
+        reverse = angle < 0 ? true : false;
 
-    }
-
-    public AutoTurn(int length, boolean isRight, double power, Robot robot){
-        super(length);
-        this.drivetrain = robot.drivetrain;
-        this.isAngleBased = false;
-        this.isRight = isRight;
-        this.power = power;
-
+        ooga = new OogaBoogaPID(1.5, .15, .15, 100, .03, 1);
+        this.angle = angle;
     }
 
     @Override
-    public void init(){
+    public void init() {
         super.init();
-        if (isAngleBased){
-            drivetrain.frontLeft.getEncoder().setPosition(0);
-            drivetrain.frontRight.getEncoder().setPosition(0);
-        }
-
+        targetAngle = robot.gyro.getAngle() + angle;
+        currentAngle = robot.gyro.getAngle();
     }
 
-    //@Override
+
+    private double averageArray(double[] arr) {
+        double sum = 0;
+        for (double a : arr) {
+            sum += a;
+        }
+        return sum/arr.length;
+    }
+
+    @Override
     public void update() {
-        //KAI HERE! i think the problem is that all of this test code itself doesn't actually do anything?
-        //Robot.limelight.setLights(0);
-        /*drivetrain.getFrontLeft().set(0.25);
-        drivetrain.getFrontRight().set(-0.25);*/
 
-        //this may not do what you want, but at least it will do something
-        drivetrain.drive(0.25, 0.5);
+        currentAngle = robot.gyro.getAngle();
 
-        /*if (isAngleBased){
-            // rturnPIDController.rotateToAngle(turningDist);
-            // lturnPIDController.rotateToAngle(turningDist * -1);
+        double speed = ooga.calculate(currentAngle, targetAngle);
 
-            //drivetrain.anglePID(angle);
+        robot.drivetrain.set(speed, -speed);
 
-            // drivetrain.getFrontLeft().set(0.25);
-            // drivetrain.getFrontRight().set(-0.25);
-        } else {
-            if(isRight){
-                drivetrain.getFrontLeft().set(power);
-                drivetrain.getFrontRight().set(-power);
-            } else {
-                drivetrain.getFrontLeft().set(power);
-                drivetrain.getFrontRight().set(power);
-            }
-        }*/
+        SmartDashboard.putNumber("Turn PID", ooga.calculate(currentAngle, targetAngle));
+        SmartDashboard.putNumber("Past PID Average", averageArray(pastAverages));
+
+        pastAverages[ticks%pastAverages.length] = ooga.calculate(currentAngle, targetAngle);
+        ticks++;
 
     }
 
     @Override
     public void disabled() {
-        drivetrain.drive(0,0);
-        super.endTime = System.currentTimeMillis();
-
+        robot.drivetrain.set(0, 0);
     }
 
     @Override
     public boolean disableCondition() {
-        if (isAngleBased){
-            //return super.disableCondition();
-            return drivetrain.getAnglePIDStatus();
-        } else{
-            return super.disableCondition();
-        }
+        return Math.abs(averageArray(pastAverages)) < .03;
     }
+    
 }

@@ -17,8 +17,8 @@ import frc.robot.autonomous.sections.*;
 public class AutoManager {
 
     SendableChooser<AutoMode> autoChooser;
-    AutoMode auto1, auto2, threeBall, autoDriveTest;
-    public AutoMode auto3;
+    AutoMode twoBall, oneBall, threeBall, intercept, twoBallAlign;
+    public AutoMode test;
     AutoMode auto4;
 
     Robot robot;
@@ -30,57 +30,38 @@ public class AutoManager {
         autoChooser = robot.autoMode;
         this.robot = robot;
 
-        auto1 = new AutoMode("2ball");
-        auto2 = new AutoMode("1ball");
-        auto3 = new AutoMode("test");
+        twoBall = new AutoMode("2ball");
+        oneBall = new AutoMode("1ball");
+        test = new AutoMode("test");
+        intercept = new AutoMode("Intercept");
         threeBall = new AutoMode("3ball");
-        autoDriveTest = new AutoMode("autoDriveTest");
+        twoBallAlign = new AutoMode("2 ball - UNTESTED");
 
-        
-        
-        /**auto4 = new AutoMode("3ball");
+        //Test auto code
+        //test.addSection(new AutoAutoAlign(-1, robot), 0);
+        test.addSection(new AutoSetpoint(10, -2, robot), 0);
+        //test.addSection(new AutoTurn(-45, robot), 0);
 
-        auto4.addSection(new AutoAutoAlign(1), 0);
-        auto4.addSection(new AutoShoot(2), 0);
-        auto4.addSection(new AutoDrive(1, robot, false), 0);
-        auto4.addSection(new AutoDrive(1, robot, true), 0);
-        auto4.addSection(new AutoTurn(1, true, 0.5), 0);
-        auto4.addSection(new AutoDrive(2, robot, false), 0);
-        auto4.addSection(new AutoTurn(1, true, 0.5), 0);
-        auto4.addSection(new AutoAutoAlign(1), 0);
-        auto4.addSection(new AutoShoot(3), 0);
+        //Shoots and taxis
+        oneBall.addSection(new AutoShoot(3, robot), 0);
+        oneBall.addSection(new AutoDrive(2, robot, false), 0);
 
-        auto4.addSection(new AutoWait(3), 1);
-        auto4.addSection(new AutoIntake(1), 1);
-        auto4.addSection(new AutoWait(2), 1);
-        auto4.addSection(new AutoIntake(2), 1);
-    
-        */
+        //Taxis intakes and shoots both balls
+        twoBall.addSection(new AutoDrive(1.5, robot, false), 0);
+        twoBall.addSection(new AutoIntake(2.2, robot), 1);
+        twoBall.addSection(new AutoDrive(1.5, robot, true), 0);
+        twoBall.addSection(new AutoSetpoint(10, robot), 0);
+        twoBall.addSection(new AutoShoot(4, robot), 0);
 
-        //auto3.addSection(new AutoTurn(1,true, 0.25), 0);
-        //auto3.addSection(new AutoTurn(230, 1), 0);
-        
-        //auto3.addSection(new AutoTurn(180.0, robot), 0);
-        //auto3.addSection(new AutoPath("test", robot), 0);
-        auto3.addSection(new RyanAutoTurn(90.0, robot), 0);
-        auto3.addSection(new RyanAutoTurn(-90.0, robot), 0);
-        //auto3.addSection(new RyanAutoTurn(-360, robot), 0);
+        //Two ball but setpoint align
+        twoBallAlign.addSection(new AutoDrive(1.5, robot, false), 0);
+        twoBallAlign.addSection(new AutoIntake(2.2, robot), 1);
+        twoBallAlign.addSection(new AutoDrive(1.5, robot, true), 0);
+        twoBallAlign.addSection(new AutoSetpoint(10, 0, robot), 0);
+        twoBallAlign.addSection(new AutoShoot(10, robot), 0);
 
-        // auto3.addSection(new AutoDrive(1, robot, false), 0);
-        // auto3.addSection(new AutoDrive(1, robot, true), 0);
-        // auto3.addSection(new AutoAutoAlign(1, robot), 0);
-        // auto3.addSection(new AutoShoot(3, robot), 0);
-
-        // auto3.addSection(new AutoWait(1), 1);
-        // auto3.addSection(new AutoIntake(1, robot), 1);
-
-        auto1.addSection(new AutoDrive(1.5, robot, false), 0);
-        auto1.addSection(new AutoIntake(2.2, robot), 1);
-        auto1.addSection(new AutoDrive(1.5, robot, true), 0);
-        auto1.addSection(new AutoAutoAlign(10, robot), 0);
-        auto1.addSection(new AutoShoot(4, robot), 0);
-
-        //hreeBall.addSection(new AutoAutoAlign(10, robot), 0);
+        //Shoots taxis back, turns, taxis to 3rd ball, aligns to target, shoots both balls
+        //threeBall.addSection(new AutoAutoAlign(10, robot), 0);
         threeBall.addSection(new AutoHood(0, robot), 0);
         threeBall.addSection(new AutoWait(4.7), 1);
         threeBall.addSection(new AutoShoot(7150, 0, 3, robot), 0);
@@ -88,39 +69,26 @@ public class AutoManager {
         threeBall.addSection(new AutoIntake(2, robot), 1);
         threeBall.addSection(new AutoHood(.5, robot), 1);
         //threeBall.addSection(new AutoWait(1), 1);
-        threeBall.addSection(new RyanAutoTurn(102, robot), 0);
+        threeBall.addSection(new AutoTurn(102, robot), 0);
         threeBall.addSection(new AutoDrive(2.5, robot, false), 0);
         threeBall.addSection(new AutoIntake(3, robot), 1);
-        threeBall.addSection(new RyanAutoTurn(-82, robot), 0);
-        threeBall.addSection(new AutoAutoAlign(10, robot), 0);
+        threeBall.addSection(new AutoTurn(-82, robot), 0);
+        threeBall.addSection(new AutoSetpoint(10, robot), 0);
         threeBall.addSection(new AutoShoot(8150, .5, 5, robot), 0);
 
-        autoDriveTest.addSection(new KaiAutoDrive(robot, 0.5, 2), 0);
 
-        /**
-        //AutoTurn autoTurn1 = new AutoTurn(-29, robot);
-        //auto1.addSection(autoTurn1, 0);
-        //double waitTime = (autoTurn1.getEndTime() - autoTurn1.getStartTime())/1000;
-        AutoDrive autoDrive1 = new AutoDrive(116, robot);
-        auto1.addSection(autoDrive1, 0);
-        double intakeTime = (autoDrive1.getEndTime() - autoDrive1.getStartTime())/1000;
-        auto1.addSection(new AutoWait(intakeTime * 0.3), 0);
-        //auto1.addSection(new AutoTurn(-119), 0);
-        auto1.addSection(new AutoShoot(5), 0);
+        //Taxis back to hit ball, comes back and shoots ball
+        intercept.addSection(new AutoDrive(2, robot, false), 0);
+        intercept.addSection(new AutoWait(1), 0);
+        intercept.addSection(new AutoDrive(2, robot, true), 0);
+        intercept.addSection(new AutoAutoAlign(10, robot), 0);
+        intercept.addSection(new AutoShoot(3, robot), 0);
 
-        //auto1.addSection(new AutoWait(waitTime), 1);
-        auto1.addSection(new AutoIntake(intakeTime * 1.3, robot), 1);
-
-        */
-
-        auto2.addSection(new AutoShoot(3, robot), 0);
-        auto2.addSection(new AutoDrive(2, robot, false), 0);
-
-        autoChooser.setDefaultOption(auto1.getName(), auto1);
-        autoChooser.addOption(auto2.getName(), auto2);
-        autoChooser.addOption(auto3.getName(), auto3);
+        autoChooser.setDefaultOption(twoBall.getName(), twoBall);
+        autoChooser.addOption(oneBall.getName(), oneBall);
+        autoChooser.addOption(test.getName(), test);
+        autoChooser.addOption(intercept.getName(), intercept);
         autoChooser.addOption(threeBall.getName(), threeBall);
-        autoChooser.addOption(autoDriveTest.getName(), autoDriveTest);
 
         //SmartDashboard.putData("Auto Mode Selector", autoChooser);
 
@@ -134,7 +102,7 @@ public class AutoManager {
     public void update() {
         SmartDashboard.putString("Current Auto", autoChooser.getSelected().name);
         //autoChooser.getSelected().update();
-        //auto2.update();
+        //oneBall.update();
         autoChooser.getSelected().update();
     }
 

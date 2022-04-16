@@ -10,7 +10,7 @@ public class IntakeInterface extends Interface {
     public IntakeInterface(Robot robot, Control c) {
         super(robot, c);
         intake = robot.intake;
-        intake.down();
+        intake.up();
     }
 
     /**

@@ -50,19 +50,19 @@ public class Lights {
 
     public void rainbow() {
         // For every pixel
-    for (var i = 0; i < underglowBuffer.getLength(); i++) {
-        // Calculate the hue - hue is easier for rainbows because the color
-        // shape is a circle so only one value needs to precess
-        final var hue = (m_rainbowFirstPixelHue + (i * 180 / underglowBuffer.getLength())) % 180;
-        // Set the value
-        underglowBuffer.setHSV(i, hue, 255, 128);
-      }
-      // Increase by to make the rainbow "move"
-      m_rainbowFirstPixelHue += 3;
-      // Check bounds
-      m_rainbowFirstPixelHue %= 180;
+        for (var i = 0; i < underglowBuffer.getLength(); i++) {
+            // Calculate the hue - hue is easier for rainbows because the color
+            // shape is a circle so only one value needs to precess
+            final var hue = (m_rainbowFirstPixelHue + (i * 180 / underglowBuffer.getLength())) % 180;
+            // Set the value
+            underglowBuffer.setHSV(i, hue, 255, 128);
+        }
+        // Increase by to make the rainbow "move"
+        m_rainbowFirstPixelHue += 3;
+        // Check bounds
+        m_rainbowFirstPixelHue %= 180;
     }
-
+//funnylite
     public void update() {
         underglow.setData(underglowBuffer);
         /*rightClimb.setData(rightBuffer);

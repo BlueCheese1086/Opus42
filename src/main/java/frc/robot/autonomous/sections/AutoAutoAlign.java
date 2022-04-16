@@ -30,6 +30,7 @@ public class AutoAutoAlign extends AutoSection {
 
     @Override
     public boolean disableCondition() {
+        //return false;
         return robot.drivetrain.isXAligned();
     }
     

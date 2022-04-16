@@ -66,8 +66,8 @@ public class Drivetrain {
         frontLeft.setOpenLoopRampRate(0);
         backLeft.setOpenLoopRampRate(0);
 
-        xAlignPID = new OogaBoogaPID(1.6, 0, .05, 15, 1.5, .6);
-        yAlignPID = new OogaBoogaPID(3.5, 0, .03, 3, 1, 1);
+        xAlignPID = new OogaBoogaPID(0.3, 28.0, 0.01, 15, 3, .5);
+        yAlignPID = new OogaBoogaPID(1.5, 23, .05, 30, 1, 1);
 
     }
 
@@ -189,12 +189,8 @@ public class Drivetrain {
         return Math.abs(limelight.getXAngle()) < 1.5;
     }
 
-    public boolean isYAligned() {
-        return Math.abs(limelight.getYAngle() - robot.shooter.shooterConstants.getNearestSetpoint(limelight.getYAngle())[0]) < 1;
-    }
-
-    public boolean isAligned() {
-        return isXAligned() && isYAligned();
+    public boolean isYAligned(double y) {
+        return Math.abs(limelight.getYAngle() - y) < 1;
     }
 
     //maybe angle pid gyro based

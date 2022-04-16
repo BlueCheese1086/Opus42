@@ -1,5 +1,6 @@
 package frc.robot;
 
+import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -29,6 +30,7 @@ import frc.robot.controlInterfaces.IndexerInterface;
 import frc.robot.controlInterfaces.IntakeInterface;
 import frc.robot.controlInterfaces.Interface;
 import frc.robot.controlInterfaces.ShooterInterface;
+import frc.robot.controlInterfaces.LightsInterface.ControlMode;
 import frc.robot.controlInterfaces.LightsInterface;
 import frc.robot.sensors.Limelight;
 
@@ -69,6 +71,7 @@ public class Robot extends TimedRobot {
     lights = new Lights(300);
     lightsInter = new LightsInterface(this, c);
     lightsInter.setControlMode(LightsInterface.ControlMode.Rainbow);
+    lights.setAlliance();
 
     // Initializing components
     limelight = new Limelight();
@@ -79,7 +82,6 @@ public class Robot extends TimedRobot {
     indexer = new Indexer(RobotMap.INDEXER_LEFT_ID, RobotMap.INDEXER_RIGHT_ID);
     intake = new Intake(RobotMap.INTAKE_MOTOR_ID, RobotMap.INTAKE_SOLENOID_ID);
     shooter = new Shooter(this, RobotMap.LAUNCHER_X_ID, RobotMap.LAUNCHER_Y_ID, RobotMap.LAUNCHER_ONE_ID, RobotMap.LAUNCHER_TWO_ID, RobotMap.LAUNCHER_THREE_ID, RobotMap.LAUNCHER_FOUR_ID, limelight, hood, indexer, drivetrain);
-    //gyro = new AHRS();
 
     // Initializing interfaces
     interfaces = new ArrayList<>();
@@ -109,6 +111,8 @@ public class Robot extends TimedRobot {
 
     gyro.calibrate();
 
+    //CameraServer.startAutomaticCapture();
+
   }
 
   @Override
@@ -118,7 +122,6 @@ public class Robot extends TimedRobot {
      ********************/
 
     //lights.rainbow();
-    //lights.setAlliance();
     lightsInter.tick();
     
     // Driver Selection
@@ -127,6 +130,10 @@ public class Robot extends TimedRobot {
 
     // Auto Selection
     SmartDashboard.putData("Auto Mode Selector", autoMode);
+
+    //Override
+    SmartDashboard.putBoolean("Tower Override", shooter.getOverride());
+    SmartDashboard.putBoolean("Shooter Override", shooter.overrideShooter);
 
     // Brake Mode
     SmartDashboard.putBoolean("Brake Mode", drivetrain.getMode());
@@ -140,9 +147,12 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Shooter 1 Temp", shooter.x.getTemperature());
     SmartDashboard.putNumber("Shooter 2 Temp", shooter.y.getTemperature());
 
+    //Shooter Velocity
+    SmartDashboard.putNumber("Shooter Velocity", shooter.getMotorVelocity());
+
     // Input
-    SmartDashboard.putNumber("Shooter Velocity", SmartDashboard.getNumber("Shooter Velocity", 0));
-    SmartDashboard.getNumber("Shooter Velocity", 0);
+    SmartDashboard.putNumber("Target Velocity", SmartDashboard.getNumber("Target Velocity", 0));
+    SmartDashboard.getNumber("Target Velocity", 0);
 
     //Limelight
     SmartDashboard.putNumber("Y Angle", limelight.getYAngle());
@@ -157,6 +167,7 @@ public class Robot extends TimedRobot {
     hood.setMax();
     hood.setMin();
     drivetrain.setMode(IdleMode.kBrake);
+    lightsInter.setControlMode(ControlMode.Alliance);
   }
 
   /** This function is called periodically during autonomous. */
@@ -173,12 +184,18 @@ public class Robot extends TimedRobot {
     c.setPrimary(primaryDrivers.getSelected());
     c.setSecondary(secondaryDrivers.getSelected());
 
+    drivetrain.setMode(IdleMode.kBrake);
+
   }
 
   @Override
   public void teleopPeriodic() {
     // Ticks each interface
     interfaces.forEach(Interface::tick);
+    if (DriverStation.getMatchTime() <= 15.0) {
+      lights.setLights(255, 255, 0);
+      lightsInter.setControlMode(ControlMode.StaticColor);
+    }
     /*if(c.primary.getAButton()){
       drivetrain.autoAlign();
     }
@@ -194,6 +211,7 @@ public class Robot extends TimedRobot {
     // Sets up counter for disabled time
     timeOff = 0;
     timeOff = System.currentTimeMillis();
+    lightsInter.setControlMode(ControlMode.Alliance);
   }
 
   /** This function is called periodically when disabled. */
